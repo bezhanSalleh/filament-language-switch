@@ -22,6 +22,7 @@
 </p>
 
 <hr style="background-color: #ff2e21"></hr>
+
 # Filament Language(Locale) Switcher
 
 Zero config Language Switch(Changer/Localizer) plugin for Filamentphp Admin
