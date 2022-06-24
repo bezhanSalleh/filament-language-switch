@@ -2,11 +2,11 @@
 
 namespace BezhanSalleh\FilamentLanguageSwitch;
 
-use Livewire\Livewire;
 use BladeUI\Icons\Factory;
 use Filament\Facades\Filament;
 use Filament\PluginServiceProvider;
 use Illuminate\Support\Facades\Blade;
+use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Package;
 
 class FilamentLanguageSwitchServiceProvider extends PluginServiceProvider
@@ -47,7 +47,7 @@ class FilamentLanguageSwitchServiceProvider extends PluginServiceProvider
             fn (): string => Blade::render("@livewire('switch-filament-language')")
         );
 
-        if (!array_key_exists($key = \BezhanSalleh\FilamentLanguageSwitch\Http\Middleware\SwtichLanguageLocale::class, $filamentMiddlewares = config('filament.middleware.base'))) {
+        if (! array_key_exists($key = \BezhanSalleh\FilamentLanguageSwitch\Http\Middleware\SwtichLanguageLocale::class, $filamentMiddlewares = config('filament.middleware.base'))) {
             $filamentMiddlewares[] = $key;
             config(['filament.middleware.base' => $filamentMiddlewares]);
         }

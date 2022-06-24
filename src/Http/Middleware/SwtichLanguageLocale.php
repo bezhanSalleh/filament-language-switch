@@ -2,8 +2,8 @@
 
 namespace BezhanSalleh\FilamentLanguageSwitch\Http\Middleware;
 
-use Closure;
 use Carbon\Carbon;
+use Closure;
 use Illuminate\Http\Request;
 
 class SwtichLanguageLocale
@@ -24,6 +24,7 @@ class SwtichLanguageLocale
                 Carbon::setLocale(session()->get('locale'));
             }
         }
+
         return $next($request);
     }
 }

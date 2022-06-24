@@ -2,9 +2,9 @@
 
 namespace BezhanSalleh\FilamentLanguageSwitch\Tests;
 
+use BezhanSalleh\FilamentLanguageSwitch\FilamentLanguageSwitchServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use BezhanSalleh\FilamentLanguageSwitch\FilamentLanguageSwitchServiceProvider;
 
 class TestCase extends Orchestra
 {
