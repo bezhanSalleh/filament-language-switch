@@ -1,84 +1,150 @@
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/support-ukraine.svg?t=1" />](https://supportukrainenow.org)
+<a href="https://github.com/bezhansalleh/filament-language-switch">
+<img style="width: 100%; max-width: 100%;" alt="filament-shield-art" src="https://banners.beyondco.de/Filament%20Language%20Switch.png?theme=light&packageManager=composer+require&packageName=bezhansalleh%2Ffilament-language-switch&pattern=topography&style=style_2&description=Zero+config+Language+Switcher+for+Filamentphp&md=1&showWatermark=0&fontSize=125px&images=translate" >
+</a>
+<p align="center">
+    <a href="https://filamentadmin.com/docs/2.x/admin/installation">
+        <img alt="FILAMENT 8.x" src="https://img.shields.io/badge/FILAMENT-2.x-EBB304?style=for-the-badge">
+    </a>
+    <a href="https://packagist.org/packages/bezhansalleh/filament-language-switch">
+        <img alt="Packagist" src="https://img.shields.io/packagist/v/bezhansalleh/filament-language-switch.svg?style=for-the-badge&logo=packagist">
+    </a>
+    <a href="https://github.com/bezhansalleh/filament-language-switch/actions?query=workflow%3Arun-tests+branch%3Amain">
+        <img alt="Tests Passing" src="https://img.shields.io/github/workflow/status/bezhansalleh/filament-language-switch/run-tests?style=for-the-badge&logo=github&label=tests">
+    </a>
+    <a href="https://github.com/bezhansalleh/filament-language-switch/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain">
+        <img alt="Code Style Passing" src="https://img.shields.io/github/workflow/status/bezhansalleh/filament-language-switch/run-tests?style=for-the-badge&logo=github&label=code%20style">
+    </a>
 
-# :package_description
+<a href="https://packagist.org/packages/bezhansalleh/filament-language-switch">
+    <img alt="Downloads" src="https://img.shields.io/packagist/dt/bezhansalleh/filament-language-switch.svg?style=for-the-badge" >
+    </a>
+</p>
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/:vendor_slug/:package_slug/run-tests?label=tests)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/:vendor_slug/:package_slug/Check%20&%20fix%20styling?label=code%20style)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
-<!--delete-->
----
-This repo can be used to scaffold a Laravel package. Follow these steps to get started:
+<hr style="background-color: #ff2e21"></hr>
+# Filament Language(Locale) Switcher
 
-1. Press the "Use this template" button at the top of this repo to create a new repo with the contents of this skeleton.
-2. Run "php ./configure.php" to run a script that will replace all placeholders throughout all the files.
-3. Have fun creating your package.
-4. If you need help creating a package, consider picking up our <a href="https://laravelpackage.training">Laravel Package Training</a> video course.
----
-<!--/delete-->
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+Zero config Language Switch(Changer/Localizer) plugin for Filamentphp Admin
 
-## Support us
+## Support Filament
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/:package_name.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/:package_name)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+<a href="https://github.com/sponsors/danharrin">
+<img width="320" alt="filament-logo" src="https://filamentadmin.com/images/sponsor-banner.jpg">
+</a>
 
 ## Installation
 
-You can install the package via composer:
+Install the package via composer:
 
 ```bash
-composer require :vendor_slug/:package_slug
+composer require bezhansalleh/filament-language-switch
 ```
 
-You can publish and run the migrations with:
+Publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-migrations"
-php artisan migrate
+php artisan vendor:publish --tag="filament-language-switch-config"
 ```
 
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag=":package_slug-config"
-```
-
-This is the contents of the published config file:
+Set your preferred options:
 
 ```php
+<?php
+
 return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Carbon Locale(Language)
+    |--------------------------------------------------------------------------
+    |
+    | Option to whether change the language for carbon library or not.
+    |
+    */
+    'carbon' => true,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Language display name
+    |--------------------------------------------------------------------------
+    |
+    | Option to whether dispaly the language in English or Native.
+    |
+    */
+    'native' => true,
+
+    /*
+    |--------------------------------------------------------------------------
+    | All Locales (Languages)
+    |--------------------------------------------------------------------------
+    |
+    | Uncomment the languages that your site supports - or add new ones.
+    | These are sorted by the native name, which is the order you might show them in a language selector.
+    |
+    */
+
+    'locales' => [
+        'ar'          => ['name' => 'Arabic',                 'script' => 'Arab', 'native' => 'العربية', 'flag_code' => 'sa'],
+        'en'          => ['name' => 'English',                'script' => 'Latn', 'native' => 'English', 'flag_code' => 'us'],
+        // 'fr'          => ['name' => 'French',                 'script' => 'Latn', 'native' => 'français', 'flag_code' => 'fr'],
+
+        // 'ace'         => ['name' => 'Achinese',               'script' => 'Latn', 'native' => 'Aceh', 'flag_code' => '' ],
+        //'af'          => ['name' => 'Afrikaans',              'script' => 'Latn', 'native' => 'Afrikaans', 'flag_code' => '' ],
+        //'agq'         => ['name' => 'Aghem',                  'script' => 'Latn', 'native' => 'Aghem', 'flag_code' => '' ],
+        //'ak'          => ['name' => 'Akan',                   'script' => 'Latn', 'native' => 'Akan', 'flag_code' => '' ],
+        //'an'          => ['name' => 'Aragonese',              'script' => 'Latn', 'native' => 'aragonés', 'flag_code' => '' ],
+        //'cch'         => ['name' => 'Atsam',                  'script' => 'Latn', 'native' => 'Atsam', 'flag_code' => '' ],
+        //'gn'          => ['name' => 'Guaraní',                'script' => 'Latn', 'native' => 'Avañe’ẽ', 'flag_code' => '' ],
+        //'ae'          => ['name' => 'Avestan',                'script' => 'Latn', 'native' => 'avesta', 'flag_code' => '' ],
+        //'ay'          => ['name' => 'Aymara',                 'script' => 'Latn', 'native' => 'aymar aru', 'flag_code' => '' ],
+        //'az'          => ['name' => 'Azerbaijani (Latin)',    'script' => 'Latn', 'native' => 'azərbaycanca', 'flag_code' => '' ],
+        ...
+    ]
 ];
+     
 ```
+That's it, everything is now ready to be deployed.
+
+> **Note**
+> You can find the supported country flag codes here [flag codes](https://flagicons.lipis.dev/)
+
+
 
 Optionally, you can publish the views using
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-views"
+php artisan vendor:publish --tag="filament-language-switch-views"
 ```
 
-## Usage
-
-```php
-$variable = new VendorName\Skeleton();
-echo $variable->echoPhrase('Hello, VendorName!');
-```
-
-## Testing
-
-```bash
-composer test
-```
 
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
 ## Contributing
+
+If you want to contribute to this packages, you may want to test it in a real Filament project:
+
+- Fork this repository to your GitHub account.
+- Create a Filament app locally.
+- Clone your fork in your Filament app's root directory.
+- In the `/filament-language-switch` directory, create a branch for your fix, e.g. `fix/error-message`.
+
+Install the packages in your app's `composer.json`:
+
+```json
+"require": {
+    "bezhansalleh/filament-language-switch": "dev-fix/error-message as main-dev",
+},
+"repositories": [
+    {
+        "type": "path",
+        "url": "filament-language-switch"
+    }
+]
+```
+
+Now, run `composer update`.
 
 Please see [CONTRIBUTING](https://github.com/spatie/.github/blob/main/CONTRIBUTING.md) for details.
 
@@ -88,7 +154,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Credits
 
-- [:author_name](https://github.com/:author_username)
+- [Bezhan Salleh](https://github.com/bezhanSalleh)
 - [All Contributors](../../contributors)
 
 ## License
