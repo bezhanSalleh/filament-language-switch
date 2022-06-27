@@ -66,7 +66,7 @@ return [
         //'cy'          => ['name' => 'Welsh',                  'script' => 'Latn', 'native' => 'Cymraeg', 'flag_code' => '' ],
         //'da'          => ['name' => 'Danish',                 'script' => 'Latn', 'native' => 'dansk', 'flag_code' => '' ],
         //'se'          => ['name' => 'Northern Sami',          'script' => 'Latn', 'native' => 'davvisámegiella', 'flag_code' => '' ],
-        //'de'          => ['name' => 'German',                 'script' => 'Latn', 'native' => 'Deutsch', 'flag_code' => '' ],
+        //'de'          => ['name' => 'German',                 'script' => 'Latn', 'native' => 'Deutsch', 'flag_code' => 'de' ],
         //'luo'         => ['name' => 'Luo',                    'script' => 'Latn', 'native' => 'Dholuo', 'flag_code' => '' ],
         //'nv'          => ['name' => 'Navajo',                 'script' => 'Latn', 'native' => 'Diné bizaad', 'flag_code' => '' ],
         //'dua'         => ['name' => 'Duala',                  'script' => 'Latn', 'native' => 'duálá', 'flag_code' => '' ],
