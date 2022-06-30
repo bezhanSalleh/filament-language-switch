@@ -24,18 +24,6 @@ class FilamentLanguageSwitchServiceProvider extends PluginServiceProvider
             ->hasViews();
     }
 
-    public function packageRegistered(): void
-    {
-        parent::packageRegistered();
-
-        $this->callAfterResolving(Factory::class, function (Factory $factory) {
-            $factory->add('flag-icons', [
-                'path' => $this->package->basePath('/../resources/dist/flag-icons'),
-                'prefix' => 'flag',
-            ]);
-        });
-    }
-
     public function packageBooted(): void
     {
         parent::packageBooted();
