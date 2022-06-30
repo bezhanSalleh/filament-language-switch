@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
 
-class SwtichLanguageLocale
+class SwitchLanguageLocale
 {
     /**
      * Handle an incoming request.
