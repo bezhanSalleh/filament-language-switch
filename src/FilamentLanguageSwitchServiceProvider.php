@@ -2,7 +2,6 @@
 
 namespace BezhanSalleh\FilamentLanguageSwitch;
 
-use BladeUI\Icons\Factory;
 use Filament\Facades\Filament;
 use Filament\PluginServiceProvider;
 use Illuminate\Support\Facades\Blade;
