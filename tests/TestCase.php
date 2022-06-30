@@ -2,9 +2,11 @@
 
 namespace BezhanSalleh\FilamentLanguageSwitch\Tests;
 
-use BezhanSalleh\FilamentLanguageSwitch\FilamentLanguageSwitchServiceProvider;
-use Illuminate\Database\Eloquent\Factories\Factory;
+use Filament\FilamentServiceProvider;
+use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use BezhanSalleh\FilamentLanguageSwitch\FilamentLanguageSwitchServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -20,6 +22,8 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
+            LivewireServiceProvider::class,
+            FilamentServiceProvider::class,
             FilamentLanguageSwitchServiceProvider::class,
         ];
     }
