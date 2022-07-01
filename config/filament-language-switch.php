@@ -17,7 +17,7 @@ return [
     | Language display name
     |--------------------------------------------------------------------------
     |
-    | Option to whether dispaly the language in English or Native.
+    | Option to whether display the language in English or Native.
     |
     */
     'native' => true,
