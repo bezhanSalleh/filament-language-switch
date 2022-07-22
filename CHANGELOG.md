@@ -2,6 +2,21 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## v1.0.0 - 2022-07-22
+
+### What's Changed
+
+- adjust switch spacing
+- Bump dependabot/fetch-metadata from 1.3.1 to 1.3.3 by @dependabot in https://github.com/bezhanSalleh/filament-language-switch/pull/4
+- Fix readme typo by @erjanmx in https://github.com/bezhanSalleh/filament-language-switch/pull/3
+
+### New Contributors
+
+- @dependabot made their first contribution in https://github.com/bezhanSalleh/filament-language-switch/pull/4
+- @erjanmx made their first contribution in https://github.com/bezhanSalleh/filament-language-switch/pull/3
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/v0.0.1...v1.0.0
+
 ## v0.0.1 - to be released
 
 - minor wording issue: s/SwtichLanguageLocale/SwitchLanguageLocale
