@@ -11,7 +11,7 @@
         :style="(isRTL() && { margin: '0 1rem 0 0' }) || (!isRTL() && { margin: '0 0 0 1rem' })">
 
         <button x-on:click="isLocaleDropdownOpen = ! isLocaleDropdownOpen"
-            class="shrink-0 flex items-center justify-center w-10 h-10 text-primary-500 rounded-full filament-language-switch-button hover:bg-gray-500/5 focus:bg-primary-500/10 focus:outline-none lg:mr-4 rtl:lg:mr-0 rtl:lg:ml-4"
+            class="shrink-0 flex items-center justify-center w-10 h-10 text-primary-500 rounded-full filament-language-switch-button hover:bg-gray-500/5 focus:bg-primary-500/10 focus:outline-none lg:mr-2 rtl:lg:mr-0 rtl:lg:ml-2"
             style="border:1.5px solid #b4b8bf;">
             <x-dynamic-component :component="'flag-1x1-' .
                 (!blank(config('filament-language-switch.locales.' . app()->getLocale() . '.flag_code'))
