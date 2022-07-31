@@ -2,6 +2,14 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## 1.0.1 - 2022-07-31
+
+### What's Changed
+
+- Language flag is now optional
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/v1.0.0...1.0.1
+
 ## v1.0.0 - 2022-07-22
 
 ### What's Changed
