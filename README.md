@@ -27,12 +27,6 @@
 
 Zero config Language Switch(Changer/Localizer) plugin for Filamentphp Admin
 
-## Support Filament
-
-<a href="https://github.com/sponsors/danharrin">
-<img width="320" alt="filament-logo" src="https://filamentadmin.com/images/sponsor-banner.jpg">
-</a>
-
 ## Installation
 
 Install the package via composer:
@@ -86,7 +80,7 @@ return [
     */
     
     'flag' => false,
-    
+
     /*
     |--------------------------------------------------------------------------
     | All Locales (Languages)
