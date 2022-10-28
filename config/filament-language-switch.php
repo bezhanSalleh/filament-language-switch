@@ -4,17 +4,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Carbon Locale(Language)
-    |--------------------------------------------------------------------------
-    |
-    | Option to whether change the language for carbon library or not.
-    |
-    */
-
-    'carbon' => true,
-
-    /*
-    |--------------------------------------------------------------------------
     | Language display name
     |--------------------------------------------------------------------------
     |
@@ -34,7 +23,7 @@ return [
     | If set to true, the following package needs to be installed via composer.
     | "composer require stijnvanouplines/blade-country-flags"
     */
-    
+
     'flag' => false,
 
     /*

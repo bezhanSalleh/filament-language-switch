@@ -21,10 +21,6 @@ class SwitchLanguageLocale
 
         if (array_key_exists($locale, config('filament-language-switch.locales'))) {
             app()->setLocale($locale);
-
-            if (config('filament-language-switch::carbon')) {
-                Carbon::setLocale($locale);
-            }
         }
 
         return $next($request);
