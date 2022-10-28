@@ -2,7 +2,6 @@
 
 namespace BezhanSalleh\FilamentLanguageSwitch\Http\Middleware;
 
-use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
 
