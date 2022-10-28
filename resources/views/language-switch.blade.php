@@ -33,7 +33,10 @@
             x-transition:leave="transition" x-transition:leave-start="translate-y-0 opacity-100"
             x-transition:leave-end="-translate-y-1 opacity-0"
             class="absolute z-10 right-0 rtl:right-auto rtl:left-0 mt-2 shadow-xl rounded-xl w-52 top-full" x-cloak>
-            <ul class="py-1 space-y-1 overflow-hidden bg-white shadow rounded-xl dark:border-gray-600 dark:bg-gray-700">
+            <ul @class([
+                "py-1 space-y-1 overflow-hidden bg-white shadow rounded-xl",
+                "dark:border-gray-600 dark:bg-gray-700" => config('filament.dark_mode'),
+            ])>
 
                 @foreach (config('filament-language-switch.locales') as $key => $locale)
                     <li @class([
