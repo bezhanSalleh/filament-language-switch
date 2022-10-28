@@ -2,6 +2,19 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## 1.0.2 - 2022-10-28
+
+### What's Changed
+
+- Bump dependabot/fetch-metadata from 1.3.3 to 1.3.4 by @dependabot in https://github.com/bezhanSalleh/filament-language-switch/pull/6
+- fix: Fixed dark mode issues by @LukasFreyCZ in https://github.com/bezhanSalleh/filament-language-switch/pull/8
+
+### New Contributors
+
+- @LukasFreyCZ made their first contribution in https://github.com/bezhanSalleh/filament-language-switch/pull/8
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/1.0.1...1.0.2
+
 ## 1.0.1 - 2022-07-31
 
 ### What's Changed
