@@ -10,6 +10,9 @@ use Spatie\LaravelPackageTools\Package;
 
 class FilamentLanguageSwitchServiceProvider extends PluginServiceProvider
 {
+    protected array $styles = [
+        'filament-language-switch-styles' => __DIR__ . '/../resources/dist/filament-language-switch.css',
+    ];
     public function configurePackage(Package $package): void
     {
         /*

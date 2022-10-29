@@ -1,0 +1,17 @@
+{
+  "private": true,
+  "description": "Zero config Language Switch(Changer/Localizer) plugin for filamentphp admin",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx tailwindcss -i resources/css/filament-language-switch.css -o resources/dist/filament-language-switch.css --postcss --watch",
+    "build": "npx tailwindcss -i resources/css/filament-language-switch.css -o resources/dist/filament-language-switch.css --postcss --minify"
+  },
+  "author": "Bezhan Salleh",
+  "license": "MIT",
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.4",
+    "autoprefixer": "^10.4",
+    "postcss": "^8.4",
+    "tailwindcss": "^3.1"
+  }
+}
