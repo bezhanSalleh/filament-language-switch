@@ -2,6 +2,18 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## 1.0.3 - 2022-10-29
+
+### What's Changed
+
+- Fix light and dark mode issue by @bezhanSalleh in https://github.com/bezhanSalleh/filament-language-switch/pull/10
+
+### New Contributors
+
+- @bezhanSalleh made their first contribution in https://github.com/bezhanSalleh/filament-language-switch/pull/10
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/1.0.2...1.0.3
+
 ## 1.0.2 - 2022-10-28
 
 ### What's Changed
