@@ -4,46 +4,26 @@ namespace BezhanSalleh\FilamentLanguageSwitch;
 
 use Filament\Facades\Filament;
 use Filament\PluginServiceProvider;
-use Illuminate\Support\Facades\Blade;
-use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Package;
 
 class FilamentLanguageSwitchServiceProvider extends PluginServiceProvider
 {
+    public static string $name = 'filament-language-switch';
+
     protected array $styles = [
         'filament-language-switch-styles' => __DIR__ . '/../resources/dist/filament-language-switch.css',
     ];
 
     public function configurePackage(Package $package): void
     {
-        /*
-         * This class is a Package Service Provider
-         *
-         * More info: https://github.com/spatie/laravel-package-tools
-         */
         $package
-            ->name('filament-language-switch')
+            ->name(static::$name)
             ->hasConfigFile()
             ->hasViews();
     }
 
     public function packageBooted(): void
     {
-        parent::packageBooted();
-
-        Livewire::component('switch-filament-language', Http\Livewire\SwitchFilamentLanguage::class);
-
-        Filament::registerRenderHook(
-            'global-search.end',
-            fn (): string => Blade::render("@livewire('switch-filament-language')")
-        );
-
-        if (! array_key_exists(
-            $key = \BezhanSalleh\FilamentLanguageSwitch\Http\Middleware\SwitchLanguageLocale::class,
-            $filamentMiddlewares = config('filament.middleware.base')
-        )) {
-            $filamentMiddlewares[] = $key;
-            config(['filament.middleware.base' => $filamentMiddlewares]);
-        }
+        Filament::serving(fn () => FilamentLanguageSwitch::boot());
     }
 }
