@@ -17,7 +17,7 @@ class FilamentLanguageSwitch
         $self = new static();
         $self->configure();
         $self->injectComponent();
-        $self->registerSwitchLangueMiddleware();
+        $self->registerSwitchLanguageMiddleware();
     }
 
     public function injectComponent(): void
@@ -29,7 +29,7 @@ class FilamentLanguageSwitch
         );
     }
 
-    public function registerSwitchLangueMiddleware(): void
+    public function registerSwitchLanguageMiddleware(): void
     {
         if (! array_key_exists(
             $key = SwitchLanguageLocale::class,
