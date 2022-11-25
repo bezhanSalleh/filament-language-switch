@@ -2,6 +2,19 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## 1.0.4 - 2022-11-25
+
+### What's Changed
+
+- Bump dependabot/fetch-metadata from 1.3.4 to 1.3.5 by @dependabot in https://github.com/bezhanSalleh/filament-language-switch/pull/11
+- issue-12 fixed registration component to work with laravel octane by @medeiroz in https://github.com/bezhanSalleh/filament-language-switch/pull/13
+
+### New Contributors
+
+- @medeiroz made their first contribution in https://github.com/bezhanSalleh/filament-language-switch/pull/13
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/1.0.3...1.0.4
+
 ## 1.0.3 - 2022-10-29
 
 ### What's Changed
