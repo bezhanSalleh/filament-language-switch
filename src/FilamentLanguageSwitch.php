@@ -2,7 +2,6 @@
 
 namespace BezhanSalleh\FilamentLanguageSwitch;
 
-use BezhanSalleh\FilamentLanguageSwitch\Http\Middleware\SwitchLanguageLocale;
 use Filament\Facades\Filament;
 use Filament\Support\Concerns\Configurable;
 use Illuminate\Support\Facades\Blade;
