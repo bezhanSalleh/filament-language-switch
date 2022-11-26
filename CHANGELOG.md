@@ -2,6 +2,14 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## 1.0.5 - 2022-11-26
+
+### What's Changed
+
+- fix register-middleware by @medeiroz in https://github.com/bezhanSalleh/filament-language-switch/pull/14
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/1.0.4...1.0.5
+
 ## 1.0.4 - 2022-11-25
 
 ### What's Changed
