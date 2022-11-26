@@ -17,7 +17,6 @@ class FilamentLanguageSwitch
         $self = new static();
         $self->configure();
         $self->injectComponent();
-        $self->registerSwitchLanguageMiddleware();
     }
 
     public function injectComponent(): void
@@ -27,16 +26,5 @@ class FilamentLanguageSwitch
             'global-search.end',
             fn (): string => Blade::render("@livewire('switch-filament-language')")
         );
-    }
-
-    public function registerSwitchLanguageMiddleware(): void
-    {
-        if (! array_key_exists(
-            $key = SwitchLanguageLocale::class,
-            $filamentMiddlewares = config('filament.middleware.base')
-        )) {
-            $filamentMiddlewares[] = $key;
-            config(['filament.middleware.base' => $filamentMiddlewares]);
-        }
     }
 }
