@@ -11,7 +11,7 @@
         'mr-4' => __('filament::layout.direction') === 'rtl',
     ])>
         <div
-            class="flex items-center justify-center w-10 h-10 font-semibold text-white bg-center bg-cover rounded-full bg-primary-500 dark:bg-gray-900">
+            class="language-switch-trigger flex items-center justify-center w-10 h-10 font-semibold text-white bg-center bg-cover rounded-full bg-primary-500 dark:bg-gray-900">
             {{ str(app()->getLocale())->length() > 2
                 ? str(app()->getLocale())->substr(0, 2)->upper()
                 : str(app()->getLocale())->upper() }}
