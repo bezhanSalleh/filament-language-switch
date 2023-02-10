@@ -12,7 +12,7 @@ class FilamentLanguageSwitchServiceProvider extends PluginServiceProvider
     public static string $name = 'filament-language-switch';
 
     protected array $styles = [
-        'filament-language-switch-styles' => __DIR__ . '/../resources/dist/filament-language-switch.css',
+        'filament-language-switch-styles' => __DIR__.'/../resources/dist/filament-language-switch.css',
     ];
 
     public function configurePackage(Package $package): void
