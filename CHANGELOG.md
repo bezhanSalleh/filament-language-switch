@@ -2,6 +2,20 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## 1.0.6 - 2023-02-10
+
+### What's Changed
+
+- Bump dependabot/fetch-metadata from 1.3.5 to 1.3.6 by @dependabot in https://github.com/bezhanSalleh/filament-language-switch/pull/16
+- Update language-switch.blade.php by @mustafa-online in https://github.com/bezhanSalleh/filament-language-switch/pull/15
+- Fixes #17 and Laravel 10 Support by @bezhanSalleh in https://github.com/bezhanSalleh/filament-language-switch/pull/18
+
+### New Contributors
+
+- @mustafa-online made their first contribution in https://github.com/bezhanSalleh/filament-language-switch/pull/15
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/1.0.5...1.0.6
+
 ## 1.0.5 - 2022-11-26
 
 ### What's Changed
