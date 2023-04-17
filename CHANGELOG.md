@@ -2,6 +2,15 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## 1.0.7 - 2023-04-17
+
+### What's Changed
+
+- Bump aglipanci/laravel-pint-action from 1.0.0 to 2.2.0 by @dependabot in https://github.com/bezhanSalleh/filament-language-switch/pull/23
+- fixes #20, fixes #22 and fixes #24 by @bezhanSalleh in https://github.com/bezhanSalleh/filament-language-switch/pull/25
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/1.0.6...1.0.7
+
 ## 1.0.6 - 2023-02-10
 
 ### What's Changed
