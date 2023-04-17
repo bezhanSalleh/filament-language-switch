@@ -2,11 +2,11 @@
 
 namespace BezhanSalleh\FilamentLanguageSwitch;
 
+use BezhanSalleh\FilamentLanguageSwitch\Http\Middleware\SwitchLanguageLocale;
 use Filament\Facades\Filament;
+use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\PluginServiceProvider;
 use Spatie\LaravelPackageTools\Package;
-use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use BezhanSalleh\FilamentLanguageSwitch\Http\Middleware\SwitchLanguageLocale;
 
 class FilamentLanguageSwitchServiceProvider extends PluginServiceProvider
 {

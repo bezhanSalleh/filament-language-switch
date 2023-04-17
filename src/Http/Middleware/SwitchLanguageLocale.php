@@ -4,7 +4,6 @@ namespace BezhanSalleh\FilamentLanguageSwitch\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class SwitchLanguageLocale
 {
@@ -16,7 +15,7 @@ class SwitchLanguageLocale
      */
     public function handle(Request $request, Closure $next)
     {
-        $locale = session()->get('locale') ?? $request->get('locale') ?? $request->cookie('filament_language_switch_locale') ??  config('app.locale', 'en');
+        $locale = session()->get('locale') ?? $request->get('locale') ?? $request->cookie('filament_language_switch_locale') ?? config('app.locale', 'en');
 
         if (array_key_exists($locale, config('filament-language-switch.locales'))) {
             app()->setLocale($locale);

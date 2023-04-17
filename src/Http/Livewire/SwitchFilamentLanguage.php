@@ -3,7 +3,6 @@
 namespace BezhanSalleh\FilamentLanguageSwitch\Http\Livewire;
 
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Str;
 use Livewire\Component;
 
 class SwitchFilamentLanguage extends Component
