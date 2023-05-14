@@ -4,6 +4,7 @@ namespace BezhanSalleh\FilamentLanguageSwitch\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class SwitchLanguageLocale
 {
@@ -15,12 +16,34 @@ class SwitchLanguageLocale
      */
     public function handle(Request $request, Closure $next)
     {
-        $locale = session()->get('locale') ?? $request->get('locale') ?? $request->cookie('filament_language_switch_locale') ?? config('app.locale', 'en');
+        $locale = session()->get('locale') ??
+        $request->get('locale') ??
+        $request->cookie('filament_language_switch_locale') ??
+        $this->getBrowserLocale($request) ??
+        config('app.locale', 'en');
 
         if (array_key_exists($locale, config('filament-language-switch.locales'))) {
             app()->setLocale($locale);
         }
 
         return $next($request);
+    }
+
+    /**
+     * Determine the locale of the user's browser.
+     *
+     * @param Request $request
+     * @return ?string
+     */
+    private function getBrowserLocale(Request $request): ?string
+    {
+        $userLangs = preg_split('/[,;]/', $request->server('HTTP_ACCEPT_LANGUAGE'));
+        foreach ($userLangs as $locale) {
+            if (Arr::exists(config('filament-language-switch.locales'), $locale)) {
+                return $locale;
+            }
+        }
+
+        return null;
     }
 }
