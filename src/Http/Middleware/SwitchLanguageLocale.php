@@ -11,7 +11,7 @@ class SwitchLanguageLocale
     /**
      * Handle an incoming request.
      *
-     * @param \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse) $next
+     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next)
@@ -32,7 +32,6 @@ class SwitchLanguageLocale
     /**
      * Determine the locale of the user's browser.
      *
-     * @param Request $request
      * @return ?string
      */
     private function getBrowserLocale(Request $request): ?string
