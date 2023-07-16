@@ -28,7 +28,7 @@ class FilamentLanguageSwitchServiceProvider extends PluginServiceProvider
     {
         $this->registerSwitchLanguageMiddleware();
 
-        Filament::serving(fn () =>  FilamentLanguageSwitch::boot());
+        Filament::serving(fn () => FilamentLanguageSwitch::boot());
 
     }
 
