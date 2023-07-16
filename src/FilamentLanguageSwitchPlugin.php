@@ -2,8 +2,8 @@
 
 namespace BezhanSalleh\FilamentLanguageSwitch;
 
-use Filament\Panel;
 use Filament\Contracts\Plugin;
+use Filament\Panel;
 use Illuminate\Support\Facades\Blade;
 
 class FilamentLanguageSwitchPlugin implements Plugin
