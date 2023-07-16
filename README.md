@@ -124,6 +124,15 @@ Optionally, you can publish the views using
 php artisan vendor:publish --tag="filament-language-switch-views"
 ```
 
+## Configure the **Render Hook**
+You can render the the **Language Switch** in any of the [Render Hooks](https://filamentphp.com/docs/2.x/admin/appearance#render-hooks) available in Filamentphp using the following method inside a service provider's `boot()` method.
+
+```php
+public function boot(): void
+{
+    FilamentLanguageSwitch::configureUsing(fn(FilamentLanguageSwitch $switch) => $switch->setRenderHookName('user-menu.account.before'));
+}
+```
 
 ## Changelog
 
