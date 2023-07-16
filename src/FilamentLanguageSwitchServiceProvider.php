@@ -2,19 +2,18 @@
 
 namespace BezhanSalleh\FilamentLanguageSwitch;
 
-use BezhanSalleh\FilamentLanguageSwitch\Http\Middleware\SwitchLanguageLocale;
+use Livewire\Livewire;
 use Filament\Facades\Filament;
-use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\PluginServiceProvider;
+use Filament\Support\Assets\Css;
 use Spatie\LaravelPackageTools\Package;
+use Filament\Support\Facades\FilamentAsset;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use BezhanSalleh\FilamentLanguageSwitch\Http\Middleware\SwitchLanguageLocale;
 
-class FilamentLanguageSwitchServiceProvider extends PluginServiceProvider
+class FilamentLanguageSwitchServiceProvider extends PackageServiceProvider
 {
     public static string $name = 'filament-language-switch';
-
-    protected array $styles = [
-        'filament-language-switch-styles' => __DIR__.'/../resources/dist/filament-language-switch.css',
-    ];
 
     public function configurePackage(Package $package): void
     {
@@ -28,13 +27,16 @@ class FilamentLanguageSwitchServiceProvider extends PluginServiceProvider
     {
         $this->registerSwitchLanguageMiddleware();
 
-        Filament::serving(fn () => FilamentLanguageSwitch::boot());
+        Livewire::component('switch-filament-language', Http\Livewire\SwitchFilamentLanguage::class);
 
+        FilamentAsset::register([
+            Css::make('filament-language-switch', __DIR__ . '/../resources/dist/filament-language-switch.css'),
+        ], 'bezhansalleh/filament-language-switch');
     }
 
     public function registerSwitchLanguageMiddleware(): void
     {
-        $middlewareStack = config('filament.middleware.base');
+        $middlewareStack = Filament::getCurrentPanel()->getMiddleware();
         $switchLanguageIndex = array_search(SwitchLanguageLocale::class, $middlewareStack);
         $dispatchServingFilamentEventIndex = array_search(DispatchServingFilamentEvent::class, $middlewareStack);
 
@@ -46,7 +48,7 @@ class FilamentLanguageSwitchServiceProvider extends PluginServiceProvider
 
             array_splice($middlewareStack, $dispatchServingFilamentEventIndex, 0, [SwitchLanguageLocale::class]);
 
-            config(['filament.middleware.base' => $middlewareStack]);
+            Filament::getCurrentPanel()->middleware($middlewareStack);
         }
     }
 }

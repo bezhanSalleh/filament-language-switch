@@ -1,4 +1,3 @@
-
 <a href="https://github.com/bezhansalleh/filament-language-switch">
 <img style="width: 100%; max-width: 100%;" alt="filament-shield-art" src="https://banners.beyondco.de/Filament%20Language%20Switch.png?theme=light&packageManager=composer+require&packageName=bezhansalleh%2Ffilament-language-switch&pattern=topography&style=style_2&description=Zero+config+Language+Switcher+for+Filamentphp&md=1&showWatermark=0&fontSize=125px&images=translate" >
 </a>
@@ -78,7 +77,7 @@ return [
     | If set to true, the following package needs to be installed via composer.
     | "composer require stijnvanouplines/blade-country-flags"
     */
-    
+
     'flag' => false,
 
     /*
@@ -109,14 +108,13 @@ return [
         ...
     ]
 ];
-     
+
 ```
+
 That's it, everything is now ready to be deployed.
 
 > **Note**
 > You can find the supported country flag codes here [flag codes](https://flagicons.lipis.dev/)
-
-
 
 Optionally, you can publish the views using
 
@@ -125,6 +123,7 @@ php artisan vendor:publish --tag="filament-language-switch-views"
 ```
 
 ## Configure the **Render Hook**
+
 You can render the the **Language Switch** in any of the [Render Hooks](https://filamentphp.com/docs/2.x/admin/appearance#render-hooks) available in Filamentphp using the following method inside a service provider's `boot()` method.
 
 ```php
@@ -142,10 +141,10 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 
 If you want to contribute to this packages, you may want to test it in a real Filament project:
 
-- Fork this repository to your GitHub account.
-- Create a Filament app locally.
-- Clone your fork in your Filament app's root directory.
-- In the `/filament-language-switch` directory, create a branch for your fix, e.g. `fix/error-message`.
+-   Fork this repository to your GitHub account.
+-   Create a Filament app locally.
+-   Clone your fork in your Filament app's root directory.
+-   In the `/filament-language-switch` directory, create a branch for your fix, e.g. `fix/error-message`.
 
 Install the packages in your app's `composer.json`:
 
@@ -171,8 +170,8 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Credits
 
-- [Bezhan Salleh](https://github.com/bezhanSalleh)
-- [All Contributors](../../contributors)
+-   [Bezhan Salleh](https://github.com/bezhanSalleh)
+-   [All Contributors](../../contributors)
 
 ## License
 

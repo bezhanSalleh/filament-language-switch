@@ -1,4 +1,4 @@
-<x-filament::dropdown placement="bottom-end">
+<x-filament::dropdown placement="bottom-end" class="filament-user-menu">
     <style>
         .filament-dropdown-list-item-label {
             display: flex;
@@ -6,18 +6,15 @@
             align-items: center;
         }
     </style>
-    <x-slot name="trigger" @class([
-        'ml-4' => __('filament::layout.direction') === 'ltr',
-        'mr-4' => __('filament::layout.direction') === 'rtl',
-    ])>
+    <x-slot name="trigger" class="ms-4">
         <div
-            class="flex items-center justify-center w-10 h-10 font-semibold text-white bg-center bg-cover rounded-full language-switch-trigger bg-primary-500 dark:bg-gray-900">
+            class="flex items-center justify-center w-10 h-10 font-semibold text-white rounded-full language-switch-trigger bg-primary-500 dark:text-primary-600 dark:bg-gray-900 ">
             {{ \Illuminate\Support\Str::of(app()->getLocale())->length() > 2
                 ? \Illuminate\Support\Str::of(app()->getLocale())->substr(0, 2)->upper()
                 : \Illuminate\Support\Str::of(app()->getLocale())->upper() }}
         </div>
     </x-slot>
-    <x-filament::dropdown.list class="">
+    <x-filament::dropdown.list class="!border-t-0">
         @foreach (config('filament-language-switch.locales') as $key => $locale)
             @if (!app()->isLocale($key))
                 <x-filament::dropdown.list.item wire:click="changeLocale('{{ $key }}')" tag="button">
