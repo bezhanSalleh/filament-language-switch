@@ -2,6 +2,25 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## 1.0.8 - 2023-07-16
+
+### What's Changed
+
+- Added the ability to configure and customize the render Hook
+- Bump dependabot/fetch-metadata from 1.3.6 to 1.4.0 by @dependabot in https://github.com/bezhanSalleh/filament-language-switch/pull/26
+- Bump dependabot/fetch-metadata from 1.4.0 to 1.5.1 by @dependabot in https://github.com/bezhanSalleh/filament-language-switch/pull/31
+- Bump aglipanci/laravel-pint-action from 2.2.0 to 2.3.0 by @dependabot in https://github.com/bezhanSalleh/filament-language-switch/pull/30
+- Bump dependabot/fetch-metadata from 1.5.1 to 1.6.0 by @dependabot in https://github.com/bezhanSalleh/filament-language-switch/pull/34
+- Determine the locale of the user's browser. by @nikosid in https://github.com/bezhanSalleh/filament-language-switch/pull/27
+- Fix Request a feature issue template by @ziming in https://github.com/bezhanSalleh/filament-language-switch/pull/32
+
+### New Contributors
+
+- @nikosid made their first contribution in https://github.com/bezhanSalleh/filament-language-switch/pull/27
+- @ziming made their first contribution in https://github.com/bezhanSalleh/filament-language-switch/pull/32
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/1.0.7...1.0.8
+
 ## 1.0.7 - 2023-04-17
 
 ### What's Changed
