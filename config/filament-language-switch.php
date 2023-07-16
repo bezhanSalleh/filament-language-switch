@@ -24,7 +24,7 @@ return [
     | "composer require stijnvanouplines/blade-country-flags"
     */
 
-    'flag' => false,
+    'flag' => true,
 
     /*
     |--------------------------------------------------------------------------

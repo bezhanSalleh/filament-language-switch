@@ -11,6 +11,8 @@ class FilamentLanguageSwitch
 {
     use Configurable;
 
+    protected string $renderHookName = 'global-search.end';
+
     public static function boot(): void
     {
         $self = new static();
@@ -22,8 +24,18 @@ class FilamentLanguageSwitch
     {
         Livewire::component('switch-filament-language', Http\Livewire\SwitchFilamentLanguage::class);
         Filament::registerRenderHook(
-            'global-search.end',
+            $this->getRenderHookName(),
             fn (): string => Blade::render("@livewire('switch-filament-language')")
         );
+    }
+
+    public function setRenderHookName(string $name): void
+    {
+        $this->renderHookName = $name;
+    }
+
+    public function getRenderHookName(): string
+    {
+        return $this->renderHookName;
     }
 }
