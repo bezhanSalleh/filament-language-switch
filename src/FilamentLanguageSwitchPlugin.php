@@ -2,6 +2,7 @@
 
 namespace BezhanSalleh\FilamentLanguageSwitch;
 
+use BezhanSalleh\FilamentLanguageSwitch\Http\Middleware\SwitchLanguageLocale;
 use Filament\Contracts\Plugin;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Panel;
