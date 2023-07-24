@@ -13,7 +13,8 @@ class SwitchFilamentLanguage extends Component
 
         cookie()->queue(cookie()->forever('filament_language_switch_locale', $locale));
 
-        $this->redirect(request()->header('Referer'));
+        $this->dispatch('filament-language-changed');
+
     }
 
     public function render(): View

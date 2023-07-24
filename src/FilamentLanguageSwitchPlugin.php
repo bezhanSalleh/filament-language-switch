@@ -2,18 +2,25 @@
 
 namespace BezhanSalleh\FilamentLanguageSwitch;
 
+use BezhanSalleh\FilamentLanguageSwitch\Http\Livewire\SwitchFilamentLanguage;
 use Filament\Contracts\Plugin;
-use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Panel;
+use Filament\Support\Concerns\Configurable;
 use Illuminate\Support\Facades\Blade;
+use Livewire\Livewire;
 
 class FilamentLanguageSwitchPlugin implements Plugin
 {
-    protected string $renderHookName = 'global-search.end';
+    use Configurable;
+
+    protected string $renderHookName = 'user-menu.start';
 
     public static function make(): static
     {
-        return app(static::class);
+        $static = app(static::class);
+        $static->configure();
+
+        return $static;
     }
 
     public function renderHookName(string $hookName): static
@@ -28,24 +35,9 @@ class FilamentLanguageSwitchPlugin implements Plugin
         return $this->renderHookName;
     }
 
-    public static function registerPluginMiddlewareBeforeDispatchServingFilamentEvent(Panel $panel): void
+    public static function get(): static
     {
-        $middleware = invade($panel)->middleware;
-
-        $switchLanguageLocaleMiddleware = SwitchLanguageLocale::class;
-        $dispatchServingFilamentEventMiddleware = DispatchServingFilamentEvent::class;
-
-        $switchLanguageLocaleIndex = array_search($switchLanguageLocaleMiddleware, $middleware);
-        $dispatchServingFilamentEventIndex = array_search($dispatchServingFilamentEventMiddleware, $middleware);
-
-        if ($switchLanguageLocaleIndex !== false && $dispatchServingFilamentEventIndex !== false) {
-            if ($switchLanguageLocaleIndex > $dispatchServingFilamentEventIndex) {
-                $middleware[$dispatchServingFilamentEventIndex] = $switchLanguageLocaleMiddleware;
-                $middleware[$switchLanguageLocaleIndex] = $dispatchServingFilamentEventMiddleware;
-            }
-        }
-
-        invade($panel)->middleware = $middleware;
+        return filament(app(static::class)->getId());
     }
 
     public function getId(): string
@@ -55,16 +47,13 @@ class FilamentLanguageSwitchPlugin implements Plugin
 
     public function register(Panel $panel): void
     {
+        Livewire::component('switch-filament-language', SwitchFilamentLanguage::class);
+
         $panel
             ->renderHook(
-                $this->getRenderHookName(),
-                fn (): string => Blade::render("@livewire('switch-filament-language')")
-            )
-            ->middleware([
-                SwitchLanguageLocale::class,
-            ]);
-
-        static::registerPluginMiddlewareBeforeDispatchServingFilamentEvent($panel);
+                name: $this->getRenderHookName(),
+                hook: fn (): string => Blade::render('@livewire(\'switch-filament-language\')')
+            );
     }
 
     public function boot(Panel $panel): void

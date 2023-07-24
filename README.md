@@ -26,6 +26,8 @@
 
 Zero config Language Switch(Changer/Localizer) plugin for Filamentphp Admin
 
+* For Filamentphp 2.x use version 1.x
+
 ## Installation
 
 Install the package via composer:
@@ -124,14 +126,33 @@ php artisan vendor:publish --tag="filament-language-switch-views"
 
 ## Configure the **Render Hook**
 
-You can render the the **Language Switch** in any of the [Render Hooks](https://filamentphp.com/docs/2.x/admin/appearance#render-hooks) available in Filamentphp using the following method inside a service provider's `boot()` method.
+You can render the **Language Switch** in any of the [Render Hooks](https://beta.filamentphp.com/docs/3.x/panels/configuration#render-hooks) available in Filamentphp using the `renderHookName()` method inside your panel's `plugins()` method.
 
 ```php
-public function boot(): void
+public function panel(Panel $panel): Panel
 {
-    FilamentLanguageSwitch::configureUsing(fn(FilamentLanguageSwitch $switch) => $switch->setRenderHookName('user-menu.account.before'));
+    return $panel
+        ...
+        ->plugins([
+            FilamentLanguageSwitchPlugin::make()
+                ->renderHookName('global-search.start'),
+        ])
+        ...
 }
 ```
+## Custom Theme
+By default the plugin uses the default theme of Filamentphp, but you can customize it by adding the plugins view path into the `content` array of your `tailwind.config.js` file:
+
+```php
+export default {
+    content: [
+        // ...
+        './vendor/bezhansalleh/filament-language-switch/resources/views/**/*.blade.php', // Language Switch Views
+    ],
+    // ...
+}
+```
+
 
 ## Changelog
 

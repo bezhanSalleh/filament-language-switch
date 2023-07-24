@@ -10,5 +10,8 @@
         "types_spaces": {
             "space": "single"
         }
-    }
+    },
+    "exclude": [
+        "build"
+    ]
 }
