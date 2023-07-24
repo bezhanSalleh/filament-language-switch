@@ -6,7 +6,7 @@
             align-items: center;
         }
     </style>
-    <x-slot name="trigger" class="ms-4">
+    <x-slot name="trigger">
         <div
             class="flex items-center justify-center w-9 h-9 font-semibold text-sm text-white rounded-full language-switch-trigger bg-primary-500 dark:text-primary-500 dark:bg-gray-900 ring-1 ring-inset ring-gray-950/10 dark:ring-white/20">
             {{ \Illuminate\Support\Str::of(app()->getLocale())->length() > 2
