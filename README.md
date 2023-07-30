@@ -124,6 +124,19 @@ Optionally, you can publish the views using
 php artisan vendor:publish --tag="filament-language-switch-views"
 ```
 
+## Usage
+Using the plugin is easy all you need to do is instanciate it to the `Panels` you want the plugin to be available in.
+```php
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        ...
+        ->plugins([
+            FilamentLanguageSwitchPlugin::make()
+        ])
+        ...
+}
+```
 ## Configure the **Render Hook**
 
 You can render the **Language Switch** in any of the [Render Hooks](https://beta.filamentphp.com/docs/3.x/panels/configuration#render-hooks) available in Filamentphp using the `renderHookName()` method inside your panel's `plugins()` method.
@@ -140,6 +153,7 @@ public function panel(Panel $panel): Panel
         ...
 }
 ```
+
 ## Custom Theme
 By default the plugin uses the default theme of Filamentphp, but you can customize it by adding the plugins view path into the `content` array of your `tailwind.config.js` file:
 

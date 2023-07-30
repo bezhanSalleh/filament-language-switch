@@ -15,6 +15,8 @@ class SwitchFilamentLanguage extends Component
 
         $this->dispatch('filament-language-changed');
 
+        $this->redirect(request()->header('Referer'));
+
     }
 
     public function render(): View

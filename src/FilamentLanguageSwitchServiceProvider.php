@@ -2,12 +2,14 @@
 
 namespace BezhanSalleh\FilamentLanguageSwitch;
 
-use BezhanSalleh\FilamentLanguageSwitch\Http\Middleware\SwitchLanguageLocale;
-use Filament\Facades\Filament;
-use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Panel;
+use Filament\Facades\Filament;
+use Filament\Support\Assets\Css;
 use Spatie\LaravelPackageTools\Package;
+use Filament\Support\Facades\FilamentAsset;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use BezhanSalleh\FilamentLanguageSwitch\Http\Middleware\SwitchLanguageLocale;
 
 class FilamentLanguageSwitchServiceProvider extends PackageServiceProvider
 {
@@ -29,8 +31,15 @@ class FilamentLanguageSwitchServiceProvider extends PackageServiceProvider
     public function registerPluginMiddleware(): void
     {
         collect(Filament::getPanels())
-            ->filter(fn ($panel) => in_array(static::$name, array_keys($panel->getPlugins()), true))
+            ->filter(fn ($panel) => $panel->hasPlugin(static::$name))
             ->each(fn ($panel) => $this->reorderCurrentPanelMiddlewareStack($panel));
+
+        FilamentAsset::register(
+            assets: [
+                Css::make('filament-language-switch', __DIR__ . '/../resources/dist/filament-language-switch.css'),
+            ],
+            package: 'bezhansalleh/filament-language-switch'
+        );
     }
 
     protected function reorderCurrentPanelMiddlewareStack(Panel $panel): void
