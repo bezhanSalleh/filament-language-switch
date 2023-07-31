@@ -1,17 +1,17 @@
-<a href="https://github.com/bezhansalleh/filament-language-switch">
+<a href="https://github.com/bezhansalleh/filament-language-switch" class="filament-hidden">
 <img style="width: 100%; max-width: 100%;" alt="filament-shield-art" src="https://banners.beyondco.de/Filament%20Language%20Switch.png?theme=light&packageManager=composer+require&packageName=bezhansalleh%2Ffilament-language-switch&pattern=topography&style=style_2&description=Zero+config+Language+Switcher+for+Filamentphp&md=1&showWatermark=0&fontSize=125px&images=translate" >
 </a>
-<p align="center">
+<p align="left">
     <a href="https://filamentadmin.com/docs/2.x/admin/installation">
         <img alt="FILAMENT 8.x" src="https://img.shields.io/badge/FILAMENT-2.x-EBB304?style=for-the-badge">
     </a>
     <a href="https://packagist.org/packages/bezhansalleh/filament-language-switch">
         <img alt="Packagist" src="https://img.shields.io/packagist/v/bezhansalleh/filament-language-switch.svg?style=for-the-badge&logo=packagist">
     </a>
-    <a href="https://github.com/bezhansalleh/filament-language-switch/actions?query=workflow%3Arun-tests+branch%3Amain">
+    <a href="https://github.com/bezhansalleh/filament-language-switch/actions?query=workflow%3Arun-tests+branch%3Amain" class="filament-hidden">
         <img alt="Tests Passing" src="https://img.shields.io/github/actions/workflow/status/bezhansalleh/filament-language-switch/run-tests.yml?style=for-the-badge&logo=github&label=tests">
     </a>
-    <a href="https://github.com/bezhansalleh/filament-language-switch/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain">
+    <a href="https://github.com/bezhansalleh/filament-language-switch/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain" class="filament-hidden">
         <img alt="Code Style Passing" src="https://img.shields.io/github/actions/workflow/status/bezhansalleh/filament-language-switch/run-laravel-pint.yml?style=for-the-badge&logo=github&label=code%20style">
     </a>
 
@@ -124,7 +124,7 @@ Optionally, you can publish the views using
 php artisan vendor:publish --tag="filament-language-switch-views"
 ```
 
-## Usage
+## Plugin Usage
 Using the plugin is easy all you need to do is instanciate it to the `Panels` you want the plugin to be available in.
 ```php
 public function panel(Panel $panel): Panel
@@ -137,7 +137,7 @@ public function panel(Panel $panel): Panel
         ...
 }
 ```
-## Configure the **Render Hook**
+## Customize Render Hook
 
 By default the switch render in the `panels::global-search.after` hook but you can render the **Language Switch** in any of the [Render Hooks](https://beta.filamentphp.com/docs/3.x/panels/configuration#render-hooks) available in Filamentphp using the `renderHookName()` method inside your panel's `plugins()` method.
 
