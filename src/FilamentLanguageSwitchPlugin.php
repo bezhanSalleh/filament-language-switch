@@ -13,7 +13,7 @@ class FilamentLanguageSwitchPlugin implements Plugin
 {
     use Configurable;
 
-    protected string $renderHookName = 'panels::global-search.end';
+    protected string $renderHookName = 'panels::global-search.after';
 
     public static function make(): static
     {

@@ -139,7 +139,7 @@ public function panel(Panel $panel): Panel
 ```
 ## Configure the **Render Hook**
 
-You can render the **Language Switch** in any of the [Render Hooks](https://beta.filamentphp.com/docs/3.x/panels/configuration#render-hooks) available in Filamentphp using the `renderHookName()` method inside your panel's `plugins()` method.
+By default the switch render in the `panels::global-search.after` hook but you can render the **Language Switch** in any of the [Render Hooks](https://beta.filamentphp.com/docs/3.x/panels/configuration#render-hooks) available in Filamentphp using the `renderHookName()` method inside your panel's `plugins()` method.
 
 ```php
 public function panel(Panel $panel): Panel
@@ -148,7 +148,7 @@ public function panel(Panel $panel): Panel
         ...
         ->plugins([
             FilamentLanguageSwitchPlugin::make()
-                ->renderHookName('global-search.start'),
+                ->renderHookName('panels::global-search.before'),
         ])
         ...
 }
