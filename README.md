@@ -1,5 +1,7 @@
 <a href="https://github.com/bezhansalleh/filament-language-switch" class="filament-hidden">
-<img style="width: 100%; max-width: 100%;" alt="filament-shield-art" src="https://banners.beyondco.de/Filament%20Language%20Switch.png?theme=light&packageManager=composer+require&packageName=bezhansalleh%2Ffilament-language-switch&pattern=topography&style=style_2&description=Zero+config+Language+Switcher+for+Filamentphp&md=1&showWatermark=0&fontSize=125px&images=translate" >
+
+![Filament Language Switch](./.github/banner.jpg?raw=true "Filament Language Switch")
+
 </a>
 <p align="left">
     <a href="https://filamentadmin.com/docs/2.x/admin/installation">
@@ -42,78 +44,7 @@ Publish the config file with:
 php artisan vendor:publish --tag="filament-language-switch-config"
 ```
 
-Set your preferred options:
-
-```php
-<?php
-
-return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Carbon Locale(Language)
-    |--------------------------------------------------------------------------
-    |
-    | Option to whether change the language for carbon library or not.
-    |
-    */
-    'carbon' => true,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Language display name
-    |--------------------------------------------------------------------------
-    |
-    | Option to whether display the language in English or Native.
-    |
-    */
-    'native' => true,
-
-/*
-    |--------------------------------------------------------------------------
-    | Flag
-    |--------------------------------------------------------------------------
-    |
-    | Option to display flag for the Language.
-    | By default the first and second letter of the display name (if single word, otherwise first letter of first two words) will be used instead of flag.
-    | If set to true, the following package needs to be installed via composer.
-    | "composer require stijnvanouplines/blade-country-flags"
-    */
-
-    'flag' => false,
-
-    /*
-    |--------------------------------------------------------------------------
-    | All Locales (Languages)
-    |--------------------------------------------------------------------------
-    |
-    | Uncomment the languages that your site supports - or add new ones.
-    | These are sorted by the native name, which is the order you might show them in a language selector.
-    |
-    */
-
-    'locales' => [
-        'ar'          => ['name' => 'Arabic',                 'script' => 'Arab', 'native' => 'العربية', 'flag_code' => 'sa'],
-        'en'          => ['name' => 'English',                'script' => 'Latn', 'native' => 'English', 'flag_code' => 'us'],
-        // 'fr'          => ['name' => 'French',                 'script' => 'Latn', 'native' => 'français', 'flag_code' => 'fr'],
-
-        // 'ace'         => ['name' => 'Achinese',               'script' => 'Latn', 'native' => 'Aceh', 'flag_code' => '' ],
-        //'af'          => ['name' => 'Afrikaans',              'script' => 'Latn', 'native' => 'Afrikaans', 'flag_code' => '' ],
-        //'agq'         => ['name' => 'Aghem',                  'script' => 'Latn', 'native' => 'Aghem', 'flag_code' => '' ],
-        //'ak'          => ['name' => 'Akan',                   'script' => 'Latn', 'native' => 'Akan', 'flag_code' => '' ],
-        //'an'          => ['name' => 'Aragonese',              'script' => 'Latn', 'native' => 'aragonés', 'flag_code' => '' ],
-        //'cch'         => ['name' => 'Atsam',                  'script' => 'Latn', 'native' => 'Atsam', 'flag_code' => '' ],
-        //'gn'          => ['name' => 'Guaraní',                'script' => 'Latn', 'native' => 'Avañe’ẽ', 'flag_code' => '' ],
-        //'ae'          => ['name' => 'Avestan',                'script' => 'Latn', 'native' => 'avesta', 'flag_code' => '' ],
-        //'ay'          => ['name' => 'Aymara',                 'script' => 'Latn', 'native' => 'aymar aru', 'flag_code' => '' ],
-        //'az'          => ['name' => 'Azerbaijani (Latin)',    'script' => 'Latn', 'native' => 'azərbaycanca', 'flag_code' => '' ],
-        ...
-    ]
-];
-
-```
-
-That's it, everything is now ready to be deployed.
+Configure your preferred options and then register the plugin to your panel(s).
 
 > **Note**
 > You can find the supported country flag codes here [flag codes](https://flagicons.lipis.dev/)
@@ -161,7 +92,7 @@ By default the plugin uses the default theme of Filamentphp, but you can customi
 export default {
     content: [
         // ...
-        './vendor/bezhansalleh/filament-language-switch/resources/views/**/*.blade.php', // Language Switch Views
+        './vendor/bezhansalleh/filament-language-switch/resources/views/language-switch.blade.php',
     ],
     // ...
 }
