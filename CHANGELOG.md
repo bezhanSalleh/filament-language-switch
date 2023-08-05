@@ -2,6 +2,20 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## 2.0.1 - 2023-08-05
+
+### What's Changed
+
+- Fixing dropdown cropped on safari by @dev3k in https://github.com/bezhanSalleh/filament-language-switch/pull/38
+- Fixed test action
+- Added the new banner
+
+### New Contributors
+
+- @dev3k made their first contribution in https://github.com/bezhanSalleh/filament-language-switch/pull/38
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/2.0.0...2.0.1
+
 ## 2.0.0 - 2023-08-01
 
 **What's new in 2.0.0?**
