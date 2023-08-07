@@ -8,7 +8,7 @@
 @endphp
 
 @if($plugin->shouldShowSelector())
-    <x-filament::dropdown placement="bottom-end" class="fi-dropdown fi-user-menu">
+    <x-filament::dropdown teleport placement="bottom-end" class="fi-dropdown fi-user-menu">
         <style>
             .filament-dropdown-list-item-label {
                 display: flex;
