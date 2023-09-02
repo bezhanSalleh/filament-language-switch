@@ -179,7 +179,7 @@ return [
         //'nds'         => ['name' => 'Low German',             'script' => 'Latn', 'native' => 'Plattdüütsch', 'flag_code' => '' ],
         //'pl'          => ['name' => 'Polish',                 'script' => 'Latn', 'native' => 'polski', 'flag_code' => '' ],
         //'pt'          => ['name' => 'Portuguese',             'script' => 'Latn', 'native' => 'português', 'flag_code' => '' ],
-        //'pt-BR'       => ['name' => 'Brazilian Portuguese',   'script' => 'Latn', 'native' => 'português do Brasil', 'flag_code' => '' ],
+        //'pt_br'       => ['name' => 'Brazilian Portuguese',   'script' => 'Latn', 'native' => 'português do Brasil', 'flag_code' => '' ],
         //'ff'          => ['name' => 'Fulah',                  'script' => 'Latn', 'native' => 'Pulaar', 'flag_code' => '' ],
         //'pi'          => ['name' => 'Pahari-Potwari',         'script' => 'Latn', 'native' => 'Pāli', 'flag_code' => '' ],
         //'aa'          => ['name' => 'Afar',                   'script' => 'Latn', 'native' => 'Qafar', 'flag_code' => '' ],
