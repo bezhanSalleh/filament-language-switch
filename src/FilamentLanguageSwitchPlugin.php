@@ -14,6 +14,7 @@ class FilamentLanguageSwitchPlugin implements Plugin
     use Configurable;
 
     protected string $renderHookName = 'panels::global-search.after';
+    protected bool $visible = true;
 
     public static function make(): static
     {
@@ -21,6 +22,13 @@ class FilamentLanguageSwitchPlugin implements Plugin
         $static->configure();
 
         return $static;
+    }
+
+    public function visible($visible): static
+    {
+        $this->visible = $visible;
+
+        return $this;
     }
 
     public function renderHookName(string $hookName): static
@@ -49,11 +57,13 @@ class FilamentLanguageSwitchPlugin implements Plugin
     {
         Livewire::component('switch-filament-language', SwitchFilamentLanguage::class);
 
-        $panel
-            ->renderHook(
-                name: $this->getRenderHookName(),
-                hook: fn (): string => Blade::render('@livewire(\'switch-filament-language\')')
-            );
+        if ($this->visible) {
+            $panel
+                ->renderHook(
+                    name: $this->getRenderHookName(),
+                    hook: fn (): string => Blade::render('@livewire(\'switch-filament-language\')')
+                );
+        }
     }
 
     public function boot(Panel $panel): void
