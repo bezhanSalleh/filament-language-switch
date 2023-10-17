@@ -58,6 +58,8 @@ php artisan vendor:publish --tag="filament-language-switch-views"
 ## Plugin Usage
 Using the plugin is easy all you need to do is instanciate it to the `Panels` you want the plugin to be available in.
 ```php
+use BezhanSalleh\FilamentLanguageSwitch\FilamentLanguageSwitchPlugin;
+
 public function panel(Panel $panel): Panel
 {
     return $panel
@@ -73,6 +75,8 @@ public function panel(Panel $panel): Panel
 By default the switch render in the `panels::global-search.after` hook but you can render the **Language Switch** in any of the [Render Hooks](https://beta.filamentphp.com/docs/3.x/panels/configuration#render-hooks) available in Filamentphp using the `renderHookName()` method inside your panel's `plugins()` method.
 
 ```php
+use BezhanSalleh\FilamentLanguageSwitch\FilamentLanguageSwitchPlugin;
+
 public function panel(Panel $panel): Panel
 {
     return $panel
