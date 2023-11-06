@@ -83,7 +83,7 @@ public function panel(Panel $panel): Panel
         ...
         ->plugins([
             FilamentLanguageSwitchPlugin::make()
-                ->renderHookName('panels::global-search.before'),
+                ->renderHookName('panels::global-search.end'),
         ])
         ...
 }
