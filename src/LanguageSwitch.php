@@ -7,8 +7,8 @@ namespace BezhanSalleh\FilamentLanguageSwitch;
 use Closure;
 use Filament\Panel;
 use Filament\Support\Concerns;
-use Illuminate\Support\Facades\Blade;
 use Filament\Support\Facades\FilamentView;
+use Illuminate\Support\Facades\Blade;
 
 class LanguageSwitch
 {
@@ -17,7 +17,7 @@ class LanguageSwitch
 
     protected bool | Closure $isCircular = false;
 
-    protected null | string $displayLocale = null;
+    protected ?string $displayLocale = null;
 
     protected array | Closure $excludes = [];
 
@@ -122,7 +122,7 @@ class LanguageSwitch
     {
         $flagUrls = (array) $this->evaluate($this->flags);
 
-        foreach($flagUrls as $url) {
+        foreach ($flagUrls as $url) {
             if (! filter_var($url, FILTER_VALIDATE_URL)) {
                 throw new \Exception('Invlid flag url');
                 exit;

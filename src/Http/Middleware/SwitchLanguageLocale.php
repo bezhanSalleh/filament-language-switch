@@ -2,13 +2,13 @@
 
 namespace BezhanSalleh\FilamentLanguageSwitch\Http\Middleware;
 
+use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
 use Closure;
 use Illuminate\Http\Request;
-use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
 
 class SwitchLanguageLocale
 {
-    public function handle(Request $request, Closure $next): \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+    public function handle(Request $request, Closure $next): \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse
     {
         $locale = session()->get('locale')
             ?? $request->get('locale')
