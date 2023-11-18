@@ -2,14 +2,17 @@
 
 namespace BezhanSalleh\FilamentLanguageSwitch;
 
-use BezhanSalleh\FilamentLanguageSwitch\Http\Middleware\SwitchLanguageLocale;
-use Filament\Facades\Filament;
-use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Panel;
+use Livewire\Livewire;
+use Filament\Facades\Filament;
 use Filament\Support\Assets\Css;
-use Filament\Support\Facades\FilamentAsset;
 use Spatie\LaravelPackageTools\Package;
+use Filament\Support\Facades\FilamentAsset;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
+use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use BezhanSalleh\FilamentLanguageSwitch\Http\Livewire\FilamentLanguageSwitch;
+use BezhanSalleh\FilamentLanguageSwitch\Http\Middleware\SwitchLanguageLocale;
 
 class FilamentLanguageSwitchServiceProvider extends PackageServiceProvider
 {
@@ -26,13 +29,8 @@ class FilamentLanguageSwitchServiceProvider extends PackageServiceProvider
     public function packageBooted(): void
     {
         $this->registerPluginMiddleware();
-    }
 
-    public function registerPluginMiddleware(): void
-    {
-        collect(Filament::getPanels())
-            ->filter(fn ($panel) => $panel->hasPlugin(static::$name))
-            ->each(fn ($panel) => $this->reorderCurrentPanelMiddlewareStack($panel));
+        Livewire::component('filament-language-switch', FilamentLanguageSwitch::class);
 
         FilamentAsset::register(
             assets: [
@@ -40,6 +38,16 @@ class FilamentLanguageSwitchServiceProvider extends PackageServiceProvider
             ],
             package: 'bezhansalleh/filament-language-switch'
         );
+
+        Filament::serving(function () {
+            LanguageSwitch::boot();
+        });
+    }
+
+    public function registerPluginMiddleware(): void
+    {
+        collect(LanguageSwitch::make()->getPanels())
+            ->each(fn ($panel) => $this->reorderCurrentPanelMiddlewareStack($panel));
     }
 
     protected function reorderCurrentPanelMiddlewareStack(Panel $panel): void

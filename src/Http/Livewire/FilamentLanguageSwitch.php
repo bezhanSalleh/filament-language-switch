@@ -2,10 +2,11 @@
 
 namespace BezhanSalleh\FilamentLanguageSwitch\Http\Livewire;
 
-use Illuminate\Contracts\View\View;
 use Livewire\Component;
+use Illuminate\Contracts\View\View;
+use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
 
-class SwitchFilamentLanguage extends Component
+class FilamentLanguageSwitch extends Component
 {
     public function changeLocale($locale)
     {
@@ -21,6 +22,8 @@ class SwitchFilamentLanguage extends Component
 
     public function render(): View
     {
-        return view('filament-language-switch::language-switch');
+        return view('filament-language-switch::language-switch', [
+            'languageSwitch' => LanguageSwitch::make()
+        ]);
     }
 }
