@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BezhanSalleh\FilamentLanguageSwitch;
 
+use BezhanSalleh\FilamentLanguageSwitch\Enums\Alignment;
 use Closure;
 use Filament\Panel;
 use Filament\Support\Concerns;
@@ -15,19 +16,25 @@ class LanguageSwitch
     use Concerns\Configurable;
     use Concerns\EvaluatesClosures;
 
-    protected bool | Closure $isCircular = false;
-
     protected ?string $displayLocale = null;
+
+    protected array | Closure | null $displayOn = null;
+
+    protected string | Closure $displayOnRenderHook = 'panels::body.end';
 
     protected array | Closure $excludes = [];
 
     protected array | Closure $flags = [];
+
+    protected bool | Closure $isCircular = false;
 
     protected bool $isFlagsOnly = false;
 
     protected array | Closure $labels = [];
 
     protected array | Closure $locales = [];
+
+    protected ?Alignment $placement = null;
 
     protected Closure | string $renderHook = 'panels::global-search.after';
 
@@ -50,6 +57,13 @@ class LanguageSwitch
             name: $static->getRenderHook(),
             hook: fn (): string => Blade::render('@livewire(\'filament-language-switch\')')
         );
+
+        if ($static->isDisplayOn()) {
+            FilamentView::registerRenderHook(
+                name: $static->getDisplayOnRenderHook(),
+                hook: fn (): string => Blade::render('@livewire(\'filament-language-switch\')')
+            );
+        }
     }
 
     public function circular(bool $condition = true): static
@@ -62,6 +76,25 @@ class LanguageSwitch
     public function displayLocale(string $locale = 'en'): static
     {
         $this->displayLocale = $locale;
+
+        return $this;
+    }
+
+    public function displayOn(array | Closure $routes = null): static
+    {
+        $this->displayOn = $routes ?? [
+            'auth.login',
+            'auth.password',
+            'auth.profile',
+            'auth.register',
+        ];
+
+        return $this;
+    }
+
+    public function displayOnRenderHook(string | Closure $hook): static
+    {
+        $this->displayOnRenderHook = $hook;
 
         return $this;
     }
@@ -101,9 +134,16 @@ class LanguageSwitch
         return $this;
     }
 
-    public function renderHook(array | Closure $renderHook): static
+    public function placement(Alignment $alignment): static
     {
-        $this->renderHook = $renderHook;
+        $this->placement = $alignment;
+
+        return $this;
+    }
+
+    public function renderHook(string $hook): static
+    {
+        $this->renderHook = $hook;
 
         return $this;
     }
@@ -111,6 +151,11 @@ class LanguageSwitch
     public function getDisplayLocale(): string
     {
         return (string) $this->evaluate($this->displayLocale);
+    }
+
+    public function getDisplayOnRenderHook(): string
+    {
+        return (string) $this->evaluate($this->displayOnRenderHook);
     }
 
     public function getExcludes(): array
@@ -142,6 +187,11 @@ class LanguageSwitch
         return (bool) $this->evaluate($this->isFlagsOnly) && filled($this->getFlags());
     }
 
+    public function isDisplayOn(): bool
+    {
+        return str(request()->route()->getName())->contains($this->displayOn);
+    }
+
     public function getLabels(): array
     {
         return (array) $this->evaluate($this->labels);
@@ -150,6 +200,11 @@ class LanguageSwitch
     public function getLocales(): array
     {
         return (array) $this->evaluate(filled($this->locales) ? $this->locales : ['ar', config('app.locale'), 'fr']);
+    }
+
+    public function getPlacement(): Alignment
+    {
+        return $this->placement ?? Alignment::TopRight;
     }
 
     public function getRenderHook(): string

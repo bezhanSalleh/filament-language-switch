@@ -6,4 +6,9 @@
     .flags-only {
         max-width: 3rem !important;
     }
+
+    .fls-dropdown-width {
+        width: 8rem !important;
+        max-width: fit-content !important;
+    }
 }
