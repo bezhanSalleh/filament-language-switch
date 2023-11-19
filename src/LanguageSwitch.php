@@ -20,8 +20,6 @@ class LanguageSwitch
 
     protected array | Closure | null $displayOn = null;
 
-    protected string | Closure $displayOnRenderHook = 'panels::body.end';
-
     protected array | Closure $excludes = [];
 
     protected array | Closure $flags = [];
@@ -60,7 +58,7 @@ class LanguageSwitch
 
         if ($static->isDisplayOn()) {
             FilamentView::registerRenderHook(
-                name: $static->getDisplayOnRenderHook(),
+                name: 'panels::body.end',
                 hook: fn (): string => Blade::render('@livewire(\'filament-language-switch\')')
             );
         }
@@ -88,13 +86,6 @@ class LanguageSwitch
             'auth.profile',
             'auth.register',
         ];
-
-        return $this;
-    }
-
-    public function displayOnRenderHook(string | Closure $hook): static
-    {
-        $this->displayOnRenderHook = $hook;
 
         return $this;
     }
@@ -151,11 +142,6 @@ class LanguageSwitch
     public function getDisplayLocale(): string
     {
         return (string) $this->evaluate($this->displayLocale);
-    }
-
-    public function getDisplayOnRenderHook(): string
-    {
-        return (string) $this->evaluate($this->displayOnRenderHook);
     }
 
     public function getExcludes(): array
