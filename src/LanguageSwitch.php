@@ -82,7 +82,7 @@ class LanguageSwitch
         return $this;
     }
 
-    public function displayLocale(string | null $locale = null): static
+    public function displayLocale(string $locale = null): static
     {
         $this->displayLocale = $locale ?? app()->getLocale();
 
@@ -255,8 +255,8 @@ class LanguageSwitch
     public function getLabel(string $locale): string
     {
         return $this->labels[$locale] ?? str(locale_get_display_name($locale, $this->getDisplayLocale()))
-                ->title()
-                ->toString();
+            ->title()
+            ->toString();
     }
 
     public function isCurrentPanelIncluded(): bool
