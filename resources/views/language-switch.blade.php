@@ -4,17 +4,17 @@
     $isCircular = $languageSwitch->isCircular();
     $isFlagsOnly = $languageSwitch->isFlagsOnly();
     $hasFlags = filled($languageSwitch->getFlags());
-    $isDisplayOn = $languageSwitch->isDisplayOn();
-    $alignment = $languageSwitch->getPlacement()->value;
+    $isVisibleOutsidePanels = $languageSwitch->isVisibleOutsidePanels();
+    $alignment = $languageSwitch->getOutsidePanelPlacement()->value;
     $placement = match(true){
         $alignment === 'top-center' && $isFlagsOnly => 'bottom',
         $alignment === 'bottom-center' && $isFlagsOnly => 'top',
-        ! $isDisplayOn && $isFlagsOnly=> 'bottom',
+        ! $isVisibleOutsidePanels && $isFlagsOnly=> 'bottom',
         default => 'bottom-end',
     };
 @endphp
 <div>
-    @if ($isDisplayOn)
+    @if ($isVisibleOutsidePanels)
         <div @class([
             'fls-display-on fixed w-full flex p-4 z-50',
             'top-0' => str_contains($alignment, 'top'),

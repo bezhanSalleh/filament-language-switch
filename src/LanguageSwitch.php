@@ -6,6 +6,7 @@ namespace BezhanSalleh\FilamentLanguageSwitch;
 
 use BezhanSalleh\FilamentLanguageSwitch\Enums\Alignment;
 use Closure;
+use Exception;
 use Filament\Panel;
 use Filament\Support\Concerns;
 use Filament\Support\Facades\FilamentView;
@@ -18,7 +19,7 @@ class LanguageSwitch
 
     protected ?string $displayLocale = null;
 
-    protected array | Closure | null $displayOn = null;
+    protected array | Closure | null $outsidePanelRoutes = null;
 
     protected array | Closure $excludes = [];
 
@@ -32,7 +33,11 @@ class LanguageSwitch
 
     protected array | Closure $locales = [];
 
-    protected ?Alignment $placement = null;
+    protected ?Alignment $outsidePanelPlacement = null;
+
+    protected bool | Closure $visibleInsidePanels = false;
+
+    protected bool | Closure $visibleOutsidePanels = false;
 
     protected Closure | string $renderHook = 'panels::global-search.after';
 
@@ -40,7 +45,11 @@ class LanguageSwitch
     {
         $static = app(static::class);
 
+        $static->visible();
+
         $static->displayLocale();
+
+        $static->outsidePanelRoutes();
 
         $static->configure();
 
@@ -51,12 +60,14 @@ class LanguageSwitch
     {
         $static = static::make();
 
-        FilamentView::registerRenderHook(
-            name: $static->getRenderHook(),
-            hook: fn (): string => Blade::render('<livewire:filament-language-switch key=\'fls-in-panels\' />')
-        );
+        if ($static->isVisibleInsidePanels()) {
+            FilamentView::registerRenderHook(
+                name: $static->getRenderHook(),
+                hook: fn (): string => Blade::render('<livewire:filament-language-switch key=\'fls-in-panels\' />')
+            );
+        }
 
-        if ($static->isDisplayOn()) {
+        if ($static->isVisibleOutsidePanels()) {
             FilamentView::registerRenderHook(
                 name: 'panels::body.end',
                 hook: fn (): string => Blade::render('<livewire:filament-language-switch key=\'fls-outside-panels\' />')
@@ -71,18 +82,17 @@ class LanguageSwitch
         return $this;
     }
 
-    public function displayLocale(string $locale = 'en'): static
+    public function displayLocale(string | null $locale = null): static
     {
-        $this->displayLocale = $locale;
+        $this->displayLocale = $locale ?? app()->getLocale();
 
         return $this;
     }
 
-    public function displayOn(array | Closure $routes = null): static
+    public function outsidePanelRoutes(array | Closure $routes = null): static
     {
-        $this->displayOn = $routes ?? [
+        $this->outsidePanelRoutes = $routes ?? [
             'auth.login',
-            'auth.password',
             'auth.profile',
             'auth.register',
         ];
@@ -125,9 +135,9 @@ class LanguageSwitch
         return $this;
     }
 
-    public function placement(Alignment $alignment): static
+    public function outsidePanelPlacement(Alignment $alignment): static
     {
-        $this->placement = $alignment;
+        $this->outsidePanelPlacement = $alignment;
 
         return $this;
     }
@@ -135,6 +145,15 @@ class LanguageSwitch
     public function renderHook(string $hook): static
     {
         $this->renderHook = $hook;
+
+        return $this;
+    }
+
+    public function visible(bool | Closure $insidePanels = true, bool | Closure $outsidePanels = false): static
+    {
+        $this->visibleInsidePanels = $insidePanels;
+
+        $this->visibleOutsidePanels = $outsidePanels;
 
         return $this;
     }
@@ -149,13 +168,16 @@ class LanguageSwitch
         return (array) $this->evaluate($this->excludes);
     }
 
+    /**
+     * @throws Exception
+     */
     public function getFlags(): array
     {
         $flagUrls = (array) $this->evaluate($this->flags);
 
         foreach ($flagUrls as $url) {
             if (! filter_var($url, FILTER_VALIDATE_URL)) {
-                throw new \Exception('Invlid flag url');
+                throw new \Exception('Invalid flag url');
                 exit;
             }
         }
@@ -168,14 +190,26 @@ class LanguageSwitch
         return (bool) $this->evaluate($this->isCircular);
     }
 
+    /**
+     * @throws Exception
+     */
     public function isFlagsOnly(): bool
     {
         return (bool) $this->evaluate($this->isFlagsOnly) && filled($this->getFlags());
     }
 
-    public function isDisplayOn(): bool
+    public function isVisibleInsidePanels(): bool
     {
-        return str(request()->route()->getName())->contains($this->displayOn);
+        return (bool) ($this->evaluate($this->visibleInsidePanels)
+            && count($this->locales) > 1
+            && $this->isCurrentPanelIncluded());
+    }
+
+    public function isVisibleOutsidePanels(): bool
+    {
+        return (bool) ($this->evaluate($this->visibleOutsidePanels)
+            && str(request()->route()->getName())->contains($this->outsidePanelRoutes)
+            && $this->isCurrentPanelIncluded());
     }
 
     public function getLabels(): array
@@ -185,12 +219,12 @@ class LanguageSwitch
 
     public function getLocales(): array
     {
-        return (array) $this->evaluate(filled($this->locales) ? $this->locales : ['ar', config('app.locale'), 'fr']);
+        return (array) $this->evaluate($this->locales);
     }
 
-    public function getPlacement(): Alignment
+    public function getOutsidePanelPlacement(): Alignment
     {
-        return $this->placement ?? Alignment::TopRight;
+        return $this->outsidePanelPlacement ?? Alignment::TopRight;
     }
 
     public function getRenderHook(): string
@@ -220,11 +254,20 @@ class LanguageSwitch
 
     public function getLabel(string $locale): string
     {
-        return $this->labels[$locale] ?? locale_get_display_name($locale, $this->getDisplayLocale());
+        return $this->labels[$locale] ?? str(locale_get_display_name($locale, $this->getDisplayLocale()))
+                ->title()
+                ->toString();
     }
 
-    public function generateId(): string
+    public function isCurrentPanelIncluded(): bool
     {
-        return str()->random(8);
+        return array_key_exists($this->getCurrentPanel()->getId(), $this->getPanels());
+    }
+
+    public function getCharAvatar(string $locale): string
+    {
+        return str($locale)->length() > 2
+            ? str($locale)->substr(0, 2)->upper()->toString()
+            : str($locale)->upper()->toString();
     }
 }

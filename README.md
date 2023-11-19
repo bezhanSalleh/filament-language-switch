@@ -24,12 +24,18 @@
 
 <hr style="background-color: #ff2e21"></hr>
 
-# Filament Language(Locale) Switcher
+# Language(Locale) Switch
 
-Zero config Language Switch(Changer/Localizer) plugin for Filamentphp Admin
+Zero config Language Switch(Changer/Localizer) plugin for Filament Panels.
 
-* For Filamentphp 2.x use version 1.x
+  
+## Requirement
+* [Filament v3](https://filamentphp.com/docs/3.x/panels/installation)
 
+> [!NOTE]  
+> For [Filament v2](https://filamentphp.com/docs/2.x/admin/installation) use [v1](https://github.com/bezhanSalleh/filament-language-switch/tree/1.x)
+
+  
 ## Installation
 
 Install the package via composer:
@@ -38,57 +44,152 @@ Install the package via composer:
 composer require bezhansalleh/filament-language-switch
 ```
 
-Publish the config file with:
+## Usage
 
-```bash
-php artisan vendor:publish --tag="filament-language-switch-config"
-```
-
-Configure your preferred options and then register the plugin to your panel(s).
-
-> **Note**
-> You can find the supported country flag codes here [flag codes](https://flagicons.lipis.dev/)
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="filament-language-switch-views"
-```
-
-## Plugin Usage
-Using the plugin is easy all you need to do is instanciate it to the `Panels` you want the plugin to be available in.
-```php
-public function panel(Panel $panel): Panel
-{
-    return $panel
-        ...
-        ->plugins([
-            FilamentLanguageSwitchPlugin::make()
-        ])
-        ...
-}
-```
-## Customize Render Hook
-
-By default the switch render in the `panels::global-search.after` hook but you can render the **Language Switch** in any of the [Render Hooks](https://beta.filamentphp.com/docs/3.x/panels/configuration#render-hooks) available in Filamentphp using the `renderHookName()` method inside your panel's `plugins()` method.
+The plugin boots after installation automatically. For the plugin to work, provide an array of locales that your Panel(s) support to switch between them inside a service provider's `boot()` method. You can either create a new service provider or use the default `AppServiceProvider` as follow:
 
 ```php
-public function panel(Panel $panel): Panel
+...
+use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
+
+class AppServiceProvider extends ServiceProvider
 {
-    return $panel
+    ...
+    
+    public function boot()
+    {
         ...
-        ->plugins([
-            FilamentLanguageSwitchPlugin::make()
-                ->renderHookName('panels::global-search.before'),
-        ])
+        
+        LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+            $switch
+                ->locales(['ar','en','fr']); // also accepts a closure
+        });
+        
         ...
+    }
 }
 ```
 
-## Custom Theme
-By default the plugin uses the default theme of Filamentphp, but you can customize it by adding the plugins view path into the `content` array of your `tailwind.config.js` file:
+Though this is all you would need, but the plugin is designed to be very customizable. Delve into the **Configuration** section below for detailed customization options.
+
+## Configuration
+
+The plugin comes with following options that you can customize and configure as per your requirements. The plugin has a fluent API so you can chain the methods and easily configure it all in one place.
 
 ```php
+...
+use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
+
+class AppServiceProvider extends ServiceProvider
+{
+    ...
+    
+    public function boot()
+    {
+        ...
+        
+        LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+            $switch
+                ->locales(['ar','fr','en'])
+                ->visible(insidePanels: true, outsidePanels: false)
+                ->renderHook('panels::global-search.before')
+                ->outsidePanelRoutes() // default: ['auth.login','auth.profile','auth.register']
+                ->excludes([])
+                ->displayLocale() // returns an appropriately localized display name for the input locale based on the current app locale
+                ->labels([ // override the displayLocale and provide custom display name(label) for the locale
+                    'ar' => 'عربی',
+                    'en' => 'انگلیسی',
+                    'fr' => 'فرانسوی'
+                ])
+                ->circular()
+                ->flags([
+                    'ar' => asset('flags/saudi-arabia.svg'),
+                    'fr' => asset('flags/france.svg'),
+                    'en' => asset('flags/usa.svg'),
+                ])
+                ->flagsOnly()
+                ;
+        });
+        ...
+    }
+}
+```
+### Panel Exclusion
+
+By default the **Language Switch** will be available inside all existing Panels. But you can choose which panels will have the switch by providing an array of valid panel ids using the `exclude()` method. The method also accepts a `Closure` so you have more control over how to exclude certain panels.
+```php
+//AppServiceProvider.php
+    ...
+    LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+        $switch
+            ...
+            ->excludes([
+                'app'
+            ])
+            ...;
+    });
+    ...
+```
+
+### Render Hook
+
+By default the `panels::global-search.after` hook is used to render the **Language Switch**. But you can use any of the [Render Hooks](https://filamentphp.com/docs/3.x/support/render-hooks) available in Filament using the `renderHook()` method as:
+
+```php
+//AppServiceProvider.php
+    ...
+    LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+        $switch
+            ...
+            ->renderHook('panels::global-search.before')
+            ...;
+    });
+    ...
+```
+
+### Flags
+
+By default the **Language Switch** uses the locales as `Language Badges` to serve as placeholders for the flags. But you may associate each locale with its corresponding flag image by passing an array to the `flags()` method. Each key in the array represents the locale code, and its value should be the asset path to the flag image for that locale. For example, to set flag images for Arabic, French, and English (US), you would provide an array like this:
+
+```php
+//AppServiceProvider.php
+    ...
+    LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+        $switch
+            ...
+            ->flags([
+                'ar' => asset('flags/saudi-arabia.svg'),
+                'fr' => asset('flags/france.svg'),      
+                'en' => asset('flags/usa.svg'),
+            ])
+            ...;
+    });
+    ...
+```
+
+Make sure that the provided paths in the `asset()` helper point to the correct location of the flag images in your Laravel project's public directory.
+
+### Circular
+
+By default the **Language Switch** `Flags` or `Language Badges` are slightly rounded like the most other Filament components. But you may make it fully rounded using the `circular()` method.
+
+```php
+//AppServiceProvider.php
+    ...
+    LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+        $switch
+            ...
+            ->circular()
+            ...;
+    });
+    ...
+```
+
+## Theme
+The plugin follows Filament's theming rules. So, if you have custom themes add the plugin's view path into the `content` array of your themes' `tailwind.config.js` file:
+
+```php
+//tailwind.config.js
 export default {
     content: [
         // ...
@@ -97,7 +198,17 @@ export default {
     // ...
 }
 ```
+... now build your theme using: 
+```bash
+npm run build
+```
 
+## Views
+In case you want to tweak the design, you can publish the views using the following command and adjust it however you like:
+
+```bash
+php artisan vendor:publish --tag="filament-language-switch-views"
+```
 
 ## Changelog
 

@@ -8,7 +8,6 @@
     }
 
     .fls-dropdown-width {
-        width: 8rem !important;
         max-width: fit-content !important;
     }
 }

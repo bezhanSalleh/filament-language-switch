@@ -21,7 +21,6 @@ class FilamentLanguageSwitchServiceProvider extends PackageServiceProvider
     {
         $package
             ->name(static::$name)
-            ->hasConfigFile()
             ->hasViews();
     }
 

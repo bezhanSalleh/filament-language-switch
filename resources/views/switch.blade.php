@@ -26,12 +26,12 @@
                     :switch="true"
                 />
             @else
-                <span class="font-semibold text-md">{{ $languageSwitch->getFlag(app()->getLocale()) }}</span>
+                <span class="font-semibold text-md">{{ $languageSwitch->getCharAvatar(app()->getLocale()) }}</span>
             @endif
         </div>
     </x-slot>
 
-    <x-filament::dropdown.list @class(['!border-t-0 space-y-1'])>
+    <x-filament::dropdown.list @class(['!border-t-0 space-y-1 !p-2.5'])>
         @foreach ($locales as $locale)
             @if (!app()->isLocale($locale))
                 <button
@@ -46,9 +46,9 @@
                     @endif
 
                     @class([
-                        'flex items-center w-full px-2 py-0.5 transition-colors duration-75 rounded-md outline-none fi-dropdown-list-item whitespace-nowrap disabled:pointer-events-none disabled:opacity-70 fi-dropdown-list-item-color-gray hover:bg-gray-950/5 focus:bg-gray-950/5 dark:hover:bg-white/5 dark:focus:bg-white/5',
-                        'justify-center' => $isFlagsOnly,
-                        'justify-start space-x-1' => !$isFlagsOnly,
+                        'flex items-center w-full transition-colors duration-75 rounded-md outline-none fi-dropdown-list-item whitespace-nowrap disabled:pointer-events-none disabled:opacity-70 fi-dropdown-list-item-color-gray hover:bg-gray-950/5 focus:bg-gray-950/5 dark:hover:bg-white/5 dark:focus:bg-white/5',
+                        'justify-center px-2 py-0.5' => $isFlagsOnly,
+                        'justify-start space-x-2 rtl:space-x-reverse p-1' => !$isFlagsOnly,
                     ])
                 >
 
@@ -75,7 +75,7 @@
                                     'rounded-lg' => !$isCircular,
                                 ])
                             >
-                                {{ $languageSwitch->getFlag($locale) }}
+                                {{ $languageSwitch->getCharAvatar($locale) }}
                             </span>
                         @endif
                         <span class="text-sm font-medium text-gray-600 hover:bg-transparent dark:text-gray-200">
