@@ -53,13 +53,13 @@ class LanguageSwitch
 
         FilamentView::registerRenderHook(
             name: $static->getRenderHook(),
-            hook: fn (): string => Blade::render('<livewire:filament-language-switch key=\'fls-panels\' />')
+            hook: fn (): string => Blade::render('<livewire:filament-language-switch key=\'fls-in-panels\' />')
         );
 
         if ($static->isDisplayOn()) {
             FilamentView::registerRenderHook(
                 name: 'panels::body.end',
-                hook: fn (): string => Blade::render('@livewire(\'filament-language-switch\', key(\'fls-outside-panels\'))')
+                hook: fn (): string => Blade::render('<livewire:filament-language-switch key=\'fls-outside-panels\' />')
             );
         }
     }
