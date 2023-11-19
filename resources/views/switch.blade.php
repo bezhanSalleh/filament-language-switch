@@ -16,8 +16,7 @@
             x-tooltip="{
                 content: @js($languageSwitch->getLabel(app()->getLocale())),
                 theme: $store.theme,
-                arrowless: true,
-                placement: 'right'
+                placement: 'bottom'
             }"
             @endif
         >
@@ -43,7 +42,6 @@
                     x-tooltip="{
                         content: @js($languageSwitch->getLabel($locale)),
                         theme: $store.theme,
-                        arrowless: true,
                         placement: 'right'
                     }"
                     @endif
