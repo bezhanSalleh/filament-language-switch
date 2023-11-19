@@ -49,6 +49,7 @@ composer require bezhansalleh/filament-language-switch
 The plugin boots after installation automatically. For the plugin to work, provide an array of locales that your Panel(s) support to switch between them inside a service provider's `boot()` method. You can either create a new service provider or use the default `AppServiceProvider` as follow:
 
 ```php
+
 ...
 use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
 
