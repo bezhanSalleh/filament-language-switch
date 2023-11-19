@@ -7,8 +7,9 @@
     $isDisplayOn = $languageSwitch->isDisplayOn();
     $alignment = $languageSwitch->getPlacement()->value;
     $placement = match(true){
-        $alignment === 'top-center' => 'bottom',
-        $alignment === 'bottom-center' => 'top',
+        $alignment === 'top-center' && $isFlagsOnly => 'bottom',
+        $alignment === 'bottom-center' && $isFlagsOnly => 'top',
+        ! $isDisplayOn && $isFlagsOnly=> 'bottom',
         default => 'bottom-end',
     };
 @endphp

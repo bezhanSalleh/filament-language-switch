@@ -7,18 +7,16 @@
     <x-slot name="trigger">
         <div
             @class([
-                'flex items-center justify-center text-sm font-semibold w-9 h-9 language-switch-trigger text-primary-500 bg-primary-500/10',
+                'flex items-center justify-center text-sm font-semibold w-9 h-9 language-switch-trigger text-primary-600 bg-primary-500/10',
                 'rounded-full' => $isCircular,
                 'rounded-lg' => !$isCircular,
                 'p-1 ring-2 ring-inset ring-gray-200 hover:ring-gray-300 dark:ring-gray-500 hover:dark:ring-gray-400' => $isFlagsOnly || $hasFlags,
             ])
-            @if ($isFlagsOnly || $hasFlags)
             x-tooltip="{
                 content: @js($languageSwitch->getLabel(app()->getLocale())),
                 theme: $store.theme,
                 placement: 'bottom'
             }"
-            @endif
         >
             @if ($isFlagsOnly || $hasFlags)
                 <x-filament-language-switch::flag
@@ -58,6 +56,7 @@
                             :src="$languageSwitch->getFlag($locale)"
                             :circular="$isCircular"
                             :alt="$languageSwitch->getLabel($locale)"
+                            class="w-7 h-7"
                         />
                     @else
                         @if ($hasFlags)
@@ -70,7 +69,7 @@
                         @else
                             <span
                                 @class([
-                                    'flex items-center justify-center flex-shrink-0 w-6 h-6 p-4 text-xs font-semibold group-hover:bg-white group-hover:text-primary-600 group-hover:border group-hover:border-primary-500/10 group-focus:text-white bg-primary-500/10 text-primary-500',
+                                    'flex items-center justify-center flex-shrink-0 w-6 h-6 p-4 text-xs font-semibold group-hover:bg-white group-hover:text-primary-600 group-hover:border group-hover:border-primary-500/10 group-focus:text-white bg-primary-500/10 text-primary-600',
                                     'rounded-full' => $isCircular,
                                     'rounded-lg' => !$isCircular,
                                 ])
@@ -78,7 +77,7 @@
                                 {{ $languageSwitch->getFlag($locale) }}
                             </span>
                         @endif
-                        <span class="font-medium text-gray-700 hover:bg-transparent dark:text-gray-200">
+                        <span class="font-medium text-gray-600 hover:bg-transparent dark:text-gray-200">
                             {{ $languageSwitch->getLabel($locale) }}
                         </span>
 
