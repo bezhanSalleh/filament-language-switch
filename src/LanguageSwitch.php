@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace BezhanSalleh\FilamentLanguageSwitch;
 
-use BezhanSalleh\FilamentLanguageSwitch\Enums\Alignment;
+use BezhanSalleh\FilamentLanguageSwitch\Enums\Placement;
 use Closure;
 use Exception;
 use Filament\Panel;
@@ -33,7 +33,7 @@ class LanguageSwitch
 
     protected array | Closure $locales = [];
 
-    protected ?Alignment $outsidePanelPlacement = null;
+    protected ?Placement $outsidePanelPlacement = null;
 
     protected bool | Closure $visibleInsidePanels = false;
 
@@ -135,9 +135,9 @@ class LanguageSwitch
         return $this;
     }
 
-    public function outsidePanelPlacement(Alignment $alignment): static
+    public function outsidePanelPlacement(Placement $placement): static
     {
-        $this->outsidePanelPlacement = $alignment;
+        $this->outsidePanelPlacement = $placement;
 
         return $this;
     }
@@ -222,9 +222,9 @@ class LanguageSwitch
         return (array) $this->evaluate($this->locales);
     }
 
-    public function getOutsidePanelPlacement(): Alignment
+    public function getOutsidePanelPlacement(): Placement
     {
-        return $this->outsidePanelPlacement ?? Alignment::TopRight;
+        return $this->outsidePanelPlacement ?? Placement::TopRight;
     }
 
     public function getRenderHook(): string

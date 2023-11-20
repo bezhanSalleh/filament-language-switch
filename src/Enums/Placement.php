@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace BezhanSalleh\FilamentLanguageSwitch\Enums;
 
-enum Alignment: string
+enum Placement: string
 {
     case TopLeft = 'top-left';
 
