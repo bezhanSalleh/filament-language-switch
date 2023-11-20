@@ -5,7 +5,7 @@ namespace BezhanSalleh\FilamentLanguageSwitch\Http\Livewire;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
-class SwitchFilamentLanguage extends Component
+class FilamentLanguageSwitch extends Component
 {
     public function changeLocale($locale)
     {

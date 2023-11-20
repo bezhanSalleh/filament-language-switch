@@ -11,7 +11,5 @@
             "space": "single"
         }
     },
-    "exclude": [
-        "build"
-    ]
+    "exclude": ["build"]
 }

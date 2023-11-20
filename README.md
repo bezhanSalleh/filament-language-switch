@@ -24,12 +24,18 @@
 
 <hr style="background-color: #ff2e21"></hr>
 
-# Filament Language(Locale) Switcher
+# Language(Locale) Switch
 
-Zero config Language Switch(Changer/Localizer) plugin for Filamentphp Admin
+Zero config Language Switch(Changer/Localizer) plugin for Filament Panels.
 
-* For Filamentphp 2.x use version 1.x
+  
+## Requirement
+* [Filament v3](https://filamentphp.com/docs/3.x/panels/installation)
 
+> [!NOTE]  
+> For [Filament v2](https://filamentphp.com/docs/2.x/admin/installation) use [v1](https://github.com/bezhanSalleh/filament-language-switch/tree/1.x)
+
+  
 ## Installation
 
 Install the package via composer:
@@ -38,61 +44,272 @@ Install the package via composer:
 composer require bezhansalleh/filament-language-switch
 ```
 
-Publish the config file with:
+## Usage
 
-```bash
-php artisan vendor:publish --tag="filament-language-switch-config"
-```
-
-Configure your preferred options and then register the plugin to your panel(s).
-
-> **Note**
-> You can find the supported country flag codes here [flag codes](https://flagicons.lipis.dev/)
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="filament-language-switch-views"
-```
-
-## Plugin Usage
-Using the plugin is easy all you need to do is instanciate it to the `Panels` you want the plugin to be available in.
-```php
-use BezhanSalleh\FilamentLanguageSwitch\FilamentLanguageSwitchPlugin;
-
-public function panel(Panel $panel): Panel
-{
-    return $panel
-        ...
-        ->plugins([
-            FilamentLanguageSwitchPlugin::make()
-        ])
-        ...
-}
-```
-## Customize Render Hook
-
-By default the switch render in the `panels::global-search.after` hook but you can render the **Language Switch** in any of the [Render Hooks](https://beta.filamentphp.com/docs/3.x/panels/configuration#render-hooks) available in Filamentphp using the `renderHookName()` method inside your panel's `plugins()` method.
+The plugin boots after installation automatically. For the plugin to work, provide an array of locales that your Panel(s) support to switch between them inside a service provider's `boot()` method. You can either create a new service provider or use the default `AppServiceProvider` as follow:
 
 ```php
-use BezhanSalleh\FilamentLanguageSwitch\FilamentLanguageSwitchPlugin;
 
-public function panel(Panel $panel): Panel
+...
+use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
+
+class AppServiceProvider extends ServiceProvider
 {
-    return $panel
+    ...
+    
+    public function boot()
+    {
         ...
-        ->plugins([
-            FilamentLanguageSwitchPlugin::make()
-                ->renderHookName('panels::global-search.before'),
-        ])
+        
+        LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+            $switch
+                ->locales(['ar','en','fr']); // also accepts a closure
+        });
+        
         ...
+    }
 }
 ```
 
-## Custom Theme
-By default the plugin uses the default theme of Filamentphp, but you can customize it by adding the plugins view path into the `content` array of your `tailwind.config.js` file:
+Though this is all you would need, but the plugin is designed to be very customizable. Delve into the **Configuration** section below for detailed customization options.
+
+## Configuration
+
+The plugin comes with following options that you can customize and configure as per your requirements. The plugin has a fluent API so you can chain the methods and easily configure it all in one place.
+
+### Visibility Control
+
+The `visible()` method configures the visibility of the **Language Switch** within the application's UI. It has two parameters:
+
+- **insidePanels**: 
+Determines if the language switcher is visible inside Filament panels, which is `true` by default. The language switcher will be visible inside panels only if the `insidePanels` condition is true, more than one locale is available, and the current panel is included (not excluded).
+
+- **outsidePanels**: Controls visibility outside of the panels, with a default of false. The language switcher will be visible outside of panels only if the `outsidePanels` condition is true, the current route is included in the `outsidePanelRoutes()`, and the current panel is included (not excluded).
+
+Both arguments can be provided as a `boolean` or a `Closure` that returns a boolean value. The Closure enables dynamic determination of visibility, allowing you to incorporate complex logic based on the application state, user permissions, or other criteria.
 
 ```php
+//AppServiceProvider.php
+    ...
+    LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+        $switch
+            ...
+            ->visible(outsidePanels: true)
+            ...;
+    });
+    ...
+```
+### Outside Panel Routes
+
+The `outsidePanelRoutes()` method is used to define the routes where the **Language Switch** should be visible outside of the Filament panels. This method accepts either an `array` of route names or a `Closure` that returns an array of route names. By default, it includes common authentication routes such as `auth.login`, `auth.profile`, and `auth.register`.
+
+To specify custom routes for displaying the language switcher, pass an array of route names to the method:
+
+```php
+// AppServiceProvider.php
+...
+LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+    $switch
+        ...
+        ->outsidePanelRoutes([
+            'profile',
+            'home',
+            // Additional custom routes where the switcher should be visible outside panels
+        ])
+        ...;
+});
+...
+```
+
+If you want to dynamically determine the routes, use a Closure:
+
+```php
+// AppServiceProvider.php
+...
+LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+    $switch
+        ...
+        ->outsidePanelRoutes(fn() => someCondition() ? ['dynamic.route'] : ['default.route'])
+        ...;
+});
+...
+```
+
+### Outside Panel Placement
+The `outsidePanelPlacement()` method specifies the placement of the **Language Switch** when it is rendered outside of Filament panels. This method accepts an `Placement` enum value that determines the switch's position on the screen.
+
+You can choose from the following placements defined in the `Placement` enum:
+
+* `TopLeft` default
+* `TopCenter`
+* `TopRight`
+* `BottomLeft`
+* `BottomCenter`
+* `BottomRight`
+  
+Set the desired placement for the **language switch** outside Filament Panels like this:
+
+```php
+// AppServiceProvider.php
+...
+use BezhanSalleh\FilamentLanguageSwitch\Enums\Placement;
+
+LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+    $switch
+        ...
+        ->outsidePanelPlacement(Placement::BottomRight)
+        // Sets the language switch to appear at the bottom right outside of panels
+        ...;
+});
+...
+```
+### Localized Labels
+The `displayLocale()` method is used to set the locale that influences how labels for given locales are generated by PHP's native function `locale_get_display_name()`. This method specifies the language in which the labels for given locales are displayed when custom labels are not set using the `labels()` method.
+
+By default, if `displayLocale()` is not explicitly set, the locale labels are generated based on the application's current locale. This affects the automatic label generation for locales without custom labels.
+
+For example, if your application's current locale is `English ('en')`, and you have not set a specific display locale, then the labels for locales like `pt_BR` and `pt_PT` would automatically be generated as `Portuguese (Brazil)` and `Portuguese (Portugal)` respectively, in English.
+
+To specify a different language for the automatic label generation, use `displayLocale()`:
+```php
+// AppServiceProvider.php
+...
+LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+    $switch
+        ...
+        ->displayLocale('fr') // Sets French as the language for label localization
+        ...;
+});
+...
+```
+
+### Custom Labels
+
+The `labels()` method in the **Language Switch** allows you to define custom text labels for each locale that your application supports. This customization is particularly useful when the default labels generated by PHP's native function `locale_get_display_name()` are not suitable for your application's needs.
+
+By default, if no custom labels are provided, the **Language switch** will generate labels for each locale using the native PHP function `locale_get_display_name()`, which creates a label based on the current application's locale. For example, the locales `pt_BR` and `pt_PT` will be labeled as **Portuguese (Brazil)** and **Portuguese (Portugal)** respectively, when the application's locale is set to `en`.
+
+However, you might prefer to display labels that are shorter or differently formatted. This is where the `labels()` method is beneficial. You can specify exactly how each language should be labeled, overriding the default behavior.
+
+Here's how to set custom labels:
+
+```php
+// AppServiceProvider.php
+...
+LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+    $switch
+        ...
+        ->locales(['en','fr','pt_BR','pt_PT'])
+        ->labels([
+            'pt_BR' => 'Português (BR)',
+            'pt_PT' => 'Português (PT)',
+            // Other custom labels as needed
+        ])
+        ...;
+});
+...
+```
+
+### Panel Exclusion
+
+By default the **Language Switch** will be available inside all existing Panels. But you can choose which panels will have the switch by providing an array of valid panel ids using the `exclude()` method. The method also accepts a `Closure` so you have more control over how to exclude certain panels.
+
+```php
+//AppServiceProvider.php
+    ...
+    LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+        $switch
+            ...
+            ->excludes([
+                'app'
+            ])
+            ...;
+    });
+    ...
+```
+
+### Render Hook
+
+By default the `panels::global-search.after` hook is used to render the **Language Switch**. But you can use any of the [Render Hooks](https://filamentphp.com/docs/3.x/support/render-hooks) available in Filament using the `renderHook()` method as:
+
+```php
+//AppServiceProvider.php
+    ...
+    LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+        $switch
+            ...
+            ->renderHook('panels::global-search.before')
+            ...;
+    });
+    ...
+```
+
+### Flags
+
+By default the **Language Switch** uses the locales as `Language Badges` to serve as placeholders for the flags. But you may associate each locale with its corresponding flag image by passing an array to the `flags()` method. Each key in the array represents the locale code, and its value should be the asset path to the flag image for that locale. For example, to set flag images for Arabic, French, and English (US), you would provide an array like this:
+
+```php
+//AppServiceProvider.php
+    ...
+    LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+        $switch
+            ...
+            ->flags([
+                'ar' => asset('flags/saudi-arabia.svg'),
+                'fr' => asset('flags/france.svg'),      
+                'en' => asset('flags/usa.svg'),
+            ])
+            ...;
+    });
+    ...
+```
+
+Make sure that the provided paths in the `asset()` helper point to the correct location of the flag images in your Laravel project's public directory.
+
+### Flags Only
+
+The `flagsOnly()` method controls whether the **Language Switch** displays only flag images, without accompanying text labels. This method can enhance the UI by providing a cleaner look when space is limited or when you prefer a more visual representation of language options.
+
+To display only the flags for each language, invoke the method and make sure you have provided the flags for locales just like shown above using the `flags()` method:
+
+```php
+//AppServiceProvider.php
+    ...
+    LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+        $switch
+            ...
+            ->flags([
+                'ar' => asset('flags/saudi-arabia.svg'),
+                'fr' => asset('flags/france.svg'),      
+                'en' => asset('flags/usa.svg'),
+            ])
+            ->flagsOnly()
+            ...;
+    });
+    ...
+```
+
+### Circular
+
+By default the **Language Switch** `Flags` or `Language Badges` are slightly rounded like the most other Filament components. But you may make it fully rounded using the `circular()` method.
+
+```php
+//AppServiceProvider.php
+    ...
+    LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+        $switch
+            ...
+            ->circular()
+            ...;
+    });
+    ...
+```
+
+## Theme
+The plugin follows Filament's theming rules. So, if you have custom themes add the plugin's view path into the `content` array of your themes' `tailwind.config.js` file:
+
+```php
+//tailwind.config.js
 export default {
     content: [
         // ...
@@ -101,7 +318,17 @@ export default {
     // ...
 }
 ```
+... now build your theme using: 
+```bash
+npm run build
+```
 
+## Views
+In case you want to tweak the design, you can publish the views using the following command and adjust it however you like:
+
+```bash
+php artisan vendor:publish --tag="filament-language-switch-views"
+```
 
 ## Changelog
 
