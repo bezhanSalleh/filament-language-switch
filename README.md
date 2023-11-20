@@ -24,9 +24,9 @@
 
 <hr style="background-color: #ff2e21"></hr>
 
-# Language(Locale) Switch
+# Language Switch
 
-Zero config Language Switch(Changer/Localizer) plugin for Filament Panels.
+The **Language Switch** plugin is a versatile and user-friendly tool designed for Filament Panels. It offers a seamless way to integrate language switching capabilities into your Filament Panels. With a range of customizable options and a fluent API, the plugin allows you to easily configure language selection for your users. It supports displaying language options both within and outside of Filament panels, and it provides the flexibility to specify which panels or routes should include the language switch and much more.
 
   
 ## Requirement
