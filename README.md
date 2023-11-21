@@ -25,10 +25,9 @@
     </a>
 </p>
 
-<hr style="background-color: #ff2e21"></hr>
+***
 
 # Language Switch
-
 The **Language Switch** plugin is a versatile and user-friendly tool designed for Filament Panels. It offers a seamless way to integrate language switching capabilities into your Filament Panels. With a range of customizable options and a fluent API, the plugin allows you to easily configure language selection for your users. It supports displaying language options both within and outside of Filament panels, and it provides the flexibility to specify which panels or routes should include the language switch and much more.
 
   
@@ -38,6 +37,17 @@ The **Language Switch** plugin is a versatile and user-friendly tool designed fo
 > [!NOTE]  
 > For [Filament v2](https://filamentphp.com/docs/2.x/admin/installation) use [v1](https://github.com/bezhanSalleh/filament-language-switch/tree/1.x)
 
+***
+
+> [!IMPORTANT]
+> Migrating form 2.x to 3.x
+> - Unregister the plugin form all your panels
+> - Remove the config file `config/filament-language-switch.php`
+> - Remove the `filament-language-switch` directory from `resources/views/vendor`
+> - Bump the package version to `^3.0` in your `composer.json` file
+> - Run `composer update`
+> - Checkout the [Usage](#usage) section below to get up and running. 
+> - Checkout the [Configuration](#configuration) section to see what's new and how to configure the plugin.
   
 ## Installation
 
