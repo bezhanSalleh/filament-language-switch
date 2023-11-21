@@ -2,6 +2,26 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## 3.0.0 - 2023-11-21
+
+### What's Changed
+
+- Complete rewrite [3.x]   
+  - No Panel registeration required   
+  - Automatically boots after installation   
+  - Easily Configurable   
+  - Flags Support (no third-party packages required)   
+  - outside panels 'auth pages'      
+    - Display      
+    - Placement(position)      
+       
+  - much more ...   
+  
+
+for more checkout @bezhanSalleh in https://github.com/bezhanSalleh/filament-language-switch/pull/57
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/2.0.1...3.0.0
+
 ## 2.0.1 - 2023-08-05
 
 ### What's Changed
