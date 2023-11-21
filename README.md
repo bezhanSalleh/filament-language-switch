@@ -20,6 +20,9 @@
 <a href="https://packagist.org/packages/bezhansalleh/filament-language-switch">
     <img alt="Downloads" src="https://img.shields.io/packagist/dt/bezhansalleh/filament-language-switch.svg?style=for-the-badge" >
     </a>
+<a href="https://discord.com/channels/883083792112300104/990920249744453642" target="_blank">
+    <img alt="Downloads" src="https://img.shields.io/discord/883083792112300104?label=Discord&style=for-the-badge" >
+    </a>
 </p>
 
 <hr style="background-color: #ff2e21"></hr>
