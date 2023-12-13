@@ -2,6 +2,7 @@
 
 namespace BezhanSalleh\FilamentLanguageSwitch\Http\Livewire;
 
+use BezhanSalleh\FilamentLanguageSwitch\Events\LocaleChanged;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
@@ -13,7 +14,9 @@ class FilamentLanguageSwitch extends Component
 
         cookie()->queue(cookie()->forever('filament_language_switch_locale', $locale));
 
-        $this->dispatch('filament-language-changed', $locale);
+        $this->dispatch('filament-language-changed');
+
+        LocaleChanged::dispatch($locale);
 
         $this->redirect(request()->header('Referer'));
 
