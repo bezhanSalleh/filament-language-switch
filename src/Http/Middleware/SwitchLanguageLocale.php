@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class SwitchLanguageLocale
 {
-    public function handle(Request $request, Closure $next): \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse
+    public function handle(Request $request, Closure $next): \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse | \Illuminate\Http\JsonResponse
     {
         $locale = session()->get('locale')
             ?? $request->get('locale')
