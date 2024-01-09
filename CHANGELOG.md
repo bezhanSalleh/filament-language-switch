@@ -2,6 +2,10 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## 3.0.3 - 2024-01-09
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/3.0.2...3.0.3
+
 ## 3.0.2 - 2024-01-09
 
 **Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/3.0.1...3.0.2
