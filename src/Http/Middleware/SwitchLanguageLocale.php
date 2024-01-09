@@ -25,12 +25,16 @@ class SwitchLanguageLocale
 
     private function getBrowserLocale(Request $request): ?string
     {
-        $userLangs = preg_split('/[,;]/', $request->server('HTTP_ACCEPT_LANGUAGE'));
+        $appLocales = LanguageSwitch::make()->getLocales();
 
-        foreach ($userLangs as $locale) {
-            return in_array($locale, LanguageSwitch::make()->getLocales())
-                ? $locale
-                : null;
+        $userLocales = preg_split('/[,;]/', $request->server('HTTP_ACCEPT_LANGUAGE'));
+
+        foreach ($userLocales as $locale) {
+            if (in_array($locale, $appLocales)) {
+                return $locale;
+            }
         }
+
+        return null;
     }
 }
