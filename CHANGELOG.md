@@ -2,20 +2,40 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## 3.0.1 - 2024-01-09
+
+### What's Changed
+
+* Bump aglipanci/laravel-pint-action from 2.3.0 to 2.3.1 by @dependabot in https://github.com/bezhanSalleh/filament-language-switch/pull/66
+* [Feature] Added `LocaleChanged` event by @michaelklopf in https://github.com/bezhanSalleh/filament-language-switch/pull/61
+* [Fix] Browser Locale issue by @bezhanSalleh in https://github.com/bezhanSalleh/filament-language-switch/pull/69
+
+### New Contributors
+
+* @michaelklopf made their first contribution in https://github.com/bezhanSalleh/filament-language-switch/pull/61
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/3.0.0...3.0.1
+
 ## 3.0.0 - 2023-11-21
 
 ### What's Changed
 
-- Complete rewrite [3.x]   
-  - No Panel registeration required   
-  - Automatically boots after installation   
-  - Easily Configurable   
-  - Flags Support (no third-party packages required)   
-  - outside panels 'auth pages'      
-    - Display      
-    - Placement(position)      
-       
-  - much more ...   
+- Complete rewrite [3.x]
+  - No Panel registeration required
+    
+  - Automatically boots after installation
+    
+  - Easily Configurable
+    
+  - Flags Support (no third-party packages required)
+    
+  - outside panels 'auth pages'
+    
+    - Display
+    - Placement(position)
+    
+  - much more ...
+    
   
 
 for more checkout @bezhanSalleh in https://github.com/bezhanSalleh/filament-language-switch/pull/57
