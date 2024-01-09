@@ -16,7 +16,7 @@ class FilamentLanguageSwitch extends Component
 
         $this->dispatch('filament-language-changed');
 
-        LocaleChanged::dispatch($locale);
+        event(new LocaleChanged($locale));
 
         $this->redirect(request()->header('Referer'));
 
