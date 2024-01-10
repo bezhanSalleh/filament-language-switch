@@ -17,6 +17,7 @@
 				?? $request->cookie('filament_language_switch_locale')
 				?? config('app.locale' , 'en')
 				?? $this->getBrowserLocale($request);
+			
 			if (in_array($locale , LanguageSwitch::make()->getLocales())) {
 				app()->setLocale($locale);
 			}
