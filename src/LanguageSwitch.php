@@ -8,15 +8,12 @@ use BezhanSalleh\FilamentLanguageSwitch\Enums\Placement;
 use Closure;
 use Exception;
 use Filament\Panel;
-use Filament\Support\Concerns;
+use Filament\Support\Components\Component;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Support\Facades\Blade;
 
-class LanguageSwitch
+class LanguageSwitch extends Component
 {
-    use Concerns\Configurable;
-    use Concerns\EvaluatesClosures;
-
     protected ?string $displayLocale = null;
 
     protected array | Closure | null $outsidePanelRoutes = null;
