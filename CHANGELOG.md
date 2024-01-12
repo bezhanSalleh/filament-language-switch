@@ -2,6 +2,14 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## 3.0.4 - 2024-01-12
+
+### What's Changed
+
+* fix configurable trait usage by @bezhanSalleh in https://github.com/bezhanSalleh/filament-language-switch/pull/72
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/3.0.3...3.0.4
+
 ## 3.0.3 - 2024-01-09
 
 **Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/3.0.2...3.0.3
