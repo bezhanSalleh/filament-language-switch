@@ -38,6 +38,11 @@ class LanguageSwitch extends Component
 
     protected Closure | string $renderHook = 'panels::global-search.after';
 
+    protected Closure | string | null $userPreferredLocale = null;
+
+    protected Closure | string | null $preferredLocale = null;
+
+
     public static function make(): static
     {
         $static = app(static::class);
@@ -146,6 +151,20 @@ class LanguageSwitch extends Component
         return $this;
     }
 
+    public function userPreferredLocale(Closure | string | null $locale): static
+    {
+        $this->userPreferredLocale = $locale;
+
+        return $this;
+    }
+
+    public function preferredLocale(Closure | string $locale): static
+    {
+        $this->preferredLocale = $locale;
+
+        return $this;
+    }
+
     public function visible(bool | Closure $insidePanels = true, bool | Closure $outsidePanels = false): static
     {
         $this->visibleInsidePanels = $insidePanels;
@@ -227,6 +246,24 @@ class LanguageSwitch extends Component
     public function getRenderHook(): string
     {
         return (string) $this->evaluate($this->renderHook);
+    }
+
+    public function getUserPreferredLocale(): ?string
+    {
+        return $this->evaluate($this->userPreferredLocale) ?? null;
+    }
+
+    public function getPreferredLocale(): string
+    {
+        $locale = $this->perferredLocale ??
+            session()->get('locale') ??
+            request()->get('locale') ??
+            request()->cookie('filament_language_switch_locale') ??
+            $this->getUserPreferredLocale() ??
+            config('app.locale', 'en') ??
+            request()->getPreferredLanguage();
+
+        return in_array($locale, $this->getLocales(), true) ? $locale : config('app.locale');
     }
 
     /**
