@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BezhanSalleh\FilamentLanguageSwitch;
 
 use BezhanSalleh\FilamentLanguageSwitch\Enums\Placement;
+use BezhanSalleh\FilamentLanguageSwitch\Events\LocaleChanged;
 use Closure;
 use Exception;
 use Filament\Panel;
@@ -39,9 +40,6 @@ class LanguageSwitch extends Component
     protected Closure | string $renderHook = 'panels::global-search.after';
 
     protected Closure | string | null $userPreferredLocale = null;
-
-    protected Closure | string | null $preferredLocale = null;
-
 
     public static function make(): static
     {
@@ -158,13 +156,6 @@ class LanguageSwitch extends Component
         return $this;
     }
 
-    public function preferredLocale(Closure | string $locale): static
-    {
-        $this->preferredLocale = $locale;
-
-        return $this;
-    }
-
     public function visible(bool | Closure $insidePanels = true, bool | Closure $outsidePanels = false): static
     {
         $this->visibleInsidePanels = $insidePanels;
@@ -255,8 +246,7 @@ class LanguageSwitch extends Component
 
     public function getPreferredLocale(): string
     {
-        $locale = $this->perferredLocale ??
-            session()->get('locale') ??
+        $locale = session()->get('locale') ??
             request()->get('locale') ??
             request()->cookie('filament_language_switch_locale') ??
             $this->getUserPreferredLocale() ??
@@ -303,5 +293,16 @@ class LanguageSwitch extends Component
         return str($locale)->length() > 2
             ? str($locale)->substr(0, 2)->upper()->toString()
             : str($locale)->upper()->toString();
+    }
+
+    public static function trigger($locale)
+    {
+        session()->put('locale', $locale);
+
+        cookie()->queue(cookie()->forever('filament_language_switch_locale', $locale));
+
+        event(new LocaleChanged($locale));
+
+        return redirect(request()->header('Referer'));
     }
 }
