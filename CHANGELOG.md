@@ -2,6 +2,14 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## 3.0.5 - 2024-01-25
+
+### What's Changed
+
+* fix middleware return type by @bezhanSalleh in https://github.com/bezhanSalleh/filament-language-switch/pull/80
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/3.0.4...3.0.5
+
 ## 3.0.4 - 2024-01-12
 
 ### What's Changed
