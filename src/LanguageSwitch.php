@@ -42,7 +42,6 @@ class LanguageSwitch extends Component
 
     protected Closure | string | null $preferredLocale = null;
 
-
     public static function make(): static
     {
         $static = app(static::class);
