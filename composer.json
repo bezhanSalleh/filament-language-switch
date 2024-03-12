@@ -21,15 +21,15 @@
         }
     ],
     "require": {
-        "php": "^8.1|^8.2",
+        "php": "^8.1|^8.2|^8.3",
         "filament/filament": "^3.0",
         "spatie/laravel-package-tools": "^1.9",
         "illuminate/contracts": "^9.0|^10.0|^11.0"
     },
     "require-dev": {
         "laravel/pint": "^1.0",
-        "nunomaduro/collision": "^6.0|^7.0",
-        "orchestra/testbench": "^7.0|^8.0",
+        "nunomaduro/collision": "^6.0|^7.0|^8.0",
+        "orchestra/testbench": "^7.0|^8.0|^9.0",
         "pestphp/pest": "^1.21",
         "pestphp/pest-plugin-laravel": "^1.1",
         "spatie/laravel-ray": "^1.26"
