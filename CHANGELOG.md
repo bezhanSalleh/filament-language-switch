@@ -2,6 +2,15 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## 3.0.6 - 2024-03-28
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 1.6.0 to 2.0.0 by @dependabot in https://github.com/bezhanSalleh/filament-language-switch/pull/85
+* remove laravel explicit version dependency by @bezhanSalleh in https://github.com/bezhanSalleh/filament-language-switch/pull/86
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/3.0.5...3.0.6
+
 ## 3.0.5 - 2024-01-25
 
 ### What's Changed
