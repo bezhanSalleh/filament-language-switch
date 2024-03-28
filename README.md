@@ -40,8 +40,8 @@ The **Language Switch** plugin is a versatile and user-friendly tool designed fo
 ***
 
 > [!IMPORTANT]
-> Migrating form 2.x to 3.x
-> - Unregister the plugin form all your panels
+> Migrating from 2.x to 3.x
+> - Unregister the plugin from all your panels
 > - Remove the config file `config/filament-language-switch.php`
 > - Remove the `filament-language-switch` directory from `resources/views/vendor`
 > - Bump the package version to `^3.0` in your `composer.json` file
@@ -349,7 +349,7 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 
 ## Contributing
 
-If you want to contribute to this packages, you may want to test it in a real Filament project:
+If you want to contribute to this package, you may want to test it in a real Filament project:
 
 -   Fork this repository to your GitHub account.
 -   Create a Filament app locally.
