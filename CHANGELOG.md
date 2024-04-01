@@ -2,6 +2,19 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## 3.1.0 - 2024-04-01
+
+### What's Changed
+
+* Preferred User and Browser Locales by @bezhanSalleh in https://github.com/bezhanSalleh/filament-language-switch/pull/78
+* Updates README.md by @fsamapoor in https://github.com/bezhanSalleh/filament-language-switch/pull/76
+
+### New Contributors
+
+* @fsamapoor made their first contribution in https://github.com/bezhanSalleh/filament-language-switch/pull/76
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/3.0.6...3.1.0
+
 ## 3.0.6 - 2024-03-28
 
 ### What's Changed
