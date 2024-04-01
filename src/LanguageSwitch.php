@@ -84,7 +84,7 @@ class LanguageSwitch extends Component
         return $this;
     }
 
-    public function displayLocale(string $locale = null): static
+    public function displayLocale(?string $locale = null): static
     {
         $this->displayLocale = $locale ?? app()->getLocale();
 
@@ -98,7 +98,7 @@ class LanguageSwitch extends Component
         return $this;
     }
 
-    public function outsidePanelRoutes(array | Closure $routes = null): static
+    public function outsidePanelRoutes(array | Closure | null $routes = null): static
     {
         $this->outsidePanelRoutes = $routes ?? [
             'auth.login',
