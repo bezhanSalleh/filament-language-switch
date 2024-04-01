@@ -318,7 +318,7 @@ class LanguageSwitch extends Component
             : str($locale)->upper()->toString();
     }
 
-    public static function trigger($locale)
+    public static function trigger(string $locale)
     {
         session()->put('locale', $locale);
 
