@@ -8,14 +8,10 @@
     src="{{ $src }}"
     {{ $attributes
         ->class([
-            'object-cover object-center max-w-none',
+            'object-cover object-center',
             'rounded-full' => $circular,
             'rounded-lg' => ! $circular && ! $switch,
             'rounded-md' => ! $circular && $switch,
-            ''
         ])
     }}
-    @class([
-
-    ])
 />

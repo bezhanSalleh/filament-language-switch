@@ -31,6 +31,8 @@ class LanguageSwitch extends Component
 
     protected array | Closure $locales = [];
 
+    protected bool $nativeLabel = false;
+
     protected ?Placement $outsidePanelPlacement = null;
 
     protected bool | Closure $visibleInsidePanels = false;
@@ -69,7 +71,7 @@ class LanguageSwitch extends Component
 
         if ($static->isVisibleOutsidePanels()) {
             FilamentView::registerRenderHook(
-                name: 'panels::body.end',
+                name: 'panels::body.start',
                 hook: fn (): string => Blade::render('<livewire:filament-language-switch key=\'fls-outside-panels\' />')
             );
         }
@@ -82,14 +84,21 @@ class LanguageSwitch extends Component
         return $this;
     }
 
-    public function displayLocale(?string $locale = null): static
+    public function displayLocale(string $locale = null): static
     {
         $this->displayLocale = $locale ?? app()->getLocale();
 
         return $this;
     }
 
-    public function outsidePanelRoutes(array | Closure | null $routes = null): static
+    public function nativeLabel(bool $condition = true): static
+    {
+        $this->nativeLabel = $condition;
+
+        return $this;
+    }
+
+    public function outsidePanelRoutes(array | Closure $routes = null): static
     {
         $this->outsidePanelRoutes = $routes ?? [
             'auth.login',
@@ -165,9 +174,9 @@ class LanguageSwitch extends Component
         return $this;
     }
 
-    public function getDisplayLocale(): string
+    public function getDisplayLocale(): ?string
     {
-        return (string) $this->evaluate($this->displayLocale);
+        return $this->evaluate($this->displayLocale);
     }
 
     public function getExcludes(): array
@@ -229,6 +238,11 @@ class LanguageSwitch extends Component
         return (array) $this->evaluate($this->locales);
     }
 
+    public function getNativeLabel(): bool
+    {
+        return (bool) $this->evaluate($this->nativeLabel);
+    }
+
     public function getOutsidePanelPlacement(): Placement
     {
         return $this->outsidePanelPlacement ?? Placement::TopRight;
@@ -278,7 +292,16 @@ class LanguageSwitch extends Component
 
     public function getLabel(string $locale): string
     {
-        return $this->labels[$locale] ?? str(locale_get_display_name($locale, $this->getDisplayLocale()))
+        if (array_key_exists($locale, $this->labels) && ! $this->getNativeLabel()) {
+            return strval($this->labels[$locale]);
+        }
+
+        return str(
+            locale_get_display_name(
+                locale: $locale,
+                displayLocale: $this->getNativeLabel() ? $locale : $this->getDisplayLocale()
+            )
+        )
             ->title()
             ->toString();
     }

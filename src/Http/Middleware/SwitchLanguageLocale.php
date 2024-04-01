@@ -11,7 +11,7 @@ class SwitchLanguageLocale
     public function handle(Request $request, Closure $next): \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse
     {
         app()->setLocale(
-            LanguageSwitch::make()->getPreferredLocale()
+            locale: LanguageSwitch::make()->getPreferredLocale()
         );
 
         return $next($request);
