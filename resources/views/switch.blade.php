@@ -65,7 +65,7 @@
                                 :src="$languageSwitch->getFlag($locale)"
                                 :circular="$isCircular"
                                 :alt="$languageSwitch->getLabel($locale)"
-                                class="p-0.5 w-7 h-7"
+                                class="w-7 h-7"
                             />
                         @else
                             <span

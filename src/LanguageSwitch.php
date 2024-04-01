@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BezhanSalleh\FilamentLanguageSwitch;
 
 use BezhanSalleh\FilamentLanguageSwitch\Enums\Placement;
+use BezhanSalleh\FilamentLanguageSwitch\Events\LocaleChanged;
 use Closure;
 use Exception;
 use Filament\Panel;
@@ -30,6 +31,8 @@ class LanguageSwitch extends Component
 
     protected array | Closure $locales = [];
 
+    protected bool $nativeLabel = false;
+
     protected ?Placement $outsidePanelPlacement = null;
 
     protected bool | Closure $visibleInsidePanels = false;
@@ -37,6 +40,8 @@ class LanguageSwitch extends Component
     protected bool | Closure $visibleOutsidePanels = false;
 
     protected Closure | string $renderHook = 'panels::global-search.after';
+
+    protected Closure | string | null $userPreferredLocale = null;
 
     public static function make(): static
     {
@@ -66,7 +71,7 @@ class LanguageSwitch extends Component
 
         if ($static->isVisibleOutsidePanels()) {
             FilamentView::registerRenderHook(
-                name: 'panels::body.end',
+                name: 'panels::body.start',
                 hook: fn (): string => Blade::render('<livewire:filament-language-switch key=\'fls-outside-panels\' />')
             );
         }
@@ -82,6 +87,13 @@ class LanguageSwitch extends Component
     public function displayLocale(?string $locale = null): static
     {
         $this->displayLocale = $locale ?? app()->getLocale();
+
+        return $this;
+    }
+
+    public function nativeLabel(bool $condition = true): static
+    {
+        $this->nativeLabel = $condition;
 
         return $this;
     }
@@ -146,6 +158,13 @@ class LanguageSwitch extends Component
         return $this;
     }
 
+    public function userPreferredLocale(Closure | string | null $locale): static
+    {
+        $this->userPreferredLocale = $locale;
+
+        return $this;
+    }
+
     public function visible(bool | Closure $insidePanels = true, bool | Closure $outsidePanels = false): static
     {
         $this->visibleInsidePanels = $insidePanels;
@@ -155,9 +174,9 @@ class LanguageSwitch extends Component
         return $this;
     }
 
-    public function getDisplayLocale(): string
+    public function getDisplayLocale(): ?string
     {
-        return (string) $this->evaluate($this->displayLocale);
+        return $this->evaluate($this->displayLocale);
     }
 
     public function getExcludes(): array
@@ -219,6 +238,11 @@ class LanguageSwitch extends Component
         return (array) $this->evaluate($this->locales);
     }
 
+    public function getNativeLabel(): bool
+    {
+        return (bool) $this->evaluate($this->nativeLabel);
+    }
+
     public function getOutsidePanelPlacement(): Placement
     {
         return $this->outsidePanelPlacement ?? Placement::TopRight;
@@ -227,6 +251,23 @@ class LanguageSwitch extends Component
     public function getRenderHook(): string
     {
         return (string) $this->evaluate($this->renderHook);
+    }
+
+    public function getUserPreferredLocale(): ?string
+    {
+        return $this->evaluate($this->userPreferredLocale) ?? null;
+    }
+
+    public function getPreferredLocale(): string
+    {
+        $locale = session()->get('locale') ??
+            request()->get('locale') ??
+            request()->cookie('filament_language_switch_locale') ??
+            $this->getUserPreferredLocale() ??
+            config('app.locale', 'en') ??
+            request()->getPreferredLanguage();
+
+        return in_array($locale, $this->getLocales(), true) ? $locale : config('app.locale');
     }
 
     /**
@@ -251,7 +292,16 @@ class LanguageSwitch extends Component
 
     public function getLabel(string $locale): string
     {
-        return $this->labels[$locale] ?? str(locale_get_display_name($locale, $this->getDisplayLocale()))
+        if (array_key_exists($locale, $this->labels) && ! $this->getNativeLabel()) {
+            return strval($this->labels[$locale]);
+        }
+
+        return str(
+            locale_get_display_name(
+                locale: $locale,
+                displayLocale: $this->getNativeLabel() ? $locale : $this->getDisplayLocale()
+            )
+        )
             ->title()
             ->toString();
     }
@@ -266,5 +316,16 @@ class LanguageSwitch extends Component
         return str($locale)->length() > 2
             ? str($locale)->substr(0, 2)->upper()->toString()
             : str($locale)->upper()->toString();
+    }
+
+    public static function trigger(string $locale)
+    {
+        session()->put('locale', $locale);
+
+        cookie()->queue(cookie()->forever('filament_language_switch_locale', $locale));
+
+        event(new LocaleChanged($locale));
+
+        return redirect(request()->header('Referer'));
     }
 }
