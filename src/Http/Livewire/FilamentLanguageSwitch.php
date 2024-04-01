@@ -4,7 +4,7 @@ namespace BezhanSalleh\FilamentLanguageSwitch\Http\Livewire;
 
 use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
 use Illuminate\Contracts\View\View;
-use Livewire\Attributes\On; 
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class FilamentLanguageSwitch extends Component
