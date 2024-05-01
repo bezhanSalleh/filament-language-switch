@@ -84,7 +84,7 @@ class AppServiceProvider extends ServiceProvider
 }
 ```
 
-Though this is all you would need, but the plugin is designed to be very customizable. Delve into the **Configuration** section below for detailed customization options.
+Though this is all you would need, but the plugin is designed to be very customizable. Checkout the [Laravel localization documentation](https://laravel.com/docs/11.x/localization#introduction) to get started with localization. Delve into the **Configuration** section below for detailed customization options.
 
 ## Configuration
 
