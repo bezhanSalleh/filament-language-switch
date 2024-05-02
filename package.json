@@ -9,8 +9,6 @@
     },
     "devDependencies": {
         "@awcodes/filament-plugin-purge": "^1.1.1",
-        "@tailwindcss/forms": "^0.5.4",
-        "@tailwindcss/typography": "^0.5.9",
         "autoprefixer": "^10.4.14",
         "esbuild": "^0.18.13",
         "postcss": "^8.4.26",
