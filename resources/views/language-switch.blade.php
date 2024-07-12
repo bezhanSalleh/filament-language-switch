@@ -12,6 +12,7 @@
         ! $isVisibleOutsidePanels && $isFlagsOnly=> 'bottom',
         default => 'bottom-end',
     };
+    $maxHeight = $languageSwitch->getMaxHeight();
 @endphp
 <div>
     @if ($isVisibleOutsidePanels)

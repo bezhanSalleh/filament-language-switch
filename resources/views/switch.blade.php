@@ -2,6 +2,7 @@
     teleport
     :placement="$placement"
     :width="$isFlagsOnly ? 'flags-only' : 'fls-dropdown-width'"
+    :max-height="$maxHeight"
     class="fi-dropdown fi-user-menu"
 >
     <x-slot name="trigger">
