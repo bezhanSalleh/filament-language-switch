@@ -224,7 +224,7 @@ class LanguageSwitch extends Component
     public function isVisibleOutsidePanels(): bool
     {
         return (bool) ($this->evaluate($this->visibleOutsidePanels)
-            && str(request()->route()->getName())->contains($this->outsidePanelRoutes)
+            && str(request()->route()?->getName())->contains($this->outsidePanelRoutes)
             && $this->isCurrentPanelIncluded());
     }
 
