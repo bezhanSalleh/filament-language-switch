@@ -102,7 +102,6 @@ class LanguageSwitch extends Component
     {
         $this->outsidePanelRoutes = $routes ?? [
             'auth.login',
-            'auth.profile',
             'auth.register',
         ];
 
@@ -225,18 +224,7 @@ class LanguageSwitch extends Component
     {
         return (bool) ($this->evaluate($this->visibleOutsidePanels)
             && str(request()->route()->getName())->contains($this->outsidePanelRoutes)
-            && $this->isCurrentPanelIncluded())
-            && (! $this->isProfilePage() || $this->isSimpleProfilePage());
-    }
-
-    public function isProfilePage(): bool
-    {
-        return str(request()->route()->getName())->contains('auth.profile');
-    }
-
-    public function isSimpleProfilePage(): bool
-    {
-        return $this->isProfilePage() && $this->getCurrentPanel()->isProfilePageSimple();
+            && $this->isCurrentPanelIncluded());
     }
 
     public function getLabels(): array

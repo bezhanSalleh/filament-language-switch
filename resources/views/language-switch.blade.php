@@ -22,7 +22,6 @@
             'justify-start' => str_contains($outsidePanelsPlacement, 'left'),
             'justify-end' => str_contains($outsidePanelsPlacement, 'right'),
             'justify-center' => str_contains($outsidePanelsPlacement, 'center'),
-            'right-20' => str_contains($outsidePanelsPlacement, 'top-right') && $languageSwitch->isSimpleProfilePage(),
         ])>
             <div class="rounded-lg bg-gray-50 dark:bg-gray-950">
                 @include('filament-language-switch::switch')
