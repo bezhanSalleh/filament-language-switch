@@ -39,7 +39,7 @@ class LanguageSwitch extends Component
 
     protected bool | Closure $visibleOutsidePanels = false;
 
-    protected Closure | string $renderHook = 'panels::global-search.after';
+    protected Closure | string $renderHook = 'panels::user-menu.before';
 
     protected Closure | string | null $userPreferredLocale = null;
 
