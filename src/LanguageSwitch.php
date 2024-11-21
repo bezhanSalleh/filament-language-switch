@@ -39,6 +39,8 @@ class LanguageSwitch extends Component
 
     protected bool | Closure $visibleOutsidePanels = false;
 
+    protected string $maxHeight = 'max-content';
+
     protected Closure | string $renderHook = 'panels::global-search.after';
 
     protected Closure | string | null $userPreferredLocale = null;
@@ -174,6 +176,13 @@ class LanguageSwitch extends Component
         return $this;
     }
 
+    public function maxHeight(string $height): static
+    {
+        $this->maxHeight = $height;
+
+        return $this;
+    }
+
     public function getDisplayLocale(): ?string
     {
         return $this->evaluate($this->displayLocale);
@@ -268,6 +277,11 @@ class LanguageSwitch extends Component
             request()->getPreferredLanguage();
 
         return in_array($locale, $this->getLocales(), true) ? $locale : config('app.locale');
+    }
+
+    public function getMaxHeight(): string
+    {
+        return $this->maxHeight;
     }
 
     /**
