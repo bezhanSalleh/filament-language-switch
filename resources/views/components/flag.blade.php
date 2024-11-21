@@ -13,5 +13,6 @@
             'rounded-lg' => ! $circular && ! $switch,
             'rounded-md' => ! $circular && $switch,
         ])
+        ->merge(['alt' => $alt])
     }}
 />
