@@ -30,12 +30,12 @@ class FilamentLanguageSwitchServiceProvider extends PackageServiceProvider
 
         Livewire::component('filament-language-switch', FilamentLanguageSwitch::class);
 
-        FilamentAsset::register(
-            assets: [
-                Css::make('filament-language-switch', __DIR__ . '/../resources/dist/filament-language-switch.css'),
-            ],
-            package: 'bezhansalleh/filament-language-switch'
-        );
+        // FilamentAsset::register(
+        //     assets: [
+        //         Css::make('filament-language-switch', __DIR__ . '/../resources/dist/filament-language-switch.css'),
+        //     ],
+        //     package: 'bezhansalleh/filament-language-switch'
+        // );
 
         Filament::serving(function () {
             LanguageSwitch::boot();

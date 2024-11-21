@@ -15,6 +15,15 @@
     $maxHeight = $languageSwitch->getMaxHeight();
 @endphp
 <div>
+    <style>
+        .flags-only {
+            max-width: 3rem !important;
+        }
+
+        .fls-dropdown-width {
+            max-width: fit-content !important;
+        }
+    </style>
     @if ($isVisibleOutsidePanels)
         <div @class([
             'fls-display-on fixed w-fit flex p-4 z-50',
