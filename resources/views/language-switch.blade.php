@@ -14,7 +14,10 @@
     };
     $maxHeight = $languageSwitch->getMaxHeight();
 @endphp
-<div>
+<div
+    x-data
+    x-load-css="[@js(\Filament\Support\Facades\FilamentAsset::getStyleHref('filament-language-switch', package: 'bezhansalleh/filament-language-switch'))]"
+>
     @if ($isVisibleOutsidePanels)
         <div @class([
             'fls-display-on fixed w-fit flex p-4 z-50',

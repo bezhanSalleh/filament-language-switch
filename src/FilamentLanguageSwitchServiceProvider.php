@@ -32,7 +32,7 @@ class FilamentLanguageSwitchServiceProvider extends PackageServiceProvider
 
         FilamentAsset::register(
             assets: [
-                Css::make('filament-language-switch', __DIR__ . '/../resources/dist/filament-language-switch.css'),
+                Css::make('filament-language-switch', __DIR__ . '/../resources/dist/filament-language-switch.css')->loadedOnRequest(),
             ],
             package: 'bezhansalleh/filament-language-switch'
         );
