@@ -273,10 +273,12 @@ class LanguageSwitch extends Component
             request()->get('locale') ??
             request()->cookie('filament_language_switch_locale') ??
             $this->getUserPreferredLocale() ??
-            config('app.locale', 'en') ??
             request()->getPreferredLanguage();
 
-        return in_array($locale, $this->getLocales(), true) ? $locale : config('app.locale');
+        // Usually browsers return the locale in the format of `en-US`, but we only need the first part.
+        $locale = substr($locale, 0, 2);
+
+        return in_array($locale, $this->getLocales(), true) ? $locale : config('app.locale', 'en');
     }
 
     public function getMaxHeight(): string
