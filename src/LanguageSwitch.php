@@ -336,7 +336,7 @@ class LanguageSwitch extends Component
     {
         session()->put('locale', $locale);
 
-        cookie()->queue(cookie()->forever('filament_language_switch_locale', $locale));
+        // cookie()->queue(cookie()->forever('filament_language_switch_locale', $locale));
 
         event(new LocaleChanged($locale));
 
