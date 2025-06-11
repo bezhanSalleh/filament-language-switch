@@ -2,6 +2,33 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## 3.1.1 - 2025-06-11
+
+### What's Changed
+
+* Bump aglipanci/laravel-pint-action from 2.3.1 to 2.4 by @dependabot in https://github.com/bezhanSalleh/filament-language-switch/pull/93
+* Bump dependabot/fetch-metadata from 2.0.0 to 2.1.0 by @dependabot in https://github.com/bezhanSalleh/filament-language-switch/pull/97
+* Bump dependabot/fetch-metadata from 2.1.0 to 2.2.0 by @dependabot in https://github.com/bezhanSalleh/filament-language-switch/pull/102
+* Update flag.blade.php. Add alt text to img by @donatiss in https://github.com/bezhanSalleh/filament-language-switch/pull/88
+* Update README.md by @Saad5400 in https://github.com/bezhanSalleh/filament-language-switch/pull/89
+* Add max height to language switch dropdown by @michaelklopf in https://github.com/bezhanSalleh/filament-language-switch/pull/100
+* fixes wrongly overridded styles, now  styles only the minimum styles needed by @inalto in https://github.com/bezhanSalleh/filament-language-switch/pull/96
+* Make route getName optional by @jyrkidn in https://github.com/bezhanSalleh/filament-language-switch/pull/101
+* Bump dependabot/fetch-metadata from 2.2.0 to 2.3.0 by @dependabot in https://github.com/bezhanSalleh/filament-language-switch/pull/113
+* Bump aglipanci/laravel-pint-action from 2.4 to 2.5 by @dependabot in https://github.com/bezhanSalleh/filament-language-switch/pull/114
+* Bump dependabot/fetch-metadata from 2.3.0 to 2.4.0 by @dependabot in https://github.com/bezhanSalleh/filament-language-switch/pull/120
+* add data-nosnippet to language switcher dropdown by @AurelDemiri in https://github.com/bezhanSalleh/filament-language-switch/pull/122
+
+### New Contributors
+
+* @donatiss made their first contribution in https://github.com/bezhanSalleh/filament-language-switch/pull/88
+* @Saad5400 made their first contribution in https://github.com/bezhanSalleh/filament-language-switch/pull/89
+* @inalto made their first contribution in https://github.com/bezhanSalleh/filament-language-switch/pull/96
+* @jyrkidn made their first contribution in https://github.com/bezhanSalleh/filament-language-switch/pull/101
+* @AurelDemiri made their first contribution in https://github.com/bezhanSalleh/filament-language-switch/pull/122
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/3.1.0...3.1.1
+
 ## 3.1.0 - 2024-04-01
 
 ### What's Changed
