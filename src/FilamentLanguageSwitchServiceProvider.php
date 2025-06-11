@@ -7,8 +7,6 @@ use BezhanSalleh\FilamentLanguageSwitch\Http\Middleware\SwitchLanguageLocale;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Panel;
-use Filament\Support\Assets\Css;
-use Filament\Support\Facades\FilamentAsset;
 use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -29,13 +27,6 @@ class FilamentLanguageSwitchServiceProvider extends PackageServiceProvider
         $this->registerPluginMiddleware();
 
         Livewire::component('filament-language-switch', FilamentLanguageSwitch::class);
-
-        // FilamentAsset::register(
-        //     assets: [
-        //         Css::make('filament-language-switch', __DIR__ . '/../resources/dist/filament-language-switch.css'),
-        //     ],
-        //     package: 'bezhansalleh/filament-language-switch'
-        // );
 
         Filament::serving(function () {
             LanguageSwitch::boot();

@@ -1,7 +1,0 @@
-*.md
-**/.git
-**/.github
-**/dist
-**/vendor
-**/node_modules
-composer.lock
