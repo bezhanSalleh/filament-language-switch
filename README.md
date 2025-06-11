@@ -32,10 +32,11 @@ The **Language Switch** plugin is a versatile and user-friendly tool designed fo
 
   
 ## Requirement
-* [Filament v3](https://filamentphp.com/docs/3.x/panels/installation)
+* [Filament v4.x](https://filamentphp.com/docs/4.x/panels/installation)
 
 > [!NOTE]  
-> For [Filament v2](https://filamentphp.com/docs/2.x/admin/installation) use [v1](https://github.com/bezhanSalleh/filament-language-switch/tree/1.x)
+> For [Filament v3.x](https://filamentphp.com/docs/3.x/panels/installation) use [v3.x](https://github.com/bezhanSalleh/filament-language-switch/tree/3.x)
+> For [Filament v2.x](https://filamentphp.com/docs/2.x/admin/installation) use [v1.x](https://github.com/bezhanSalleh/filament-language-switch/tree/1.x)
 
 ***
 
@@ -56,6 +57,17 @@ Install the package via composer:
 ```bash
 composer require bezhansalleh/filament-language-switch
 ```
+> [!IMPORTANT]
+> The plugin follows Filament's theming rules. So, to use the plugin create a custom if you haven't already, and add the following line to your `theme.css` file:
+
+```php
+@source '../../../../vendor/bezhansalleh/filament-language-switch/resources/views/**/*.blade.php';
+```
+Now build your theme using: 
+```bash
+npm run build
+```
+--- 
 
 ## Usage
 
@@ -316,24 +328,6 @@ By default the **Language Switch** `Flags` or `Language Badges` are slightly rou
             ...;
     });
     ...
-```
-
-## Theme
-The plugin follows Filament's theming rules. So, if you have custom themes add the plugin's view path into the `content` array of your themes' `tailwind.config.js` file:
-
-```php
-//tailwind.config.js
-export default {
-    content: [
-        // ...
-        './vendor/bezhansalleh/filament-language-switch/resources/views/language-switch.blade.php',
-    ],
-    // ...
-}
-```
-... now build your theme using: 
-```bash
-npm run build
 ```
 
 ## Views
