@@ -4,6 +4,7 @@
     :width="$isFlagsOnly ? 'flags-only' : 'fls-dropdown-width'"
     :max-height="$maxHeight"
     class="fi-dropdown fi-user-menu"
+    data-nosnippet="true"
 >
     <x-slot name="trigger">
         <div
