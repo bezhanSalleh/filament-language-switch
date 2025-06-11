@@ -40,16 +40,6 @@ The **Language Switch** plugin is a versatile and user-friendly tool designed fo
 
 ***
 
-> [!IMPORTANT]
-> Migrating from 2.x to 3.x
-> - Unregister the plugin from all your panels
-> - Remove the config file `config/filament-language-switch.php`
-> - Remove the `filament-language-switch` directory from `resources/views/vendor`
-> - Bump the package version to `^3.0` in your `composer.json` file
-> - Run `composer update`
-> - Checkout the [Usage](#usage) section below to get up and running. 
-> - Checkout the [Configuration](#configuration) section to see what's new and how to configure the plugin.
-  
 ## Installation
 
 Install the package via composer:
