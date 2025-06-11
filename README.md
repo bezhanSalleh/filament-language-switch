@@ -48,7 +48,7 @@ Install the package via composer:
 composer require bezhansalleh/filament-language-switch
 ```
 > [!IMPORTANT]
-> The plugin follows Filament's theming rules. So, to use the plugin create a custom if you haven't already, and add the following line to your `theme.css` file:
+> The plugin follows Filament's theming rules. So, to use the plugin create a custom theme if you haven't already, and add the following line to your `theme.css` file:
 
 ```php
 @source '../../../../vendor/bezhansalleh/filament-language-switch/resources/views/**/*.blade.php';
