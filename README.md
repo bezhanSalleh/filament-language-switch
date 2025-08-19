@@ -38,7 +38,17 @@ The **Language Switch** plugin is a versatile and user-friendly tool designed fo
 > - For [Filament v3.x](https://filamentphp.com/docs/3.x/panels/installation) use [v3.x](https://github.com/bezhanSalleh/filament-language-switch/tree/3.x)
 > - For [Filament v2.x](https://filamentphp.com/docs/2.x/admin/installation) use [v1.x](https://github.com/bezhanSalleh/filament-language-switch/tree/1.x)
 
-***
+#### Compatibility
+
+| Package Version | Filament Version | 
+|----------------|---------------------|
+| [v1](https://github.com/bezhanSalleh/filament-language-switch/tree/1.x) | [v2](https://filamentphp.com/docs/2.x/admin/installation) |
+| [v3](https://github.com/bezhanSalleh/filament-language-switch/tree/3.x) | [v3](https://filamentphp.com/docs/3.x/panels/installation) |
+| [v4](https://github.com/bezhanSalleh/filament-language-switch/tree/4.x) | [v4](https://filamentphp.com/docs/4.x/introduction/overview) |
+
+## Upgrading from v2 to v3
+
+If you are upgrading from version 2 to version 3, you will need to update the namespace anywhere you are using the plugin from `BezhanSalleh\FilamentLanguageSwitch` to `BezhanSalleh\LanguageSwitch`.
 
 ## Installation
 
@@ -91,6 +101,25 @@ Though this is all you would need, but the plugin is designed to be very customi
 ## Configuration
 
 The plugin comes with following options that you can customize and configure as per your requirements. The plugin has a fluent API so you can chain the methods and easily configure it all in one place.
+
+### Event
+Whenever the locale is changed, the plugin dispatches a `LocaleChanged` event. You can listen to this event in your application to perform any additional actions or logic when the language is switched.
+
+```php
+use BezhanSalleh\LanguageSwitch\Events\LocaleChanged;
+use Illuminate\Support\Facades\Event;
+ 
+/**
+ * Bootstrap any application services.
+ */
+public function boot(): void
+{
+    Event::listen(function (LocaleChanged $event) {
+        // persist the new locale in the user's profile, or perform any other action
+        // auth()->user()->setLocale($event->locale);
+    });
+}
+```
 
 ### Visibility Control
 
