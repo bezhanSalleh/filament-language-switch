@@ -46,9 +46,9 @@ The **Language Switch** plugin is a versatile and user-friendly tool designed fo
 | [v3](https://github.com/bezhanSalleh/filament-language-switch/tree/3.x) | [v3](https://filamentphp.com/docs/3.x/panels/installation) |
 | [v4](https://github.com/bezhanSalleh/filament-language-switch/tree/4.x) | [v4](https://filamentphp.com/docs/4.x/introduction/overview) |
 
-## Upgrading from v2 to v3
+## Upgrading from v3 to v4
 
-If you are upgrading from version 2 to version 3, you will need to update the namespace anywhere you are using the plugin from `BezhanSalleh\FilamentLanguageSwitch` to `BezhanSalleh\LanguageSwitch`.
+If you are upgrading from version 3 to version 4, you will need to update the namespace anywhere you are using the plugin from `BezhanSalleh\LanguageSwitch` to `BezhanSalleh\FilamentLanguageSwitch`.
 
 ## Installation
 
