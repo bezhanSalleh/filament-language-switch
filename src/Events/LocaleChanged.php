@@ -1,6 +1,6 @@
 <?php
 
-namespace BezhanSalleh\FilamentLanguageSwitch\Events;
+namespace BezhanSalleh\LanguageSwitch\Events;
 
 class LocaleChanged
 {

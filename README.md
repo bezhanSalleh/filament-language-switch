@@ -66,7 +66,7 @@ The plugin boots after installation automatically. For the plugin to work, provi
 ```php
 
 ...
-use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
+use BezhanSalleh\LanguageSwitch\LanguageSwitch;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -167,7 +167,7 @@ Set the desired placement for the **language switch** outside Filament Panels li
 ```php
 // AppServiceProvider.php
 ...
-use BezhanSalleh\FilamentLanguageSwitch\Enums\Placement;
+use BezhanSalleh\LanguageSwitch\Enums\Placement;
 
 LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
     $switch
@@ -324,7 +324,7 @@ By default the **Language Switch** `Flags` or `Language Badges` are slightly rou
 In case you want to tweak the design, you can publish the views using the following command and adjust it however you like:
 
 ```bash
-php artisan vendor:publish --tag="filament-language-switch-views"
+php artisan vendor:publish --tag="language-switch-views"
 ```
 
 ## Changelog

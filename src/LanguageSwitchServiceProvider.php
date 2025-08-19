@@ -1,9 +1,9 @@
 <?php
 
-namespace BezhanSalleh\FilamentLanguageSwitch;
+namespace BezhanSalleh\LanguageSwitch;
 
-use BezhanSalleh\FilamentLanguageSwitch\Http\Livewire\FilamentLanguageSwitch;
-use BezhanSalleh\FilamentLanguageSwitch\Http\Middleware\SwitchLanguageLocale;
+use BezhanSalleh\LanguageSwitch\Http\Livewire\LanguageSwitchComponent;
+use BezhanSalleh\LanguageSwitch\Http\Middleware\SwitchLanguageLocale;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Panel;
@@ -11,9 +11,9 @@ use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class FilamentLanguageSwitchServiceProvider extends PackageServiceProvider
+class LanguageSwitchServiceProvider extends PackageServiceProvider
 {
-    public static string $name = 'filament-language-switch';
+    public static string $name = 'language-switch';
 
     public function configurePackage(Package $package): void
     {
@@ -26,9 +26,9 @@ class FilamentLanguageSwitchServiceProvider extends PackageServiceProvider
     {
         $this->registerPluginMiddleware();
 
-        Livewire::component('filament-language-switch', FilamentLanguageSwitch::class);
+        Livewire::component('language-switch-component', LanguageSwitchComponent::class);
 
-        Filament::serving(function () {
+        Filament::serving(function (): void {
             LanguageSwitch::boot();
         });
     }

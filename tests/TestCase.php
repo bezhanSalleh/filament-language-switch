@@ -1,8 +1,8 @@
 <?php
 
-namespace BezhanSalleh\FilamentLanguageSwitch\Tests;
+namespace BezhanSalleh\LanguageSwitch\Tests;
 
-use BezhanSalleh\FilamentLanguageSwitch\FilamentLanguageSwitchServiceProvider;
+use BezhanSalleh\LanguageSwitch\LanguageSwitchServiceProvider;
 use Filament\FilamentServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Livewire\LivewireServiceProvider;
@@ -15,26 +15,21 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'BezhanSalleh\\FilamentLanguageSwitch\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
+            fn (string $modelName) => 'BezhanSalleh\\LanguageSwitch\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
         );
     }
 
     protected function getPackageProviders($app)
     {
         return [
-            LivewireServiceProvider::class,
             FilamentServiceProvider::class,
-            FilamentLanguageSwitchServiceProvider::class,
+            LivewireServiceProvider::class,
+            LanguageSwitchServiceProvider::class,
         ];
     }
 
     public function getEnvironmentSetUp($app)
     {
         config()->set('database.default', 'testing');
-
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_filament-language-switch_table.php.stub';
-        $migration->up();
-        */
     }
 }

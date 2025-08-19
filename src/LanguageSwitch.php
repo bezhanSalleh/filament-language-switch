@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace BezhanSalleh\FilamentLanguageSwitch;
+namespace BezhanSalleh\LanguageSwitch;
 
-use BezhanSalleh\FilamentLanguageSwitch\Enums\Placement;
-use BezhanSalleh\FilamentLanguageSwitch\Events\LocaleChanged;
+use BezhanSalleh\LanguageSwitch\Enums\Placement;
+use BezhanSalleh\LanguageSwitch\Events\LocaleChanged;
 use Closure;
 use Exception;
 use Filament\Panel;
@@ -67,14 +67,14 @@ class LanguageSwitch extends Component
         if ($static->isVisibleInsidePanels()) {
             FilamentView::registerRenderHook(
                 name: $static->getRenderHook(),
-                hook: fn (): string => Blade::render('<livewire:filament-language-switch key=\'fls-in-panels\' />')
+                hook: fn (): string => Blade::render("<livewire:language-switch-component key='fls-in-panels' />")
             );
         }
 
         if ($static->isVisibleOutsidePanels()) {
             FilamentView::registerRenderHook(
                 name: 'panels::body.start',
-                hook: fn (): string => Blade::render('<livewire:filament-language-switch key=\'fls-outside-panels\' />')
+                hook: fn (): string => Blade::render("<livewire:language-switch-component key='fls-outside-panels' />")
             );
         }
     }
@@ -200,10 +200,9 @@ class LanguageSwitch extends Component
     {
         $flagUrls = (array) $this->evaluate($this->flags);
 
-        foreach ($flagUrls as $url) {
-            if (! filter_var($url, FILTER_VALIDATE_URL)) {
+        foreach ($flagUrls as $flagUrl) {
+            if (! filter_var($flagUrl, FILTER_VALIDATE_URL)) {
                 throw new \Exception('Invalid flag url');
-                exit;
             }
         }
 
@@ -225,16 +224,16 @@ class LanguageSwitch extends Component
 
     public function isVisibleInsidePanels(): bool
     {
-        return (bool) ($this->evaluate($this->visibleInsidePanels)
+        return $this->evaluate($this->visibleInsidePanels)
             && count($this->locales) > 1
-            && $this->isCurrentPanelIncluded());
+            && $this->isCurrentPanelIncluded();
     }
 
     public function isVisibleOutsidePanels(): bool
     {
-        return (bool) ($this->evaluate($this->visibleOutsidePanels)
+        return $this->evaluate($this->visibleOutsidePanels)
             && str(request()->route()?->getName())->contains($this->outsidePanelRoutes)
-            && $this->isCurrentPanelIncluded());
+            && $this->isCurrentPanelIncluded();
     }
 
     public function getLabels(): array
@@ -290,7 +289,7 @@ class LanguageSwitch extends Component
     public function getPanels(): array
     {
         return collect(filament()->getPanels())
-            ->reject(fn (Panel $panel) => in_array($panel->getId(), $this->getExcludes()))
+            ->reject(fn (Panel $panel): bool => in_array($panel->getId(), $this->getExcludes()))
             ->toArray();
     }
 

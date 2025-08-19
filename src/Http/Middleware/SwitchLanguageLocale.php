@@ -1,8 +1,8 @@
 <?php
 
-namespace BezhanSalleh\FilamentLanguageSwitch\Http\Middleware;
+namespace BezhanSalleh\LanguageSwitch\Http\Middleware;
 
-use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
+use BezhanSalleh\LanguageSwitch\LanguageSwitch;
 use Closure;
 use Illuminate\Http\Request;
 

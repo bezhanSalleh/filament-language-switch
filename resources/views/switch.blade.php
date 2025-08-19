@@ -1,7 +1,7 @@
 <x-filament::dropdown
     teleport
     :placement="$placement"
-    :width="$isFlagsOnly ? 'flags-only' : 'fls-dropdown-width'"
+    :width="$isFlagsOnly ? 'w-fit fls-flag-only-width' : 'w-fit fls-dropdown-width'"
     :max-height="$maxHeight"
     class="fi-dropdown fi-user-menu"
     data-nosnippet="true"
@@ -17,11 +17,11 @@
             x-tooltip="{
                 content: @js($languageSwitch->getLabel(app()->getLocale())),
                 theme: $store.theme,
-                placement: 'bottom'
+                placement: 'right'
             }"
         >
             @if ($isFlagsOnly || $hasFlags)
-                <x-filament-language-switch::flag
+                <x-language-switch::flag
                     :src="$languageSwitch->getFlag(app()->getLocale())"
                     :circular="$isCircular"
                     :alt="$languageSwitch->getLabel(app()->getLocale())"
@@ -55,7 +55,7 @@
                 >
 
                     @if ($isFlagsOnly)
-                        <x-filament-language-switch::flag
+                        <x-language-switch::flag
                             :src="$languageSwitch->getFlag($locale)"
                             :circular="$isCircular"
                             :alt="$languageSwitch->getLabel($locale)"
@@ -63,7 +63,7 @@
                         />
                     @else
                         @if ($hasFlags)
-                            <x-filament-language-switch::flag
+                            <x-language-switch::flag
                                 :src="$languageSwitch->getFlag($locale)"
                                 :circular="$isCircular"
                                 :alt="$languageSwitch->getLabel($locale)"

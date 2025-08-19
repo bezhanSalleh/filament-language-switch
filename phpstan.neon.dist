@@ -1,0 +1,15 @@
+includes:
+
+parameters:
+    level: 8
+    phpVersion: 80200
+    paths:
+        - src
+    reportUnmatchedIgnoredErrors: false
+    checkOctaneCompatibility: true
+
+    tmpDir: build/phpstan
+
+    ignoreErrors:
+        -
+            identifier: property.onlyWritten

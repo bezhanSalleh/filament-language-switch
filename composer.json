@@ -23,32 +23,62 @@
     "require": {
         "php": "^8.2",
         "filament/filament": "^4.0",
+        "illuminate/support": "^11.28|^12.0",
         "spatie/laravel-package-tools": "^1.9"
     },
     "require-dev": {
+        "larastan/larastan": "^3.0",
         "laravel/pint": "^1.0",
-        "spatie/laravel-ray": "^1.26"
+        "nunomaduro/collision": "^8.0",
+        "orchestra/testbench": "^9.0|^10.0",
+        "pestphp/pest": "^2.0|^3.0",
+        "pestphp/pest-plugin-laravel": "^2.0|^3.0",
+        "pestphp/pest-plugin-livewire": "^2.0|^3.0",
+        "pestphp/pest-plugin-type-coverage": "^2.0|^3.5",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^1.0|^2.1",
+        "phpstan/phpstan-deprecation-rules": "^1.0|^2.0",
+        "phpstan/phpstan-phpunit": "^1.0|^2.0",
+        "phpunit/phpunit": "^10.1|^11.0",
+        "rector/rector": "^2.1",
+        "spatie/laravel-ray": "^1.40"
     },
     "autoload": {
         "psr-4": {
-            "BezhanSalleh\\FilamentLanguageSwitch\\": "src"
+            "BezhanSalleh\\LanguageSwitch\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "BezhanSalleh\\FilamentLanguageSwitch\\Tests\\": "tests"
+            "BezhanSalleh\\LanguageSwitch\\Tests\\": "tests"
         }
     },
     "scripts": {
-        "format": "vendor/bin/pint"
+        "analyse": "vendor/bin/phpstan analyse",
+        "test": "vendor/bin/pest --no-coverage",
+        "test:type": "vendor/bin/pest --type-coverage",
+        "lint": "vendor/bin/pint",
+        "refactor": "vendor/bin/rector",
+        "finalize": [
+            "@analyse",
+            "@refactor",
+            "@lint",
+            "@type",
+            "@test"
+        ]
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "BezhanSalleh\\FilamentLanguageSwitch\\FilamentLanguageSwitchServiceProvider"
+                "BezhanSalleh\\LanguageSwitch\\LanguageSwitchServiceProvider"
             ]
         }
     },

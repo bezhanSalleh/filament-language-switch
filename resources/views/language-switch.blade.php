@@ -1,5 +1,5 @@
 @php
-    $languageSwitch = \BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch::make();
+    $languageSwitch = \BezhanSalleh\LanguageSwitch\LanguageSwitch::make();
     $locales = $languageSwitch->getLocales();
     $isCircular = $languageSwitch->isCircular();
     $isFlagsOnly = $languageSwitch->isFlagsOnly();
@@ -15,15 +15,6 @@
     $maxHeight = $languageSwitch->getMaxHeight();
 @endphp
 <div>
-    <style>
-        .flags-only {
-            max-width: 3rem !important;
-        }
-
-        .fls-dropdown-width {
-            max-width: fit-content !important;
-        }
-    </style>
     @if ($isVisibleOutsidePanels)
         <div @class([
             'fls-display-on fixed w-fit flex p-4 z-50',
@@ -34,10 +25,10 @@
             'justify-center' => str_contains($outsidePanelsPlacement, 'center'),
         ])>
             <div class="rounded-lg bg-gray-50 dark:bg-gray-950">
-                @include('filament-language-switch::switch')
+                @include('language-switch::switch')
             </div>
         </div>
     @else
-        @include('filament-language-switch::switch')
+        @include('language-switch::switch')
     @endif
 </div>

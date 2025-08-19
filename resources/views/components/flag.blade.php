@@ -9,7 +9,7 @@
     {{ $attributes
         ->class([
             'object-cover object-center',
-            'rounded-full' => $circular,
+            'rounded-full w-7 h-7' => $circular,
             'rounded-lg' => ! $circular && ! $switch,
             'rounded-md' => ! $circular && $switch,
         ])
