@@ -30,14 +30,6 @@
 # Language Switch
 The **Language Switch** plugin is a versatile and user-friendly tool designed for Filament Panels. It offers a seamless way to integrate language switching capabilities into your Filament Panels. With a range of customizable options and a fluent API, the plugin allows you to easily configure language selection for your users. It supports displaying language options both within and outside of Filament panels, and it provides the flexibility to specify which panels or routes should include the language switch and much more.
 
-  
-## Requirement
-* [Filament v4.x](https://filamentphp.com/docs/4.x/panels/installation)
-
-> [!NOTE]  
-> - For [Filament v3.x](https://filamentphp.com/docs/3.x/panels/installation) use [v3.x](https://github.com/bezhanSalleh/filament-language-switch/tree/3.x)
-> - For [Filament v2.x](https://filamentphp.com/docs/2.x/admin/installation) use [v1.x](https://github.com/bezhanSalleh/filament-language-switch/tree/1.x)
-
 #### Compatibility
 
 | Package Version | Filament Version | 
@@ -46,7 +38,7 @@ The **Language Switch** plugin is a versatile and user-friendly tool designed fo
 | [v3](https://github.com/bezhanSalleh/filament-language-switch/tree/3.x) | [v3](https://filamentphp.com/docs/3.x/panels/installation) |
 | [v4](https://github.com/bezhanSalleh/filament-language-switch/tree/4.x) | [v4](https://filamentphp.com/docs/4.x/introduction/overview) |
 
-## Upgrading from v3 to v4
+### Upgrading from v3 to v4
 
 If you are upgrading from version 3 to version 4, you will need to update the namespace anywhere you are using the plugin from `BezhanSalleh\LanguageSwitch` to `BezhanSalleh\FilamentLanguageSwitch`.
 
