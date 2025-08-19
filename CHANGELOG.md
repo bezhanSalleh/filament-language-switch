@@ -2,6 +2,14 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## 4.0.0 - 2025-08-19
+
+### What's Changed
+
+* Filament v4 support
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/3.1.1...4.0.0
+
 ## 3.1.1 - 2025-06-11
 
 ### What's Changed
