@@ -50,7 +50,7 @@
                     @class([
                         'flex items-center w-full transition-colors duration-75 rounded-md outline-none  whitespace-nowrap disabled:pointer-events-none disabled:opacity-70 fi-dropdown-list-item-color-gray hover:bg-gray-950/5 focus:bg-gray-950/5 dark:hover:bg-white/5 dark:focus:bg-white/5',
                         'justify-center px-2 py-0.5' => $isFlagsOnly,
-                        'justify-start space-x-2 rtl:space-x-reverse p-1' => !$isFlagsOnly,
+                        'justify-start space-x-2 p-1' => !$isFlagsOnly,
                     ])
                 >
 
