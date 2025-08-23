@@ -40,7 +40,7 @@ The **Language Switch** plugin is a versatile and user-friendly tool designed fo
 
 ### Upgrading from v3 to v4
 
-If you are upgrading from version 3 to version 4, you will need to update the namespace anywhere you are using the plugin from `BezhanSalleh\LanguageSwitch` to `BezhanSalleh\FilamentLanguageSwitch`.
+If you are upgrading from version 3 to version 4, you will need to update the namespace anywhere you are using the plugin from `BezhanSalleh\FilamentLanguageSwitch` to `BezhanSalleh\LanguageSwitch`.
 
 ## Installation
 
