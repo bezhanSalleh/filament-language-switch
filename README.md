@@ -1,17 +1,14 @@
 <a href="https://github.com/bezhansalleh/filament-language-switch" class="filament-hidden">
 
-![Filament Language Switch](./.github/banner.jpg?raw=true "Filament Language Switch")
+![Filament Language Switch](https://repository-images.githubusercontent.com/506847060/81f73ae9-6cef-4f89-a4cf-47de0412e0b5 "Filament Language Switch")
 
 </a>
-<p align="left">
+<p align="center">
     <a href="https://filamentadmin.com/docs/2.x/admin/installation">
-        <img alt="FILAMENT 8.x" src="https://img.shields.io/badge/FILAMENT-2.x-EBB304?style=for-the-badge">
+        <img alt="FILAMENT 4.x" src="https://img.shields.io/badge/FILAMENT-4.x-EBB304?style=for-the-badge">
     </a>
     <a href="https://packagist.org/packages/bezhansalleh/filament-language-switch">
         <img alt="Packagist" src="https://img.shields.io/packagist/v/bezhansalleh/filament-language-switch.svg?style=for-the-badge&logo=packagist">
-    </a>
-    <a href="https://github.com/bezhansalleh/filament-language-switch/actions?query=workflow%3Arun-tests+branch%3Amain" class="filament-hidden">
-        <img alt="Tests Passing" src="https://img.shields.io/github/actions/workflow/status/bezhansalleh/filament-language-switch/run-tests.yml?style=for-the-badge&logo=github&label=tests">
     </a>
     <a href="https://github.com/bezhansalleh/filament-language-switch/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain" class="filament-hidden">
         <img alt="Code Style Passing" src="https://img.shields.io/github/actions/workflow/status/bezhansalleh/filament-language-switch/run-laravel-pint.yml?style=for-the-badge&logo=github&label=code%20style">
@@ -25,7 +22,6 @@
     </a>
 </p>
 
-***
 
 # Language Switch
 The **Language Switch** plugin is a versatile and user-friendly tool designed for Filament Panels. It offers a seamless way to integrate language switching capabilities into your Filament Panels. With a range of customizable options and a fluent API, the plugin allows you to easily configure language selection for your users. It supports displaying language options both within and outside of Filament panels, and it provides the flexibility to specify which panels or routes should include the language switch and much more.
@@ -36,7 +32,7 @@ The **Language Switch** plugin is a versatile and user-friendly tool designed fo
 |----------------|---------------------|
 | [v1](https://github.com/bezhanSalleh/filament-language-switch/tree/1.x) | [v2](https://filamentphp.com/docs/2.x/admin/installation) |
 | [v3](https://github.com/bezhanSalleh/filament-language-switch/tree/3.x) | [v3](https://filamentphp.com/docs/3.x/panels/installation) |
-| [v4](https://github.com/bezhanSalleh/filament-language-switch/tree/4.x) | [v4](https://filamentphp.com/docs/4.x/introduction/overview) |
+| v4 | [v4](https://filamentphp.com/docs/4.x/introduction/overview) |
 
 ### Upgrading from v3 to v4
 
