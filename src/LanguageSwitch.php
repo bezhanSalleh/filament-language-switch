@@ -225,7 +225,7 @@ class LanguageSwitch extends Component
     public function isVisibleInsidePanels(): bool
     {
         return $this->evaluate($this->visibleInsidePanels)
-            && count($this->locales) > 1
+            && count($this->getLocales()) > 1
             && $this->isCurrentPanelIncluded();
     }
 
