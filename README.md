@@ -341,7 +341,7 @@ By default the **Language Switch** `Flags` or `Language Badges` are slightly rou
 In case you want to tweak the design, you can publish the views using the following command and adjust it however you like:
 
 ```bash
-php artisan vendor:publish --tag="language-switch-views"
+php artisan vendor:publish --tag="filament-language-switch-views"
 ```
 
 ## Changelog
