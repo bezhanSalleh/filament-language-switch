@@ -11,6 +11,8 @@ use Exception;
 use Filament\Panel;
 use Filament\Support\Components\Component;
 use Filament\Support\Facades\FilamentView;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Blade;
 
 class LanguageSwitch extends Component
@@ -177,7 +179,7 @@ class LanguageSwitch extends Component
         return $this;
     }
 
-    public function maxHeight(string $height): static
+    public function maxHeight(Closure | string $height): static
     {
         $this->maxHeight = $height;
 
@@ -292,7 +294,7 @@ class LanguageSwitch extends Component
 
     public function getMaxHeight(): string
     {
-        return $this->maxHeight;
+        return (string) $this->evaluate($this->maxHeight);
     }
 
     /**
@@ -307,7 +309,7 @@ class LanguageSwitch extends Component
 
     public function getCurrentPanel(): Panel
     {
-        return filament()->getCurrentPanel();
+        return filament()->getCurrentOrDefaultPanel();
     }
 
     public function getFlag(string $locale): string
@@ -343,7 +345,7 @@ class LanguageSwitch extends Component
             : str($locale)->upper()->toString();
     }
 
-    public static function trigger(string $locale)
+    public static function trigger(string $locale): Redirector | RedirectResponse
     {
         session()->put('locale', $locale);
 

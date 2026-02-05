@@ -36,7 +36,7 @@ class LanguageSwitchServiceProvider extends PackageServiceProvider
     public function registerPluginMiddleware(): void
     {
         collect(LanguageSwitch::make()->getPanels())
-            ->each(fn ($panel) => $this->reorderCurrentPanelMiddlewareStack($panel));
+            ->each($this->reorderCurrentPanelMiddlewareStack(...));
     }
 
     protected function reorderCurrentPanelMiddlewareStack(Panel $panel): void

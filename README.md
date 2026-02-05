@@ -32,7 +32,7 @@ The **Language Switch** plugin is a versatile and user-friendly tool designed fo
 |----------------|---------------------|
 | [v1](https://github.com/bezhanSalleh/filament-language-switch/tree/1.x) | [v2](https://filamentphp.com/docs/2.x/admin/installation) |
 | [v3](https://github.com/bezhanSalleh/filament-language-switch/tree/3.x) | [v3](https://filamentphp.com/docs/3.x/panels/installation) |
-| v4 | [v4](https://filamentphp.com/docs/4.x/introduction/overview) |
+| v4 | [v4](https://filamentphp.com/docs/4.x/introduction/overview) & [v5](https://filamentphp.com/docs/5.x/introduction/overview) |
 
 ### Upgrading from v3 to v4
 

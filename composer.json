@@ -22,7 +22,7 @@
     ],
     "require": {
         "php": "^8.2",
-        "filament/filament": "^4.0",
+        "filament/filament": "^4.0|^5.0",
         "illuminate/support": "^11.28|^12.0",
         "spatie/laravel-package-tools": "^1.9"
     },
@@ -60,10 +60,9 @@
         "lint": "vendor/bin/pint",
         "refactor": "vendor/bin/rector",
         "finalize": [
-            "@analyse",
             "@refactor",
             "@lint",
-            "@type",
+            "@test:type",
             "@test"
         ]
     },
