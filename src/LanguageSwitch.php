@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Blade;
 
 class LanguageSwitch extends Component
 {
-    protected ?string $displayLocale = null;
+    protected string | Closure | null $displayLocale = null;
 
     protected array | Closure | null $outsidePanelRoutes = null;
 
@@ -25,25 +25,26 @@ class LanguageSwitch extends Component
 
     protected bool | Closure $isCircular = false;
 
-    protected bool $isFlagsOnly = false;
+    protected bool | Closure $isFlagsOnly = false;
 
     protected array | Closure $labels = [];
 
     protected array | Closure $locales = [];
 
-    protected bool $nativeLabel = false;
+    protected bool | Closure $nativeLabel = false;
 
-    protected ?Placement $outsidePanelPlacement = null;
+    /** @var Placement|Closure<string|Placement|null>|null */
+    protected string | Closure | Placement | null $outsidePanelPlacement = Placement::TopRight;
 
     protected bool | Closure $visibleInsidePanels = false;
 
     protected bool | Closure $visibleOutsidePanels = false;
 
-    protected string $maxHeight = 'max-content';
+    protected string | Closure $maxHeight = 'max-content';
 
-    protected Closure | string $renderHook = 'panels::global-search.after';
+    protected string | Closure $renderHook = 'panels::global-search.after';
 
-    protected Closure | string | null $userPreferredLocale = null;
+    protected string | Closure | null $userPreferredLocale = null;
 
     public static function make(): static
     {
@@ -79,21 +80,21 @@ class LanguageSwitch extends Component
         }
     }
 
-    public function circular(bool $condition = true): static
+    public function circular(bool | Closure $condition = true): static
     {
         $this->isCircular = $condition;
 
         return $this;
     }
 
-    public function displayLocale(?string $locale = null): static
+    public function displayLocale(string | Closure | null $locale = null): static
     {
         $this->displayLocale = $locale ?? app()->getLocale();
 
         return $this;
     }
 
-    public function nativeLabel(bool $condition = true): static
+    public function nativeLabel(bool | Closure $condition = true): static
     {
         $this->nativeLabel = $condition;
 
@@ -153,7 +154,7 @@ class LanguageSwitch extends Component
         return $this;
     }
 
-    public function renderHook(string $hook): static
+    public function renderHook(Closure | string $hook): static
     {
         $this->renderHook = $hook;
 
@@ -183,9 +184,24 @@ class LanguageSwitch extends Component
         return $this;
     }
 
+    public function isCircular(): bool
+    {
+        return (bool) $this->evaluate($this->isCircular);
+    }
+
     public function getDisplayLocale(): ?string
     {
         return $this->evaluate($this->displayLocale);
+    }
+
+    public function getNativeLabel(): bool
+    {
+        return (bool) $this->evaluate($this->nativeLabel);
+    }
+
+    public function getOutsidePanelRoutes(): array
+    {
+        return (array) $this->evaluate($this->outsidePanelRoutes);
     }
 
     public function getExcludes(): array
@@ -209,31 +225,12 @@ class LanguageSwitch extends Component
         return $flagUrls;
     }
 
-    public function isCircular(): bool
-    {
-        return (bool) $this->evaluate($this->isCircular);
-    }
-
     /**
      * @throws Exception
      */
     public function isFlagsOnly(): bool
     {
         return (bool) $this->evaluate($this->isFlagsOnly) && filled($this->getFlags());
-    }
-
-    public function isVisibleInsidePanels(): bool
-    {
-        return $this->evaluate($this->visibleInsidePanels)
-            && count($this->locales) > 1
-            && $this->isCurrentPanelIncluded();
-    }
-
-    public function isVisibleOutsidePanels(): bool
-    {
-        return $this->evaluate($this->visibleOutsidePanels)
-            && str(request()->route()?->getName())->contains($this->outsidePanelRoutes)
-            && $this->isCurrentPanelIncluded();
     }
 
     public function getLabels(): array
@@ -246,14 +243,14 @@ class LanguageSwitch extends Component
         return (array) $this->evaluate($this->locales);
     }
 
-    public function getNativeLabel(): bool
-    {
-        return (bool) $this->evaluate($this->nativeLabel);
-    }
-
     public function getOutsidePanelPlacement(): Placement
     {
-        return $this->outsidePanelPlacement ?? Placement::TopRight;
+        $outsidePanelPlacement = $this->evaluate($this->outsidePanelPlacement);
+        return match (true) {
+            $outsidePanelPlacement instanceof Placement => $outsidePanelPlacement,
+            is_string($outsidePanelPlacement) => Placement::tryFrom($outsidePanelPlacement) ?? Placement::TopRight,
+            default => Placement::TopRight
+        };
     }
 
     public function getRenderHook(): string
@@ -278,8 +275,20 @@ class LanguageSwitch extends Component
         return in_array($locale, $this->getLocales(), true) ? $locale : config('app.locale');
     }
 
-    public function getMaxHeight(): string
+    public function isVisibleInsidePanels(): bool
     {
+        return $this->evaluate($this->visibleInsidePanels)
+            && count($this->getLocales()) > 1
+            && $this->isCurrentPanelIncluded();
+    }
+
+    public function isVisibleOutsidePanels(): bool {
+        return $this->evaluate($this->visibleOutsidePanels)
+            && str(request()->route()?->getName())->contains($this->getOutsidePanelRoutes())
+            && $this->isCurrentPanelIncluded();
+    }
+
+    public function getMaxHeight(): string {
         return $this->maxHeight;
     }
 
@@ -300,13 +309,13 @@ class LanguageSwitch extends Component
 
     public function getFlag(string $locale): string
     {
-        return $this->flags[$locale] ?? str($locale)->upper()->toString();
+        return $this->getFlags()[$locale] ?? str($locale)->upper()->toString();
     }
 
     public function getLabel(string $locale): string
     {
-        if (array_key_exists($locale, $this->labels) && ! $this->getNativeLabel()) {
-            return strval($this->labels[$locale]);
+        if (array_key_exists($locale, ($labels = $this->getLabels())) && ! $this->getNativeLabel()) {
+            return strval($labels[$locale]);
         }
 
         return str(
