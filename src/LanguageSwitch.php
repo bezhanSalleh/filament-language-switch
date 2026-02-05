@@ -246,6 +246,7 @@ class LanguageSwitch extends Component
     public function getOutsidePanelPlacement(): Placement
     {
         $outsidePanelPlacement = $this->evaluate($this->outsidePanelPlacement);
+
         return match (true) {
             $outsidePanelPlacement instanceof Placement => $outsidePanelPlacement,
             is_string($outsidePanelPlacement) => Placement::tryFrom($outsidePanelPlacement) ?? Placement::TopRight,
@@ -282,13 +283,15 @@ class LanguageSwitch extends Component
             && $this->isCurrentPanelIncluded();
     }
 
-    public function isVisibleOutsidePanels(): bool {
+    public function isVisibleOutsidePanels(): bool
+    {
         return $this->evaluate($this->visibleOutsidePanels)
             && str(request()->route()?->getName())->contains($this->getOutsidePanelRoutes())
             && $this->isCurrentPanelIncluded();
     }
 
-    public function getMaxHeight(): string {
+    public function getMaxHeight(): string
+    {
         return $this->maxHeight;
     }
 
