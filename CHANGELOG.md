@@ -2,6 +2,26 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## 4.1.0 - 2026-02-05
+
+### What's Changed
+
+* Filament 5.x support
+* Bump actions/checkout from 3 to 6 by @dependabot[bot] in https://github.com/bezhanSalleh/filament-language-switch/pull/137
+* Bump stefanzweifel/git-auto-commit-action from 4 to 7 by @dependabot[bot] in https://github.com/bezhanSalleh/filament-language-switch/pull/134
+* Fix Closure evaluation in general by @gp-lnuff in https://github.com/bezhanSalleh/filament-language-switch/pull/133
+* Command correction to publish views by @arsounet in https://github.com/bezhanSalleh/filament-language-switch/pull/132
+* Update README.md by @ashwin-nath-m in https://github.com/bezhanSalleh/filament-language-switch/pull/129
+* Bump dependabot/fetch-metadata from 2.4.0 to 2.5.0 by @dependabot[bot] in https://github.com/bezhanSalleh/filament-language-switch/pull/140
+
+### New Contributors
+
+* @ashwin-nath-m made their first contribution in https://github.com/bezhanSalleh/filament-language-switch/pull/129
+* @arsounet made their first contribution in https://github.com/bezhanSalleh/filament-language-switch/pull/132
+* @gp-lnuff made their first contribution in https://github.com/bezhanSalleh/filament-language-switch/pull/133
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/4.0.0...4.1.0
+
 ## 4.0.0 - 2025-08-19
 
 ### What's Changed
