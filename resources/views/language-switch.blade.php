@@ -1,19 +1,29 @@
 @php
     $languageSwitch = \BezhanSalleh\LanguageSwitch\LanguageSwitch::make();
+
     $locales = $languageSwitch->getLocales();
     $isCircular = $languageSwitch->isCircular();
     $isFlagsOnly = $languageSwitch->isFlagsOnly();
     $hasFlags = filled($languageSwitch->getFlags());
+
     $isVisibleOutsidePanels = $languageSwitch->isVisibleOutsidePanels();
     $outsidePanelsPlacement = $languageSwitch->getOutsidePanelPlacement()->value;
+
+    // Adjust this list to your RTL locales:
+    $isRtl = in_array(app()->getLocale(), ['ar', 'fa', 'he', 'ur'], true);
+
+    $defaultPlacement = $isRtl ? 'bottom-start' : 'bottom-end';
+
     $placement = match (true) {
         $outsidePanelsPlacement === 'top-center' && $isFlagsOnly => 'bottom',
         $outsidePanelsPlacement === 'bottom-center' && $isFlagsOnly => 'top',
         !$isVisibleOutsidePanels && $isFlagsOnly => 'bottom',
-        default => 'bottom-end',
+        default => $defaultPlacement,
     };
+
     $maxHeight = $languageSwitch->getMaxHeight();
 @endphp
+
 <div>
     @if ($isVisibleOutsidePanels)
         <div @class([
