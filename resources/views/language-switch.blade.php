@@ -28,7 +28,7 @@
             'justify-end' => str_contains($outsidePanelsPlacement, 'right'),
             'justify-center' => str_contains($outsidePanelsPlacement, 'center'),
         ])>
-            <div class="rounded-lg bg-gray-50 dark:bg-gray-950">
+            <div>
                 @include('language-switch::switch')
             </div>
         </div>
