@@ -80,7 +80,7 @@
 
 @if (! $isUserMenuItem)
     @if ($hasSurroundingContent) <div class="flex items-center gap-3"> @endif
-        {{!! $beforeCoreContent !!}}
+        {!! $beforeCoreContent !!}
 
         @php
             $triggerContent = function() use ($icon, $iconSize, $iconPosition, $isFlagsOnly, $hasFlags, $languageSwitch, $flagSize, $flagPosition, $hideLanguageCodeOutside, $triggerCodeClasses, $displayFullLabel) {
@@ -137,7 +137,7 @@
                 </x-filament::dropdown.list>
             </x-filament::dropdown>
         @endif
-        {{!!  $afterCoreContent !!}}
+        {!!  $afterCoreContent !!}
         @if ($hasSurroundingContent) </div> @endif
 @endif
 
