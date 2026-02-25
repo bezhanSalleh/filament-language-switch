@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'modal_heading' => 'Language',
+    'modal_heading' => 'Languages',
     'suggested' => 'Suggested',
 ];

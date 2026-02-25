@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BezhanSalleh\LanguageSwitch;
 
 use BackedEnum;
@@ -24,17 +22,17 @@ class LanguageSwitch extends Component
 {
     // --- 1. CORE CONFIGURATION ---
     protected string | Closure | null $displayLocale = null;
-    protected array | Closure $locales = [];
-    protected array | Closure $labels = [];
+    protected array | Closure $locales =[];
+    protected array | Closure $labels =[];
     protected bool | Closure $nativeLabel = false;
     protected string | Closure | null $userPreferredLocale = null;
-    protected array | Closure $suggested = [];
+    protected array | Closure $suggested =[];
 
     // --- 2. VISIBILITY & PLACEMENT ---
     protected bool | Closure $visibleInsidePanels = false;
     protected bool | Closure $visibleOutsidePanels = false;
     protected array | Closure $outsidePanelRoutes = [];
-    protected array | Closure $excludes = [];
+    protected array | Closure $excludes =[];
     protected string | Closure | Placement | null $outsidePanelPlacement = Placement::TopRight;
     protected string | Closure $renderHook = 'panels::global-search.after';
     protected bool | Closure $renderAsUserMenuItem = false;
@@ -48,15 +46,17 @@ class LanguageSwitch extends Component
     protected string | Closure $flagSize = 'w-7 h-7';
     protected string | Closure $flagPosition = 'before'; // before, after
     protected string | Closure | null $triggerClass = null;
+    protected string | Closure | null $wrapperClass = null;
     protected bool | Closure $isCircular = false;
     protected bool | Closure $displayFullLabel = false;
+    protected string | Closure $displayFormat = 'code'; // full, code, none
     protected bool | Closure $hideLanguageCodeOutsideModal = false;
 
     // --- 4. DROPDOWN / LIST STYLING ---
     protected string | Closure $displayAs = 'dropdown';
     protected string | Closure $itemStyle = 'list';
     protected string | Closure | null $itemClass = null;
-    protected array | Closure $flags = [];
+    protected array | Closure $flags =[];
     protected bool | Closure $isFlagsOnly = false;
     protected string | Closure $maxHeight = 'max-content';
     protected string | Closure $languageCodeStyle = 'default';
@@ -81,7 +81,9 @@ class LanguageSwitch extends Component
 
     // --- 6. CONTENT INJECTION ---
     protected string | Htmlable | View | Closure | null $beforeCoreContent = null;
+    protected string | Closure | null $beforeCoreContentClasses = null;
     protected string | Htmlable | View | Closure | null $afterCoreContent = null;
+    protected string | Closure | null $afterCoreContentClasses = null;
 
     public static function make(): static
     {
@@ -90,6 +92,7 @@ class LanguageSwitch extends Component
         $static->displayLocale();
         $static->outsidePanelRoutes();
         $static->configure();
+
         return $static;
     }
 
@@ -100,15 +103,15 @@ class LanguageSwitch extends Component
         if ($static->isVisibleInsidePanels()) {
             if ($static->isRenderedAsUserMenuItem()) {
                 $panel = filament()->getCurrentOrDefaultPanel();
-                if ($panel) {
-                    $panel->userMenuItems([
-                        'language-switch' => MenuItem::make()
-                            ->label(fn() => $static->getLabel(app()->getLocale()))
-                            ->icon(fn() => $static->getIcon() ?? 'heroicon-m-language')
-                            ->sort(fn() => $static->getUserMenuSort())
-                            ->url('#fls-modal'),
-                    ]);
-                }
+
+                $panel->userMenuItems([
+                    'language-switch' => MenuItem::make()
+                        ->label(fn() => $static->getLabel(app()->getLocale()))
+                        ->icon(fn() => $static->getIcon() ?? 'heroicon-m-language')
+                        ->sort(fn() => $static->getUserMenuSort())
+                        ->url('#fls-modal'),
+                ]);
+
                 FilamentView::registerRenderHook(
                     name: 'panels::body.end',
                     hook: fn (): string => Blade::render("<livewire:language-switch-component key='fls-in-panels-modal' />")
@@ -136,8 +139,11 @@ class LanguageSwitch extends Component
     public function displayLocale(string | Closure | null $locale = null): static { $this->displayLocale = $locale ?? app()->getLocale(); return $this; }
     public function suggested(array | Closure $suggested): static { $this->suggested = $suggested; return $this; }
     public function visible(bool | Closure $insidePanels = true, bool | Closure $outsidePanels = false): static { $this->visibleInsidePanels = $insidePanels; $this->visibleOutsidePanels = $outsidePanels; return $this; }
-    public function outsidePanelRoutes(array | Closure | null $routes = null): static { $this->outsidePanelRoutes = $routes ?? ['auth.login', 'auth.profile', 'auth.register']; return $this; }
+    public function outsidePanelRoutes(array | Closure | null $routes = null): static { $this->outsidePanelRoutes = $routes ??['auth.login', 'auth.profile', 'auth.register']; return $this; }
     public function excludes(array | Closure $excludes): static { $this->excludes = $excludes; return $this; }
+    public function outsidePanelPlacement(Placement | string | Closure $placement): static { $this->outsidePanelPlacement = $placement; return $this; }
+    public function renderHook(string | Closure $hook): static { $this->renderHook = $hook; return $this; }
+    public function userPreferredLocale(string | Closure | null $locale): static { $this->userPreferredLocale = $locale; return $this; }
     public function renderAsUserMenuItem(bool | Closure $condition = true): static { $this->renderAsUserMenuItem = $condition; return $this; }
     public function userMenuSort(int | Closure $sort): static { $this->userMenuSort = $sort; return $this; }
     public function buttonStyle(string | Closure $style): static { $this->buttonStyle = $style; return $this; }
@@ -147,21 +153,37 @@ class LanguageSwitch extends Component
     public function flagSize(string | Closure $size): static { $this->flagSize = $size; return $this; }
     public function flagPosition(string | Closure $position): static { $this->flagPosition = $position; return $this; }
     public function triggerClass(string | Closure | null $class): static { $this->triggerClass = $class; return $this; }
+    public function wrapperClass(string | Closure | null $class): static { $this->wrapperClass = $class; return $this; }
     public function circular(bool | Closure $condition = true): static { $this->isCircular = $condition; return $this; }
     public function displayFullLabel(bool | Closure $condition = true): static { $this->displayFullLabel = $condition; return $this; }
+    public function displayFormat(string | Closure $format): static { $this->displayFormat = $format; return $this; }
     public function displayAs(string | Closure $displayAs): static { $this->displayAs = $displayAs; return $this; }
     public function itemStyle(string | Closure $style): static { $this->itemStyle = $style; return $this; }
+    public function itemClass(string | Closure | null $class): static { $this->itemClass = $class; return $this; }
     public function gridColumns(int | Closure $columns): static { $this->gridColumns = $columns; return $this; }
     public function dropdownWidth(string | Closure | null $width): static { $this->dropdownWidth = $width; return $this; }
     public function flags(array | Closure $flags): static { $this->flags = $flags; return $this; }
     public function flagsOnly(bool $condition = true): static { $this->isFlagsOnly = $condition; return $this; }
+    public function maxHeight(string | Closure $height): static { $this->maxHeight = $height; return $this; }
+    public function languageCodeStyle(string | Closure $style): static { $this->languageCodeStyle = $style; return $this; }
     public function hideLanguageCode(bool | Closure $insideModal = true, bool | Closure $outsideModal = false): static { $this->hideLanguageCodeInsideModal = $insideModal; $this->hideLanguageCodeOutsideModal = $outsideModal; return $this; }
     public function modalHeading(string | Closure | null $heading): static { $this->modalHeading = $heading; return $this; }
+    public function modalDescription(string | Closure | null $description): static { $this->modalDescription = $description; return $this; }
     public function modalWidth(string | Closure | null $width): static { $this->modalWidth = $width; return $this; }
     public function modalSlideOver(bool | Closure $condition = true): static { $this->modalSlideOver = $condition; return $this; }
     public function modalGridColumns(int | Closure $columns): static { $this->modalGridColumns = $columns; return $this; }
+    public function modalAlignment(Alignment | string | Closure | null $alignment): static { $this->modalAlignment = $alignment; return $this; }
+    public function modalCloseButton(bool | Closure $condition = true): static { $this->modalCloseButton = $condition; return $this; }
+    public function modalAutofocus(bool | Closure $condition = true): static { $this->modalAutofocus = $condition; return $this; }
+    public function modalIcon(string | BackedEnum | Htmlable | Closure | null $icon): static { $this->modalIcon = $icon; return $this; }
+    public function modalIconColor(string | array | Closure | null $color): static { $this->modalIconColor = $color; return $this; }
+    public function closeModalByClickingAway(bool | Closure $condition = true): static { $this->closeModalByClickingAway = $condition; return $this; }
+    public function closeModalByEscaping(bool | Closure $condition = true): static { $this->closeModalByEscaping = $condition; return $this; }
+    public function modalClass(string | Closure | null $class): static { $this->modalClass = $class; return $this; }
     public function beforeCoreContent(string | Htmlable | View | Closure | null $content): static { $this->beforeCoreContent = $content; return $this; }
+    public function beforeCoreContentClasses(string | Closure | null $classes): static { $this->beforeCoreContentClasses = $classes; return $this; }
     public function afterCoreContent(string | Htmlable | View | Closure | null $content): static { $this->afterCoreContent = $content; return $this; }
+    public function afterCoreContentClasses(string | Closure | null $classes): static { $this->afterCoreContentClasses = $classes; return $this; }
 
     // --- Getters ---
     public function getLocales(): array { return (array) $this->evaluate($this->locales); }
@@ -184,12 +206,22 @@ class LanguageSwitch extends Component
     public function getFlagSize(): string { return (string) $this->evaluate($this->flagSize); }
     public function getFlagPosition(): string { return (string) $this->evaluate($this->flagPosition); }
     public function getTriggerClass(): ?string { return $this->evaluate($this->triggerClass); }
+    public function getWrapperClass(): ?string { return $this->evaluate($this->wrapperClass); }
     public function isCircular(): bool { return (bool) $this->evaluate($this->isCircular); }
-    public function isDisplayFullLabel(): bool { return (bool) $this->evaluate($this->displayFullLabel); }
+    public function getUserPreferredLocale(): ?string { return $this->evaluate($this->userPreferredLocale); }
+
+    public function isDisplayFullLabel(): bool { return $this->getDisplayFormat() === 'full'; }
+    public function getDisplayFormat(): string {
+        if ((bool) $this->evaluate($this->displayFullLabel)) {
+            return 'full';
+        }
+        return (string) $this->evaluate($this->displayFormat);
+    }
+
     public function getDisplayAs(): string { return (string) $this->evaluate($this->displayAs); }
     public function getItemStyle(): string { return (string) $this->evaluate($this->itemStyle); }
     public function getItemClass(): ?string { return $this->evaluate($this->itemClass); }
-    public function getFlags(): array { $flagUrls = (array) $this->evaluate($this->flags); foreach ($flagUrls as $flagUrl) { if (! filter_var($flagUrl, FILTER_VALIDATE_URL)) { throw new \Exception('Invalid flag url'); } } return $flagUrls; }
+    public function getFlags(): array { $flagUrls = (array) $this->evaluate($this->flags); foreach ($flagUrls as $flagUrl) { if (! filter_var($flagUrl, FILTER_VALIDATE_URL)) { throw new Exception('Invalid flag url'); } } return $flagUrls; }
     public function isFlagsOnly(): bool { return (bool) $this->evaluate($this->isFlagsOnly) && filled($this->getFlags()); }
     public function getMaxHeight(): string { return (string) $this->evaluate($this->maxHeight); }
     public function getLanguageCodeStyle(): string { return (string) $this->evaluate($this->languageCodeStyle); }
@@ -211,7 +243,9 @@ class LanguageSwitch extends Component
     public function isModalClosedByEscaping(): ?bool { return $this->evaluate($this->closeModalByEscaping); }
     public function getModalClass(): ?string { return $this->evaluate($this->modalClass); }
     public function getBeforeCoreContent(): string | Htmlable | View | null { return $this->evaluate($this->beforeCoreContent); }
+    public function getBeforeCoreContentClasses(): ?string { return $this->evaluate($this->beforeCoreContentClasses); }
     public function getAfterCoreContent(): string | Htmlable | View | null { return $this->evaluate($this->afterCoreContent); }
+    public function getAfterCoreContentClasses(): ?string { return $this->evaluate($this->afterCoreContentClasses); }
 
     // --- Helpers ---
     public function getPreferredLocale(): string { $locale = session()->get('locale') ?? request()->get('locale') ?? request()->cookie('filament_language_switch_locale') ?? $this->getUserPreferredLocale() ?? config('app.locale', 'en') ?? request()->getPreferredLanguage(); return in_array($locale, $this->getLocales(), true) ? $locale : config('app.locale'); }

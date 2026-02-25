@@ -2,7 +2,7 @@
     $buttonStyle = $languageSwitch->getButtonStyle();
     $codeStyle = $languageSwitch->getLanguageCodeStyle();
     $isMinimalCode = $codeStyle === 'minimal';
-    $displayFullLabel = $languageSwitch->isDisplayFullLabel();
+    $displayFormat = $languageSwitch->getDisplayFormat(); // full, code, none
     $hideLanguageCodeInside = $languageSwitch->isLanguageCodeHiddenInsideModal();
     $hideLanguageCodeOutside = $languageSwitch->isLanguageCodeHiddenOutsideModal();
     $gridColumns = $languageSwitch->getGridColumns();
@@ -23,12 +23,17 @@
         : ($gridColumns > 1 ? 'lg' : ($isFlagsOnly ? 'w-fit fls-flag-only-width' : 'w-fit fls-dropdown-width'));
 
     $beforeCoreContent = $languageSwitch->getBeforeCoreContent();
+    $beforeCoreContentClasses = $languageSwitch->getBeforeCoreContentClasses();
     $afterCoreContent = $languageSwitch->getAfterCoreContent();
+    $afterCoreContentClasses = $languageSwitch->getAfterCoreContentClasses();
+    $wrapperClass = $languageSwitch->getWrapperClass();
+
     $hasSurroundingContent = $beforeCoreContent || $afterCoreContent;
+    $needsWrapper = $hasSurroundingContent || $wrapperClass;
 
     $isDoubleDefault = ($buttonStyle === 'default' && $codeStyle === 'default');
     $hasIcon = filled($icon);
-    $isSquareTrigger = $languageSwitch->isCircular() || (! $hasIcon && ($isFlagsOnly || ! $displayFullLabel));
+    $isSquareTrigger = $languageSwitch->isCircular() || (! $hasIcon && ($isFlagsOnly || $displayFormat !== 'full'));
 
     $triggerClasses = \Illuminate\Support\Arr::toCssClasses([
         'flex items-center justify-center language-switch-trigger outline-none transition-colors duration-200',
@@ -45,7 +50,7 @@
         $languageSwitch->getTriggerClass(),
     ]);
 
-    $baseCodeClasses = [
+    $baseCodeClasses =[
         'font-semibold font-sans',
         'text-xs' => !$isMinimalCode,
         'flex items-center justify-center flex-shrink-0 aspect-square' => !$isMinimalCode,
@@ -62,7 +67,7 @@
 
     $triggerCodeClasses = \Illuminate\Support\Arr::toCssClasses($baseCodeClasses);
 
-    $listCodeClasses = \Illuminate\Support\Arr::toCssClasses(array_merge($baseCodeClasses, [
+    $listCodeClasses = \Illuminate\Support\Arr::toCssClasses(array_merge($baseCodeClasses,[
         'group-hover:border group-hover:border-primary-500/10' => $codeStyle === 'default',
         'group-hover:bg-gray-100 dark:group-hover:bg-gray-800' => $codeStyle === 'ghost',
         'group-hover:bg-primary-500' => $codeStyle === 'filled',
@@ -79,34 +84,51 @@
 @endphp
 
 @if (! $isUserMenuItem)
-    @if ($hasSurroundingContent) <div class="flex items-center gap-3"> @endif
-        {!! $beforeCoreContent !!}
+    @if ($needsWrapper) <div class="flex items-center gap-3 {{ $wrapperClass }}"> @endif
+
+        @if ($beforeCoreContent)
+            <div @if($beforeCoreContentClasses) class="{{ $beforeCoreContentClasses }}" @endif>
+                {!! $beforeCoreContent !!}
+            </div>
+        @endif
 
         @php
-            $triggerContent = function() use ($icon, $iconSize, $iconPosition, $isFlagsOnly, $hasFlags, $languageSwitch, $flagSize, $flagPosition, $hideLanguageCodeOutside, $triggerCodeClasses, $displayFullLabel) {
+            $triggerContent = function() use ($icon, $iconSize, $iconPosition, $isFlagsOnly, $hasFlags, $languageSwitch, $flagSize, $flagPosition, $hideLanguageCodeOutside, $triggerCodeClasses, $displayFormat) {
                 $isCircular = $languageSwitch->isCircular();
                 $output = '';
 
                 // 1. Icon (Before)
-                if ($icon && $iconPosition === 'before') $output .= Blade::render('<x-filament::icon :icon="$icon" :class="$size . \' text-inherit flex-shrink-0\'" />', ['icon' => $icon, 'size' => $iconSize]);
+                if ($icon && $iconPosition === 'before') {
+                    $output .= \Illuminate\Support\Facades\Blade::render('<x-filament::icon :icon="$icon" :class="$size . \' text-inherit flex-shrink-0\'" />',['icon' => $icon, 'size' => $iconSize]);
+                }
 
                 // 2. Flag/Code (Before)
                 if ($flagPosition === 'before') {
-                    if ($isFlagsOnly || $hasFlags) $output .= Blade::render('<x-language-switch::flag :src="$src" :circular="$circular" :alt="$alt" :switch="true" :class="$size . \' aspect-square object-cover\'" />', ['src' => $languageSwitch->getFlag(app()->getLocale()), 'circular' => $isCircular, 'alt' => $languageSwitch->getLabel(app()->getLocale()), 'size' => $flagSize]);
-                    elseif (! $hideLanguageCodeOutside) $output .= '<span class="'.$triggerCodeClasses.'">'.$languageSwitch->getCharAvatar(app()->getLocale()).'</span>';
+                    if ($isFlagsOnly || $hasFlags) {
+                        $output .= \Illuminate\Support\Facades\Blade::render('<x-language-switch::flag :src="$src" :circular="$circular" :alt="$alt" :switch="true" :class="$size . \' aspect-square object-cover\'" />',['src' => $languageSwitch->getFlag(app()->getLocale()), 'circular' => $isCircular, 'alt' => $languageSwitch->getLabel(app()->getLocale()), 'size' => $flagSize]);
+                    } elseif (! $hideLanguageCodeOutside && $displayFormat === 'code') {
+                        $output .= '<span class="'.$triggerCodeClasses.'">'.$languageSwitch->getCharAvatar(app()->getLocale()).'</span>';
+                    }
                 }
 
                 // 3. Label
-                if ($displayFullLabel && ! $isFlagsOnly) $output .= '<span class="font-medium text-sm font-sans">'.$languageSwitch->getLabel(app()->getLocale()).'</span>';
+                if ($displayFormat === 'full' && ! $isFlagsOnly) {
+                    $output .= '<span class="font-medium text-sm font-sans">'.$languageSwitch->getLabel(app()->getLocale()).'</span>';
+                }
 
                 // 4. Flag/Code (After)
                 if ($flagPosition === 'after') {
-                    if ($isFlagsOnly || $hasFlags) $output .= Blade::render('<x-language-switch::flag :src="$src" :circular="$circular" :alt="$alt" :switch="true" :class="$size . \' aspect-square object-cover\'" />', ['src' => $languageSwitch->getFlag(app()->getLocale()), 'circular' => $isCircular, 'alt' => $languageSwitch->getLabel(app()->getLocale()), 'size' => $flagSize]);
-                    elseif (! $hideLanguageCodeOutside) $output .= '<span class="'.$triggerCodeClasses.'">'.$languageSwitch->getCharAvatar(app()->getLocale()).'</span>';
+                    if ($isFlagsOnly || $hasFlags) {
+                        $output .= \Illuminate\Support\Facades\Blade::render('<x-language-switch::flag :src="$src" :circular="$circular" :alt="$alt" :switch="true" :class="$size . \' aspect-square object-cover\'" />',['src' => $languageSwitch->getFlag(app()->getLocale()), 'circular' => $isCircular, 'alt' => $languageSwitch->getLabel(app()->getLocale()), 'size' => $flagSize]);
+                    } elseif (! $hideLanguageCodeOutside && $displayFormat === 'code') {
+                        $output .= '<span class="'.$triggerCodeClasses.'">'.$languageSwitch->getCharAvatar(app()->getLocale()).'</span>';
+                    }
                 }
 
                 // 5. Icon (After)
-                if ($icon && $iconPosition === 'after') $output .= Blade::render('<x-filament::icon :icon="$icon" :class="$size . \' text-inherit flex-shrink-0\'" />', ['icon' => $icon, 'size' => $iconSize]);
+                if ($icon && $iconPosition === 'after') {
+                    $output .= \Illuminate\Support\Facades\Blade::render('<x-filament::icon :icon="$icon" :class="$size . \' text-inherit flex-shrink-0\'" />', ['icon' => $icon, 'size' => $iconSize]);
+                }
 
                 return $output;
             };
@@ -127,18 +149,24 @@
                     @if (count($suggestedLocales) > 0)
                         <div class="col-span-full px-2 py-1 text-xs font-semibold tracking-wider text-gray-500 uppercase dark:text-gray-400">{{ __('language-switch::translations.suggested') }}</div>
                         @foreach ($suggestedLocales as $locale)
-                            @include('language-switch::list-item', ['locale' => $locale, 'hideLanguageCode' => $hideLanguageCodeInside, 'codeClasses' => $listCodeClasses, 'itemStyle' => 'list'])
+                            @include('language-switch::list-item',['locale' => $locale, 'hideLanguageCode' => $hideLanguageCodeInside, 'codeClasses' => $listCodeClasses, 'itemStyle' => 'list'])
                         @endforeach
                         @if (count($allLocales) > 0) <div class="col-span-full my-1 border-t border-gray-200 dark:border-gray-700"></div> @endif
                     @endif
                     @foreach ($allLocales as $locale)
-                        @include('language-switch::list-item', ['locale' => $locale, 'hideLanguageCode' => $hideLanguageCodeInside, 'codeClasses' => $listCodeClasses, 'itemStyle' => 'list'])
+                        @include('language-switch::list-item',['locale' => $locale, 'hideLanguageCode' => $hideLanguageCodeInside, 'codeClasses' => $listCodeClasses, 'itemStyle' => 'list'])
                     @endforeach
                 </x-filament::dropdown.list>
             </x-filament::dropdown>
         @endif
-        {!!  $afterCoreContent !!}
-        @if ($hasSurroundingContent) </div> @endif
+
+        @if ($afterCoreContent)
+            <div @if($afterCoreContentClasses) class="{{ $afterCoreContentClasses }}" @endif>
+                {!! $afterCoreContent !!}
+            </div>
+        @endif
+
+        @if ($needsWrapper) </div> @endif
 @endif
 
 @if ($displayAs === 'modal' || $isUserMenuItem)
@@ -147,12 +175,12 @@
             @if (count($suggestedLocales) > 0)
                 <div class="col-span-full px-2 py-1 text-xs font-semibold tracking-wider text-gray-500 uppercase dark:text-gray-400">{{ __('language-switch::translations.suggested') }}</div>
                 @foreach ($suggestedLocales as $locale)
-                    @include('language-switch::list-item', ['locale' => $locale, 'hideLanguageCode' => $hideLanguageCodeInside, 'codeClasses' => $listCodeClasses, 'itemStyle' => $languageSwitch->getItemStyle()])
+                    @include('language-switch::list-item',['locale' => $locale, 'hideLanguageCode' => $hideLanguageCodeInside, 'codeClasses' => $listCodeClasses, 'itemStyle' => $languageSwitch->getItemStyle()])
                 @endforeach
                 @if (count($allLocales) > 0) <div class="col-span-full my-1 border-t border-gray-200 dark:border-gray-700"></div> @endif
             @endif
             @foreach ($allLocales as $locale)
-                @include('language-switch::list-item', ['locale' => $locale, 'hideLanguageCode' => $hideLanguageCodeInside, 'codeClasses' => $listCodeClasses, 'itemStyle' => $languageSwitch->getItemStyle()])
+                @include('language-switch::list-item',['locale' => $locale, 'hideLanguageCode' => $hideLanguageCodeInside, 'codeClasses' => $listCodeClasses, 'itemStyle' => $languageSwitch->getItemStyle()])
             @endforeach
         </div>
     </x-filament::modal>
