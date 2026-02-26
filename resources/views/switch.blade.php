@@ -86,7 +86,57 @@
     $suggestedLocales = $languageSwitch->getSuggested();
     $suggestedLocales = array_filter($suggestedLocales, fn($l) => in_array($l, $locales) && ($showCurrentLocale ? true : !app()->isLocale($l)));
     $allLocales = array_filter($locales, fn($l) => !in_array($l, $suggestedLocales) && ($showCurrentLocale ? true : !app()->isLocale($l)));
+
+    // Columns
+
+    $cols = $languageSwitch->getModalGridColumnsResponsive();
+
+    // Tailwind-safe maps (strings appear literally in this file)
+    $base = [
+        1 => 'grid-cols-1', 2 => 'grid-cols-2', 3 => 'grid-cols-3', 4 => 'grid-cols-4',
+        5 => 'grid-cols-5', 6 => 'grid-cols-6', 7 => 'grid-cols-7', 8 => 'grid-cols-8',
+        9 => 'grid-cols-9', 10 => 'grid-cols-10', 11 => 'grid-cols-11', 12 => 'grid-cols-12',
+    ];
+
+    $bp = [
+        'sm' => [
+            1 => 'sm:grid-cols-1', 2 => 'sm:grid-cols-2', 3 => 'sm:grid-cols-3', 4 => 'sm:grid-cols-4',
+            5 => 'sm:grid-cols-5', 6 => 'sm:grid-cols-6', 7 => 'sm:grid-cols-7', 8 => 'sm:grid-cols-8',
+            9 => 'sm:grid-cols-9', 10 => 'sm:grid-cols-10', 11 => 'sm:grid-cols-11', 12 => 'sm:grid-cols-12',
+        ],
+        'md' => [
+            1 => 'md:grid-cols-1', 2 => 'md:grid-cols-2', 3 => 'md:grid-cols-3', 4 => 'md:grid-cols-4',
+            5 => 'md:grid-cols-5', 6 => 'md:grid-cols-6', 7 => 'md:grid-cols-7', 8 => 'md:grid-cols-8',
+            9 => 'md:grid-cols-9', 10 => 'md:grid-cols-10', 11 => 'md:grid-cols-11', 12 => 'md:grid-cols-12',
+        ],
+        'lg' => [
+            1 => 'lg:grid-cols-1', 2 => 'lg:grid-cols-2', 3 => 'lg:grid-cols-3', 4 => 'lg:grid-cols-4',
+            5 => 'lg:grid-cols-5', 6 => 'lg:grid-cols-6', 7 => 'lg:grid-cols-7', 8 => 'lg:grid-cols-8',
+            9 => 'lg:grid-cols-9', 10 => 'lg:grid-cols-10', 11 => 'lg:grid-cols-11', 12 => 'lg:grid-cols-12',
+        ],
+        'xl' => [
+            1 => 'xl:grid-cols-1', 2 => 'xl:grid-cols-2', 3 => 'xl:grid-cols-3', 4 => 'xl:grid-cols-4',
+            5 => 'xl:grid-cols-5', 6 => 'xl:grid-cols-6', 7 => 'xl:grid-cols-7', 8 => 'xl:grid-cols-8',
+            9 => 'xl:grid-cols-9', 10 => 'xl:grid-cols-10', 11 => 'xl:grid-cols-11', 12 => 'xl:grid-cols-12',
+        ],
+        '2xl' => [
+            1 => '2xl:grid-cols-1', 2 => '2xl:grid-cols-2', 3 => '2xl:grid-cols-3', 4 => '2xl:grid-cols-4',
+            5 => '2xl:grid-cols-5', 6 => '2xl:grid-cols-6', 7 => '2xl:grid-cols-7', 8 => '2xl:grid-cols-8',
+            9 => '2xl:grid-cols-9', 10 => '2xl:grid-cols-10', 11 => '2xl:grid-cols-11', 12 => '2xl:grid-cols-12',
+        ],
+    ];
+
+    $gridClasses = 'grid gap-4 ' . ($base[$cols['default'] ?? 1] ?? 'grid-cols-1');
+
+    foreach (['sm', 'md', 'lg', 'xl', '2xl'] as $k) {
+        if (isset($cols[$k]) && isset($bp[$k][$cols[$k]])) {
+            $gridClasses .= ' ' . $bp[$k][$cols[$k]];
+        }
+    }
 @endphp
+
+
+
 
 @if (! $isUserMenuItem)
     @if ($needsWrapper) <div class="flex items-center gap-3 {{ $wrapperClass }}"> @endif
@@ -187,7 +237,7 @@
 
 @if ($displayAs === 'modal' || $isUserMenuItem)
     <x-filament::modal id="fls-modal" class="{{ $languageSwitch->getModalClass() }}" :heading="$languageSwitch->getModalHeading()" :description="$languageSwitch->getModalDescription()" :width="$languageSwitch->getModalWidth() ?? 'md'" :slide-over="$languageSwitch->isModalSlideOver()" :sticky-header="$languageSwitch->isModalSlideOver()" :alignment="$languageSwitch->getModalAlignment()" :close-button="$languageSwitch->hasModalCloseButton() ?? true" :autofocus="$languageSwitch->isModalAutofocused() ?? true" :icon="$languageSwitch->getModalIcon()" :icon-color="$languageSwitch->getModalIconColor()" :close-by-clicking-away="$languageSwitch->isModalClosedByClickingAway() ?? true" :close-by-escaping="$languageSwitch->isModalClosedByEscaping() ?? true">
-        <div class="grid gap-4" style="grid-template-columns: repeat({{ $languageSwitch->getModalGridColumns() }}, minmax(0, 1fr));">
+            <div class="{{ $gridClasses }}">
             @if (count($suggestedLocales) > 0)
                 <div class="col-span-full px-2 py-1 text-xs font-semibold tracking-wider text-gray-500 uppercase dark:text-gray-400">{{ __('language-switch::translations.suggested') }}</div>
                 @foreach ($suggestedLocales as $locale)

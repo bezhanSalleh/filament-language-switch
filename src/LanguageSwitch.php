@@ -71,7 +71,7 @@ class LanguageSwitch extends Component
     protected string | Closure | null $modalDescription = null;
     protected string | Closure | null $modalWidth = null;
     protected bool | Closure $modalSlideOver = false;
-    protected int | Closure $modalGridColumns = 1;
+    protected int | array | Closure $modalGridColumns = 1;
     protected Alignment | string | Closure | null $modalAlignment = null;
     protected bool | Closure | null $modalCloseButton = null;
     protected bool | Closure | null $modalAutofocus = null;
@@ -151,7 +151,7 @@ class LanguageSwitch extends Component
     public function userPreferredLocale(string | Closure | null $locale): static { $this->userPreferredLocale = $locale; return $this; }
     public function renderAsUserMenuItem(bool | Closure $condition = true): static { $this->renderAsUserMenuItem = $condition; return $this; }
     public function userMenuSort(int | Closure $sort): static { $this->userMenuSort = $sort; return $this; }
-    public function isFixed(bool | Closure $condition = true): static { $this->isFixedOutsidePanels = $condition; return $this; }
+    public function isFixed(bool | Closure $condition = true): static{  $this->isFixedOutsidePanels = $condition; return $this; } 
     public function buttonStyle(string | Closure $style): static { $this->buttonStyle = $style; return $this; }
     public function icon(string | Closure | null $icon): static { $this->icon = $icon; return $this; }
     public function iconSize(string | Closure $size): static { $this->iconSize = $size; return $this; }
@@ -176,7 +176,7 @@ class LanguageSwitch extends Component
     public function modalDescription(string | Closure | null $description): static { $this->modalDescription = $description; return $this; }
     public function modalWidth(string | Closure | null $width): static { $this->modalWidth = $width; return $this; }
     public function modalSlideOver(bool | Closure $condition = true): static { $this->modalSlideOver = $condition; return $this; }
-    public function modalGridColumns(int | Closure $columns): static { $this->modalGridColumns = $columns; return $this; }
+    public function modalGridColumns(int | array | Closure $columns): static{ $this->modalGridColumns = $columns;return $this;}
     public function modalAlignment(Alignment | string | Closure | null $alignment): static { $this->modalAlignment = $alignment; return $this; }
     public function modalCloseButton(bool | Closure $condition = true): static { $this->modalCloseButton = $condition; return $this; }
     public function modalAutofocus(bool | Closure $condition = true): static { $this->modalAutofocus = $condition; return $this; }
@@ -198,7 +198,7 @@ class LanguageSwitch extends Component
     public function getSuggested(): array { return (array) $this->evaluate($this->suggested); }
     public function isVisibleInsidePanels(): bool { return $this->evaluate($this->visibleInsidePanels) && count($this->getLocales()) > 1 && $this->isCurrentPanelIncluded(); }
     public function isVisibleOutsidePanels(): bool { return $this->evaluate($this->visibleOutsidePanels) && str(request()->route()?->getName())->contains($this->getOutsidePanelRoutes()) && $this->isCurrentPanelIncluded(); }
-    public function isFixedOutsidePanels(): bool { return (bool) $this->evaluate($this->isFixedOutsidePanels); }
+    public function isFixedOutsidePanels(): bool {  return (bool) $this->evaluate($this->isFixedOutsidePanels); }
     public function getOutsidePanelRoutes(): array { return (array) $this->evaluate($this->outsidePanelRoutes); }
     public function getExcludes(): array { return (array) $this->evaluate($this->excludes); }
     public function getOutsidePanelPlacement(): Placement { $outsidePanelPlacement = $this->evaluate($this->outsidePanelPlacement); return match (true) { $outsidePanelPlacement instanceof Placement => $outsidePanelPlacement, is_string($outsidePanelPlacement) => Placement::tryFrom($outsidePanelPlacement) ?? Placement::TopRight, default => Placement::TopRight }; }
@@ -246,7 +246,44 @@ class LanguageSwitch extends Component
     public function getBeforeCoreContentClasses(): ?string { return $this->evaluate($this->beforeCoreContentClasses); }
     public function getAfterCoreContent(): string | Htmlable | View | null { return $this->evaluate($this->afterCoreContent); }
     public function getAfterCoreContentClasses(): ?string { return $this->evaluate($this->afterCoreContentClasses); }
+    public function getModalGridColumnsResponsive(): array
+    {
+        $value = $this->evaluate($this->modalGridColumns);
 
+        if (is_int($value)) {
+            // Backward compatible: same number on all sizes
+            return [
+                'default' => $value,
+            ];
+        }
+
+        if (! is_array($value)) {
+            return ['default' => 1];
+        }
+
+        // Normalize + sanitize
+        $allowedKeys = ['default', 'sm', 'md', 'lg', 'xl', '2xl'];
+        $out = [];
+
+        foreach ($allowedKeys as $key) {
+            if (! array_key_exists($key, $value)) {
+                continue;
+            }
+
+            $n = (int) $value[$key];
+
+            // keep it safe (Tailwind provides grid-cols-1..12)
+            if ($n < 1) {
+                $n = 1;
+            } elseif ($n > 12) {
+                $n = 12;
+            }
+
+            $out[$key] = $n;
+        }
+
+        return $out ?: ['default' => 1];
+    }
     // --- Helpers ---
     public function getPreferredLocale(): string { $locale = session()->get('locale') ?? request()->get('locale') ?? request()->cookie('filament_language_switch_locale') ?? $this->getUserPreferredLocale() ?? config('app.locale', 'en') ?? request()->getPreferredLanguage(); return in_array($locale, $this->getLocales(), true) ? $locale : config('app.locale'); }
     public function getPanels(): array { return collect(filament()->getPanels())->reject(fn (Panel $panel): bool => in_array($panel->getId(), $this->getExcludes()))->toArray(); }
