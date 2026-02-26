@@ -22,21 +22,24 @@ class LanguageSwitch extends Component
 {
     // --- 1. CORE CONFIGURATION ---
     protected string | Closure | null $displayLocale = null;
-    protected array | Closure $locales =[];
-    protected array | Closure $labels =[];
+    protected array | Closure $locales = [];
+    protected array | Closure $labels = [];
     protected bool | Closure $nativeLabel = false;
     protected string | Closure | null $userPreferredLocale = null;
-    protected array | Closure $suggested =[];
+    protected array | Closure $suggested = [];
 
     // --- 2. VISIBILITY & PLACEMENT ---
     protected bool | Closure $visibleInsidePanels = false;
     protected bool | Closure $visibleOutsidePanels = false;
     protected array | Closure $outsidePanelRoutes = [];
-    protected array | Closure $excludes =[];
+    protected array | Closure $excludes = [];
     protected string | Closure | Placement | null $outsidePanelPlacement = Placement::TopRight;
+    protected string | Closure | null $outsidePanelBeforeSpace = null;
+    protected string | Closure | null $outsidePanelAfterSpace = null;
     protected string | Closure $renderHook = 'panels::global-search.after';
     protected bool | Closure $renderAsUserMenuItem = false;
     protected int | Closure $userMenuSort = 10;
+    protected bool | Closure $isFixedOutsidePanels = false;
 
     // --- 3. TRIGGER BUTTON STYLING ---
     protected string | Closure $buttonStyle = 'default';
@@ -48,7 +51,6 @@ class LanguageSwitch extends Component
     protected string | Closure | null $triggerClass = null;
     protected string | Closure | null $wrapperClass = null;
     protected bool | Closure $isCircular = false;
-    protected bool | Closure $displayFullLabel = false;
     protected string | Closure $displayFormat = 'code'; // full, code, none
     protected bool | Closure $hideLanguageCodeOutsideModal = false;
 
@@ -56,7 +58,7 @@ class LanguageSwitch extends Component
     protected string | Closure $displayAs = 'dropdown';
     protected string | Closure $itemStyle = 'list';
     protected string | Closure | null $itemClass = null;
-    protected array | Closure $flags =[];
+    protected array | Closure $flags = [];
     protected bool | Closure $isFlagsOnly = false;
     protected string | Closure $maxHeight = 'max-content';
     protected string | Closure $languageCodeStyle = 'default';
@@ -106,9 +108,9 @@ class LanguageSwitch extends Component
 
                 $panel->userMenuItems([
                     'language-switch' => MenuItem::make()
-                        ->label(fn() => $static->getLabel(app()->getLocale()))
-                        ->icon(fn() => $static->getIcon() ?? 'heroicon-m-language')
-                        ->sort(fn() => $static->getUserMenuSort())
+                        ->label(fn () => $static->getLabel(app()->getLocale()))
+                        ->icon(fn () => $static->getIcon() ?? 'heroicon-m-language')
+                        ->sort(fn () => $static->getUserMenuSort())
                         ->url('#fls-modal'),
                 ]);
 
@@ -125,6 +127,7 @@ class LanguageSwitch extends Component
         }
 
         if ($static->isVisibleOutsidePanels()) {
+            // Render at body start (outside panels) - documented render hook behavior in Filament. :contentReference[oaicite:2]{index=2}
             FilamentView::registerRenderHook(
                 name: 'panels::body.start',
                 hook: fn (): string => Blade::render("<livewire:language-switch-component key='fls-outside-panels' />")
@@ -139,13 +142,16 @@ class LanguageSwitch extends Component
     public function displayLocale(string | Closure | null $locale = null): static { $this->displayLocale = $locale ?? app()->getLocale(); return $this; }
     public function suggested(array | Closure $suggested): static { $this->suggested = $suggested; return $this; }
     public function visible(bool | Closure $insidePanels = true, bool | Closure $outsidePanels = false): static { $this->visibleInsidePanels = $insidePanels; $this->visibleOutsidePanels = $outsidePanels; return $this; }
-    public function outsidePanelRoutes(array | Closure | null $routes = null): static { $this->outsidePanelRoutes = $routes ??['auth.login', 'auth.profile', 'auth.register']; return $this; }
+    public function outsidePanelRoutes(array | Closure | null $routes = null): static { $this->outsidePanelRoutes = $routes ?? ['auth.login', 'auth.profile', 'auth.register']; return $this; }
     public function excludes(array | Closure $excludes): static { $this->excludes = $excludes; return $this; }
     public function outsidePanelPlacement(Placement | string | Closure $placement): static { $this->outsidePanelPlacement = $placement; return $this; }
+    public function beforeSpace(string | Closure | null $space): static { $this->outsidePanelBeforeSpace = $space; return $this; }
+    public function afterSpace(string | Closure | null $space): static { $this->outsidePanelAfterSpace = $space; return $this; }
     public function renderHook(string | Closure $hook): static { $this->renderHook = $hook; return $this; }
     public function userPreferredLocale(string | Closure | null $locale): static { $this->userPreferredLocale = $locale; return $this; }
     public function renderAsUserMenuItem(bool | Closure $condition = true): static { $this->renderAsUserMenuItem = $condition; return $this; }
     public function userMenuSort(int | Closure $sort): static { $this->userMenuSort = $sort; return $this; }
+    public function isFixed(bool | Closure $condition = true): static { $this->isFixedOutsidePanels = $condition; return $this; }
     public function buttonStyle(string | Closure $style): static { $this->buttonStyle = $style; return $this; }
     public function icon(string | Closure | null $icon): static { $this->icon = $icon; return $this; }
     public function iconSize(string | Closure $size): static { $this->iconSize = $size; return $this; }
@@ -155,7 +161,6 @@ class LanguageSwitch extends Component
     public function triggerClass(string | Closure | null $class): static { $this->triggerClass = $class; return $this; }
     public function wrapperClass(string | Closure | null $class): static { $this->wrapperClass = $class; return $this; }
     public function circular(bool | Closure $condition = true): static { $this->isCircular = $condition; return $this; }
-    public function displayFullLabel(bool | Closure $condition = true): static { $this->displayFullLabel = $condition; return $this; }
     public function displayFormat(string | Closure $format): static { $this->displayFormat = $format; return $this; }
     public function displayAs(string | Closure $displayAs): static { $this->displayAs = $displayAs; return $this; }
     public function itemStyle(string | Closure $style): static { $this->itemStyle = $style; return $this; }
@@ -193,9 +198,12 @@ class LanguageSwitch extends Component
     public function getSuggested(): array { return (array) $this->evaluate($this->suggested); }
     public function isVisibleInsidePanels(): bool { return $this->evaluate($this->visibleInsidePanels) && count($this->getLocales()) > 1 && $this->isCurrentPanelIncluded(); }
     public function isVisibleOutsidePanels(): bool { return $this->evaluate($this->visibleOutsidePanels) && str(request()->route()?->getName())->contains($this->getOutsidePanelRoutes()) && $this->isCurrentPanelIncluded(); }
+    public function isFixedOutsidePanels(): bool { return (bool) $this->evaluate($this->isFixedOutsidePanels); }
     public function getOutsidePanelRoutes(): array { return (array) $this->evaluate($this->outsidePanelRoutes); }
     public function getExcludes(): array { return (array) $this->evaluate($this->excludes); }
     public function getOutsidePanelPlacement(): Placement { $outsidePanelPlacement = $this->evaluate($this->outsidePanelPlacement); return match (true) { $outsidePanelPlacement instanceof Placement => $outsidePanelPlacement, is_string($outsidePanelPlacement) => Placement::tryFrom($outsidePanelPlacement) ?? Placement::TopRight, default => Placement::TopRight }; }
+    public function getOutsidePanelBeforeSpace(): ?string { return $this->evaluate($this->outsidePanelBeforeSpace); }
+    public function getOutsidePanelAfterSpace(): ?string { return $this->evaluate($this->outsidePanelAfterSpace); }
     public function getRenderHook(): string { return (string) $this->evaluate($this->renderHook); }
     public function isRenderedAsUserMenuItem(): bool { return (bool) $this->evaluate($this->renderAsUserMenuItem); }
     public function getUserMenuSort(): int { return (int) $this->evaluate($this->userMenuSort); }
@@ -209,15 +217,7 @@ class LanguageSwitch extends Component
     public function getWrapperClass(): ?string { return $this->evaluate($this->wrapperClass); }
     public function isCircular(): bool { return (bool) $this->evaluate($this->isCircular); }
     public function getUserPreferredLocale(): ?string { return $this->evaluate($this->userPreferredLocale); }
-
-    public function isDisplayFullLabel(): bool { return $this->getDisplayFormat() === 'full'; }
-    public function getDisplayFormat(): string {
-        if ((bool) $this->evaluate($this->displayFullLabel)) {
-            return 'full';
-        }
-        return (string) $this->evaluate($this->displayFormat);
-    }
-
+    public function getDisplayFormat(): string { return (string) $this->evaluate($this->displayFormat); }
     public function getDisplayAs(): string { return (string) $this->evaluate($this->displayAs); }
     public function getItemStyle(): string { return (string) $this->evaluate($this->itemStyle); }
     public function getItemClass(): ?string { return $this->evaluate($this->itemClass); }
