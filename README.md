@@ -1,4 +1,3 @@
-
 <a href="https://github.com/bezhansalleh/filament-language-switch" class="filament-hidden">
 
 ![Filament Language Switch](https://repository-images.githubusercontent.com/506847060/81f73ae9-6cef-4f89-a4cf-47de0412e0b5 "Filament Language Switch")
@@ -28,7 +27,7 @@ The **Language Switch** plugin is a versatile and user-friendly tool designed fo
 
 #### Compatibility
 
-| Package Version | Filament Version | 
+| Package Version | Filament Version |
 |----------------|------------------|
 | [v1](https://github.com/bezhanSalleh/filament-language-switch/tree/1.x) | [v2](https://filamentphp.com/docs/2.x/admin/installation) |
 | [v3](https://github.com/bezhanSalleh/filament-language-switch/tree/3.x) | [v3](https://filamentphp.com/docs/3.x/panels/installation) |
@@ -75,7 +74,13 @@ public function boot()
             ->nativeLabel(true)
             ->displayAs('modal')
             ->itemStyle('card')
-            ->modalGridColumns(3)
+            ->modalWidth('2xl')
+            ->modalGridColumns([
+                'sm' => 1,
+                'md' => 2,
+                'lg' => 3,
+                'xl' => 4,
+            ])
             ->buttonStyle('transparent')
             ->languageCodeStyle('minimal')
             ->icon('heroicon-o-language');
@@ -91,7 +96,7 @@ public function boot()
 
 Instead of a simple dropdown list, display languages in a responsive modal with a grid layout and Card styling. <img width="100%" alt="Modal Card Layout" src="https://github.com/user-attachments/assets/3888cae6-292f-4d5d-908d-ac229d58f7d8" />
 
-> Configure using `displayAs('modal')`, `itemStyle('card')`, `modalWidth('2xl')` and `modalGridColumns(3)`.
+> Configure using `displayAs('modal')`, `itemStyle('card')`, `modalWidth('2xl')` and `modalGridColumns(...)`.
 
 ### 2. User Menu Integration
 
@@ -144,11 +149,31 @@ Customize the modal when `displayAs('modal')` is used.
 | Method                            | Description                               |
 | :-------------------------------- | :---------------------------------------- |
 | `modalWidth('4xl')`               | Set modal size (`sm` to `7xl`).           |
-| `modalGridColumns(3)`             | Grid layout inside the modal.             |
+| `modalGridColumns(3)`             | Grid layout inside the modal (static).    |
+| `modalGridColumns([...])`         | Responsive columns by breakpoint. |
 | `modalSlideOver(true)`            | Slide the modal from the side.            |
 | `modalHeading('Select Language')` | Custom translated header text.            |
 | `modalAlignment('center')`        | Align content inside modal (Top, Center). |
 | `closeModalByClickingAway(false)` | Control modal dismissal behavior.         |
+
+#### Responsive Modal Grid Columns
+
+You can pass **an integer** (static grid) or **an array** for responsive columns:
+
+```php
+// Static (same columns everywhere)
+->modalGridColumns(2);
+
+// Responsive (sm/md/lg/xl/2xl)
+->modalGridColumns([
+    'sm' => 1,
+    'md' => 2,
+    'lg' => 3,
+    'xl' => 4,
+]);
+```
+
+Supported keys: `default`, `sm`, `md`, `lg`, `xl`, `2xl`.
 
 ### 4. Content Injection
 
@@ -232,3 +257,5 @@ php artisan vendor:publish --tag="filament-language-switch-views"
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+
+[1]: https://tailwindcss.com/docs/grid-template-columns?utm_source=chatgpt.com "grid-template-columns - Flexbox & Grid - Tailwind CSS"
