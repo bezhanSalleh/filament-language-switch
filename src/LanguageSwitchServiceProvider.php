@@ -19,7 +19,8 @@ class LanguageSwitchServiceProvider extends PackageServiceProvider
     {
         $package
             ->name(static::$name)
-            ->hasViews();
+            ->hasViews()
+            ->hasTranslations();
     }
 
     public function packageBooted(): void
@@ -42,15 +43,11 @@ class LanguageSwitchServiceProvider extends PackageServiceProvider
     protected function reorderCurrentPanelMiddlewareStack(Panel $panel): void
     {
         $middlewareStack = invade($panel)->getMiddleware();
-
         $middleware = SwitchLanguageLocale::class;
         $order = 'before';
         $referenceMiddleware = DispatchServingFilamentEvent::class;
-
         $middleware = is_array($middleware) ? collect($middleware) : collect([$middleware]);
-
         $middlewareCollection = collect($middlewareStack);
-
         $referenceIndex = $middlewareCollection->search($referenceMiddleware);
         $position = $order === 'before' ? $referenceIndex : $referenceIndex + 1;
         $position = $referenceMiddleware === null || $referenceIndex === false ? ($order === 'after' ? $middlewareCollection->count() : 0) : $position;
