@@ -269,7 +269,8 @@ class LanguageSwitch extends Component
     public function getPreferredLocale(): string
     {
         $locale = session()->get('locale') ??
-            request()->get('locale') ??
+            request()->query('locale') ??
+            request()->input('locale') ??
             request()->cookie('filament_language_switch_locale') ??
             $this->getUserPreferredLocale() ??
             config('app.locale', 'en') ??
