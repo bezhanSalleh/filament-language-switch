@@ -7,5 +7,5 @@
     src="{{ $src }}"
     alt="{{ $alt }}"
     loading="lazy"
-    {{ $attributes->class(['fi-ls-flag shrink-0 object-cover object-center']) }}
+    {{ $attributes->class(['fi-avatar fi-ls-flag']) }}
 />

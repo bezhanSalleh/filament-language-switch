@@ -145,15 +145,14 @@
                     :src="$currentFlag"
                     :alt="$currentLabel"
                     @class([
-                        'h-6 w-6',
-                        'rounded-full' => $isCircular,
-                        'rounded-md' => ! $isCircular,
+                        'fi-size-sm',
+                        'fi-circular' => $isCircular,
                     ])
                 />
             @else
                 <x-language-switch::char-avatar
                     :locale="$currentLocale"
-                    class="h-6 w-6"
+                    class="size-6"
                 />
             @endif
         </button>

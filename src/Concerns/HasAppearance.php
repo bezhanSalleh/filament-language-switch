@@ -21,6 +21,10 @@ trait HasAppearance
 
     protected string | Closure $maxHeight = 'max-content';
 
+    protected string | Closure $flagHeight = 'h-16';
+
+    protected string | Closure $charAvatarHeight = 'size-8';
+
     public function circular(bool | Closure $condition = true): static
     {
         $this->isCircular = $condition;
@@ -102,5 +106,37 @@ trait HasAppearance
     public function getMaxHeight(): string
     {
         return (string) $this->evaluate($this->maxHeight);
+    }
+
+    /**
+     * Set the flag height class for modal flagsOnly cards.
+     * Default: 'h-16'. Examples: 'h-12', 'h-20', 'h-24'.
+     */
+    public function flagHeight(string | Closure $height): static
+    {
+        $this->flagHeight = $height;
+
+        return $this;
+    }
+
+    public function getFlagHeight(): string
+    {
+        return (string) $this->evaluate($this->flagHeight);
+    }
+
+    /**
+     * Set the char avatar size class for modal cards.
+     * Default: 'size-8'. Examples: 'size-10', 'size-12'.
+     */
+    public function charAvatarHeight(string | Closure $height): static
+    {
+        $this->charAvatarHeight = $height;
+
+        return $this;
+    }
+
+    public function getCharAvatarHeight(): string
+    {
+        return (string) $this->evaluate($this->charAvatarHeight);
     }
 }

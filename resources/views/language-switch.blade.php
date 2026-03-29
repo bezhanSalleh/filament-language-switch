@@ -10,6 +10,8 @@
     $maxHeight = $ls->getMaxHeight();
     $contentView = $ls->getContentView();
     $itemView = $ls->getItemView();
+    $flagHeight = $ls->getFlagHeight();
+    $charAvatarHeight = $ls->getCharAvatarHeight();
 
     $currentLocale = app()->getLocale();
     $currentLabel = $ls->getLabel($currentLocale);
