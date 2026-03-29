@@ -1,27 +1,34 @@
 @php
-    $languageSwitch = \BezhanSalleh\LanguageSwitch\LanguageSwitch::make();
-    $locales = $languageSwitch->getLocales();
-    $isCircular = $languageSwitch->isCircular();
-    $isFlagsOnly = $languageSwitch->isFlagsOnly();
-    $hasFlags = filled($languageSwitch->getFlags());
-    $isVisibleOutsidePanels = $languageSwitch->isVisibleOutsidePanels();
-    $outsidePanelsPlacement = $languageSwitch->getOutsidePanelPlacement()->value;
+    $ls = \BezhanSalleh\LanguageSwitch\LanguageSwitch::make();
+    $locales = $ls->getLocales();
+    $isCircular = $ls->isCircular();
+    $isFlagsOnly = $ls->isFlagsOnly();
+    $hasFlags = filled($ls->getFlags());
+    $displayMode = $ls->getDisplayMode();
+    $renderContext = $ls->getRenderContext();
+    $columns = $ls->getColumns();
+    $maxHeight = $ls->getMaxHeight();
+    $contentView = $ls->getContentView();
+    $itemView = $ls->getItemView();
 
-    $defaultPlacement = __('filament-panels::layout.direction') === 'rtl' ? 'bottom-start' : 'bottom-end';
+    $currentLocale = app()->getLocale();
+    $currentLabel = $ls->getLabel($currentLocale);
+    $currentFlag = $hasFlags ? $ls->getFlag($currentLocale) : null;
 
-    $placement = match (true) {
-        $outsidePanelsPlacement === 'top-center' && $isFlagsOnly => 'bottom',
-        $outsidePanelsPlacement === 'bottom-center' && $isFlagsOnly => 'top',
-        !$isVisibleOutsidePanels && $isFlagsOnly => 'bottom',
-        default => $defaultPlacement,
-    };
-    $maxHeight = $languageSwitch->getMaxHeight();
+    $rtl = __('filament-panels::layout.direction') === 'rtl';
+    $customPlacement = $ls->getDropdownPlacement();
+    $placement = $customPlacement ?? ($rtl ? 'bottom-start' : 'bottom-end');
 
+    // Deprecated: outside panel support
+    $isVisibleOutsidePanels = $ls->isVisibleOutsidePanels();
+    $outsidePanelsPlacement = $ls->getOutsidePanelPlacement()->value;
 @endphp
-<div>
+
+<div @class(['fi-ls', 'fi-circular' => $isCircular, 'fi-flags-only' => $isFlagsOnly])>
     @if ($isVisibleOutsidePanels)
+        {{-- Deprecated: outside panel fixed positioning --}}
         <div @class([
-            'fls-display-on fixed w-fit flex p-4 z-50',
+            'fixed w-fit flex p-4 z-50',
             'top-0' => str_contains($outsidePanelsPlacement, 'top'),
             'bottom-0' => str_contains($outsidePanelsPlacement, 'bottom'),
             'justify-start' => str_contains($outsidePanelsPlacement, 'left'),
@@ -29,10 +36,12 @@
             'justify-center' => str_contains($outsidePanelsPlacement, 'center'),
         ])>
             <div class="rounded-lg bg-gray-50 dark:bg-gray-950">
-                @include('language-switch::switch')
+                @include('language-switch::partials.dropdown')
             </div>
         </div>
+    @elseif ($displayMode === \BezhanSalleh\LanguageSwitch\Enums\DisplayMode::Modal)
+        @include('language-switch::partials.modal')
     @else
-        @include('language-switch::switch')
+        @include('language-switch::partials.dropdown')
     @endif
 </div>
