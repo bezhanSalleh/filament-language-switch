@@ -220,7 +220,7 @@ class LanguageSwitch extends Component
 
         foreach ($flagUrls as $flagUrl) {
             if (! filter_var($flagUrl, FILTER_VALIDATE_URL)) {
-                throw new \Exception('Invalid flag url');
+                throw new Exception('Invalid flag url');
             }
         }
 

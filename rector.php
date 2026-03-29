@@ -2,10 +2,7 @@
 
 declare(strict_types=1);
 
-use PHPStan\Type\StringType;
 use Rector\Config\RectorConfig;
-use Rector\TypeDeclaration\Rector\FunctionLike\AddParamTypeForFunctionLikeWithinCallLikeArgDeclarationRector;
-use Rector\TypeDeclaration\ValueObject\AddParamTypeForFunctionLikeWithinCallLikeArgDeclaration;
 
 return RectorConfig::configure()
     ->withPaths([
@@ -18,10 +15,6 @@ return RectorConfig::configure()
         typeDeclarations: true,
         privatization: true,
         earlyReturn: true,
-        strictBooleans: true,
         naming: true,
     )
-    ->withPhpSets(php82: true)
-    ->withConfiguredRule(AddParamTypeForFunctionLikeWithinCallLikeArgDeclarationRector::class, [
-        new AddParamTypeForFunctionLikeWithinCallLikeArgDeclaration('SomeClass', 'process', 0, 0, new StringType),
-    ]);
+    ->withPhpSets(php82: true);
