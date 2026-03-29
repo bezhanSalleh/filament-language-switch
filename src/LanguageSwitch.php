@@ -46,6 +46,8 @@ class LanguageSwitch extends Component
 
     protected string | Closure $renderHook = 'panels::global-search.after';
 
+    protected string | Closure $outsidePanelsRenderHook = 'panels::body.start';
+
     protected string | Closure | null $userPreferredLocale = null;
 
     public static function make(): static
@@ -76,7 +78,7 @@ class LanguageSwitch extends Component
 
         if ($static->isVisibleOutsidePanels()) {
             FilamentView::registerRenderHook(
-                name: 'panels::body.start',
+                name: $static->getOutsidePanelsRenderHook(),
                 hook: fn (): string => Blade::render("<livewire:language-switch-component key='fls-outside-panels' />")
             );
         }
@@ -163,6 +165,13 @@ class LanguageSwitch extends Component
         return $this;
     }
 
+    public function outsidePanelsRenderHook(Closure | string $hook): static
+    {
+        $this->outsidePanelsRenderHook = $hook;
+
+        return $this;
+    }
+
     public function userPreferredLocale(Closure | string | null $locale): static
     {
         $this->userPreferredLocale = $locale;
@@ -203,7 +212,11 @@ class LanguageSwitch extends Component
 
     public function getOutsidePanelRoutes(): array
     {
-        return (array) $this->evaluate($this->outsidePanelRoutes);
+        return (array) $this->evaluate(
+            collect($this->outsidePanelRoutes)
+                ->filter(fn ($route): bool => str($route)->contains(needles: 'profile') && $this->getCurrentPanel()->isProfilePageSimple())
+                ->toArray()
+        );
     }
 
     public function getExcludes(): array
@@ -261,6 +274,11 @@ class LanguageSwitch extends Component
         return (string) $this->evaluate($this->renderHook);
     }
 
+    public function getOutsidePanelsRenderHook(): string
+    {
+        return (string) $this->evaluate($this->outsidePanelsRenderHook);
+    }
+
     public function getUserPreferredLocale(): ?string
     {
         return $this->evaluate($this->userPreferredLocale) ?? null;
@@ -269,7 +287,8 @@ class LanguageSwitch extends Component
     public function getPreferredLocale(): string
     {
         $locale = session()->get('locale') ??
-            request()->get('locale') ??
+            request()->query('locale') ??
+            request()->input('locale') ??
             request()->cookie('filament_language_switch_locale') ??
             $this->getUserPreferredLocale() ??
             config('app.locale', 'en') ??
@@ -282,7 +301,8 @@ class LanguageSwitch extends Component
     {
         return $this->evaluate($this->visibleInsidePanels)
             && count($this->getLocales()) > 1
-            && $this->isCurrentPanelIncluded();
+            && $this->isCurrentPanelIncluded()
+            && str(request()->route()?->getName())->doesntContain($this->getOutsidePanelRoutes());
     }
 
     public function isVisibleOutsidePanels(): bool

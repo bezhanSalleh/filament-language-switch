@@ -6,13 +6,17 @@
     $hasFlags = filled($languageSwitch->getFlags());
     $isVisibleOutsidePanels = $languageSwitch->isVisibleOutsidePanels();
     $outsidePanelsPlacement = $languageSwitch->getOutsidePanelPlacement()->value;
+
+    $defaultPlacement = __('filament-panels::layout.direction') === 'rtl' ? 'bottom-start' : 'bottom-end';
+
     $placement = match (true) {
         $outsidePanelsPlacement === 'top-center' && $isFlagsOnly => 'bottom',
         $outsidePanelsPlacement === 'bottom-center' && $isFlagsOnly => 'top',
         !$isVisibleOutsidePanels && $isFlagsOnly => 'bottom',
-        default => 'bottom-end',
+        default => $defaultPlacement,
     };
     $maxHeight = $languageSwitch->getMaxHeight();
+
 @endphp
 <div>
     @if ($isVisibleOutsidePanels)

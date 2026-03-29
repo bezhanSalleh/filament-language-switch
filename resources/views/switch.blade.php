@@ -17,7 +17,7 @@
             x-tooltip="{
                 content: @js($languageSwitch->getLabel(app()->getLocale())),
                 theme: $store.theme,
-                placement: 'right'
+                placement: document.dir === 'rtl' ? 'left' : 'right',
             }"
         >
             @if ($isFlagsOnly || $hasFlags)
