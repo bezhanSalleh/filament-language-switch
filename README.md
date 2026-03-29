@@ -4,8 +4,11 @@
 
 </a>
 <p align="center">
-    <a href="https://filamentadmin.com/docs/2.x/admin/installation">
+    <a href="https://filamentphp.com/docs/4.x/panels/installation">
         <img alt="FILAMENT 4.x" src="https://img.shields.io/badge/FILAMENT-4.x-EBB304?style=for-the-badge">
+    </a>
+    <a href="https://filamentphp.com/docs/5.x/panels/installation">
+        <img alt="FILAMENT 5.x" src="https://img.shields.io/badge/FILAMENT-5.x-EBB304?style=for-the-badge">
     </a>
     <a href="https://packagist.org/packages/bezhansalleh/filament-language-switch">
         <img alt="Packagist" src="https://img.shields.io/packagist/v/bezhansalleh/filament-language-switch.svg?style=for-the-badge&logo=packagist">
@@ -13,12 +16,8 @@
     <a href="https://github.com/bezhansalleh/filament-language-switch/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain" class="filament-hidden">
         <img alt="Code Style Passing" src="https://img.shields.io/github/actions/workflow/status/bezhansalleh/filament-language-switch/run-laravel-pint.yml?style=for-the-badge&logo=github&label=code%20style">
     </a>
-
-<a href="https://packagist.org/packages/bezhansalleh/filament-language-switch">
-    <img alt="Downloads" src="https://img.shields.io/packagist/dt/bezhansalleh/filament-language-switch.svg?style=for-the-badge" >
-    </a>
-<a href="https://discord.com/channels/883083792112300104/990920249744453642" target="_blank">
-    <img alt="Downloads" src="https://img.shields.io/discord/883083792112300104?label=Discord&style=for-the-badge" >
+    <a href="https://packagist.org/packages/bezhansalleh/filament-language-switch">
+        <img alt="Downloads" src="https://img.shields.io/packagist/dt/bezhansalleh/filament-language-switch.svg?style=for-the-badge">
     </a>
 </p>
 
