@@ -2,6 +2,14 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## 4.2.0 - 2026-03-29
+
+### What's Changed
+
+* Laravel 13 Support by @bezhanSalleh in https://github.com/bezhanSalleh/filament-language-switch/pull/154
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/4.1.0...4.2.0
+
 ## 4.1.0 - 2026-02-05
 
 ### What's Changed
