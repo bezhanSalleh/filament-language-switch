@@ -4,17 +4,11 @@
 
 </a>
 <p align="center">
-    <a href="https://filamentphp.com/docs/4.x/panels/installation">
-        <img alt="FILAMENT 4.x" src="https://img.shields.io/badge/FILAMENT-4.x-EBB304?style=for-the-badge">
-    </a>
     <a href="https://filamentphp.com/docs/5.x/panels/installation">
         <img alt="FILAMENT 5.x" src="https://img.shields.io/badge/FILAMENT-5.x-EBB304?style=for-the-badge">
     </a>
     <a href="https://packagist.org/packages/bezhansalleh/filament-language-switch">
         <img alt="Packagist" src="https://img.shields.io/packagist/v/bezhansalleh/filament-language-switch.svg?style=for-the-badge&logo=packagist">
-    </a>
-    <a href="https://github.com/bezhansalleh/filament-language-switch/actions?query=workflow%3A%22Check+%26+fix+styling%22+branch%3Amain" class="filament-hidden">
-        <img alt="Code Style Passing" src="https://img.shields.io/github/actions/workflow/status/bezhansalleh/filament-language-switch/run-laravel-pint.yml?style=for-the-badge&logo=github&label=code%20style">
     </a>
     <a href="https://packagist.org/packages/bezhansalleh/filament-language-switch">
         <img alt="Downloads" src="https://img.shields.io/packagist/dt/bezhansalleh/filament-language-switch.svg?style=for-the-badge">
@@ -23,16 +17,15 @@
 
 # Language Switch
 
-A composable language switching plugin for Filament Panels. Supports dropdown, modal, and inline display modes with smart context detection for topbar, sidebar, and user menu placement.
+Zero-config language switching for Filament Panels. Drop it in, provide your locales, and you're done. The plugin auto-detects your panel layout and renders in the right place with the right design.
 
 ## Compatibility
 
-| Package Version | Filament Version |
-|----------------|------------------|
-| [v1](https://github.com/bezhanSalleh/filament-language-switch/tree/1.x) | [v2](https://filamentphp.com/docs/2.x/admin/installation) |
+| Package | Filament |
+|---------|----------|
 | [v3](https://github.com/bezhanSalleh/filament-language-switch/tree/3.x) | [v3](https://filamentphp.com/docs/3.x/panels/installation) |
-| v4 | [v4](https://filamentphp.com/docs/4.x/introduction/overview) & [v5](https://filamentphp.com/docs/5.x/introduction/overview) |
-| v5 | [v4](https://filamentphp.com/docs/4.x/introduction/overview) & [v5](https://filamentphp.com/docs/5.x/introduction/overview) |
+| v4 | v4 & v5 |
+| v5 | v5 |
 
 ## Installation
 
@@ -40,266 +33,392 @@ A composable language switching plugin for Filament Panels. Supports dropdown, m
 composer require bezhansalleh/filament-language-switch
 ```
 
-> [!IMPORTANT]
-> Create a custom theme if you haven't already, and add to your `theme.css`:
->
-> ```css
-> @source '../../../../vendor/bezhansalleh/filament-language-switch/resources/views/**/*.blade.php';
-> ```
->
-> Then build: `npm run build`
+Add the plugin's views to your custom theme so Tailwind picks up the classes:
+
+```css
+/* resources/css/filament/admin/theme.css */
+@source '../../../../vendor/bezhansalleh/filament-language-switch/resources/views/**/*.blade.php';
+```
+
+Build your theme:
+
+```bash
+npm run build
+```
 
 ## Quick Start
+
+Add this to any service provider's `boot()` method:
 
 ```php
 use BezhanSalleh\LanguageSwitch\LanguageSwitch;
 
-public function boot()
+public function boot(): void
 {
     LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
-        $switch->locales(['ar', 'en', 'fr']);
+        $switch->locales(['en', 'fr', 'ar']);
     });
 }
 ```
 
-That's it. The plugin auto-detects your panel layout and places the trigger appropriately (topbar when enabled, sidebar footer when topbar is off).
+That's it. The switch appears in your topbar automatically. When the panel has no topbar, it moves to the sidebar.
 
 ## Display Modes
 
 ### Dropdown (default)
 
-Opens a dropdown list when the trigger is clicked.
+The trigger opens a dropdown with your locales:
 
 ```php
-$switch->locales(['ar', 'en', 'fr']);
+$switch->locales(['en', 'fr', 'ar']);
 ```
 
 ### Modal
 
-Opens a modal dialog. Ideal for many languages or when you want a richer selection experience.
+Opens a modal dialog instead. Better for many languages:
 
 ```php
 use BezhanSalleh\LanguageSwitch\Enums\DisplayMode;
 
 $switch
-    ->locales(['ar', 'en', 'fr', 'de', 'es'])
+    ->locales(['en', 'fr', 'ar', 'de', 'es', 'pt', 'ja', 'ko', 'zh'])
+    ->displayMode(DisplayMode::Modal)
+    ->modalWidth('lg');
+```
+
+### Modal with Grid
+
+Arrange locales in columns:
+
+```php
+$switch
     ->displayMode(DisplayMode::Modal)
     ->columns(2)
     ->modalWidth('lg');
 ```
 
-### Modal with Slide-over
+### Slide-over
 
 ```php
 $switch
-    ->locales(['ar', 'en', 'fr', 'de', 'es'])
     ->displayMode(DisplayMode::Modal)
     ->modalSlideOver();
 ```
 
-## Trigger Placement
-
-### Inline (User Menu / Sidebar)
-
-Renders the trigger as a native menu item inside the user menu or sidebar, using the universal language icon. Opens dropdown or modal on click.
+### Modal Heading & Icon
 
 ```php
-// Inline dropdown in user menu
 $switch
-    ->locales(['ar', 'en', 'fr'])
-    ->inline();
-
-// Inline modal in user menu
-$switch
-    ->locales(['ar', 'en', 'fr', 'de', 'es'])
-    ->inline()
     ->displayMode(DisplayMode::Modal)
-    ->columns(2);
+    ->modalHeading('Choose Language')
+    ->modalIcon('heroicon-o-language')
+    ->modalIconColor('primary');
 ```
 
-### Custom Render Hook
+## Trigger
 
-Place the trigger at any Filament render hook:
+### Trigger Icon
+
+The trigger uses the language icon by default. Change it to any icon from your installed [Blade Icons](https://blade-ui-kit.com/blade-icons) packages:
 
 ```php
-use Filament\View\PanelsRenderHook;
+use Filament\Support\Icons\Heroicon;
 
-$switch
-    ->locales(['ar', 'en', 'fr'])
-    ->renderHook(PanelsRenderHook::SIDEBAR_FOOTER);
+// Using Filament's Heroicon enum
+$switch->triggerIcon(Heroicon::GlobeAlt);
+
+// Using any Blade Icons string
+$switch->triggerIcon('heroicon-o-globe-alt');
+$switch->triggerIcon('phosphor-translate');
 ```
 
-The trigger automatically adapts its design based on context:
-
-| Hook Context | Trigger Design |
-|---|---|
-| `TOPBAR_*`, `GLOBAL_SEARCH_*` | Icon button (matches panel-switch) |
-| `SIDEBAR_NAV_*` | Sidebar nav item (matches nav items) |
-| `SIDEBAR_FOOTER`, `USER_MENU_BEFORE/AFTER` | Sidebar button (matches notifications) |
-| `USER_MENU_PROFILE_*` | Dropdown list item (matches menu items) |
-
-### Smart Defaults
-
-When no `renderHook()` is specified, the plugin auto-detects based on `$panel->hasTopbar()`:
-
-| Panel Config | Default Hook |
-|---|---|
-| Topbar enabled | `GLOBAL_SEARCH_AFTER` |
-| Topbar enabled + `inline()` | `USER_MENU_PROFILE_AFTER` |
-| Topbar disabled | `USER_MENU_BEFORE` |
-
-## Appearance
-
-### Flags
+You can also override it globally via Filament's icon alias system:
 
 ```php
-$switch
-    ->locales(['ar', 'en', 'fr'])
-    ->flags([
-        'ar' => asset('flags/sa.svg'),
-        'en' => asset('flags/us.svg'),
-        'fr' => asset('flags/fr.svg'),
-    ]);
+use Filament\Support\Facades\FilamentIcon;
+
+FilamentIcon::register([
+    'language-switch::trigger' => 'heroicon-o-globe-alt',
+]);
+```
+
+### Trigger Style
+
+Control what the trigger shows. The default adapts to context automatically, but you can override it:
+
+```php
+// Icon only (default for topbar)
+$switch->triggerStyle('icon');
+
+// Icon with locale name
+$switch->triggerStyle('icon-label');
+
+// Locale abbreviation (EN, FR, AR)
+$switch->triggerStyle('avatar');
+
+// Abbreviation with locale name
+$switch->triggerStyle('avatar-label');
+
+// Flag image (requires flags() to be set)
+$switch->triggerStyle('flag');
+
+// Flag with locale name
+$switch->triggerStyle('flag-label');
+```
+
+### Inline
+
+Renders the trigger as a menu item inside the user menu instead of a standalone button:
+
+```php
+$switch->inline();
+```
+
+### Custom Trigger View
+
+Replace the trigger entirely with your own Blade view:
+
+```php
+$switch->triggerView('my-views.language-trigger');
+```
+
+Your view receives all configuration variables (`$renderContext`, `$triggerStyle`, `$currentLocale`, `$currentLabel`, `$currentFlag`, `$isCircular`, etc.).
+
+## Flags
+
+Associate each locale with a flag image:
+
+```php
+$switch->flags([
+    'en' => asset('flags/us.svg'),
+    'fr' => asset('flags/fr.svg'),
+    'ar' => asset('flags/sa.svg'),
+]);
 ```
 
 ### Flags Only
 
-Display only flags without text labels. In dropdown mode, shows compact flag buttons with tooltips. In modal mode, renders a radio-group card grid with flag showcase.
+Show only the flag images without text labels. Items show tooltips on hover:
 
 ```php
 $switch
-    ->locales(['ar', 'en', 'fr'])
     ->flags([...])
     ->flagsOnly();
 ```
 
-### Circular
-
-Makes flags and char avatars fully rounded:
+In modal mode, flags-only renders as a showcase grid with radio-card selection:
 
 ```php
-$switch->circular();
+$switch
+    ->flags([...])
+    ->flagsOnly()
+    ->displayMode(DisplayMode::Modal)
+    ->columns(3)
+    ->modalWidth('lg');
+```
+
+## Labels
+
+### Custom Labels
+
+Override the auto-generated locale names:
+
+```php
+$switch->labels([
+    'pt_BR' => 'Brasileiro',
+    'pt_PT' => 'Europeu',
+]);
 ```
 
 ### Native Labels
 
-Display locale names in their native language:
+Show each locale name in its own language (e.g., "Fran&ccedil;ais" instead of "French"):
 
 ```php
 $switch->nativeLabel();
 ```
 
-### Custom Labels
-
-```php
-$switch->labels([
-    'pt_BR' => 'Português (BR)',
-    'pt_PT' => 'Português (PT)',
-]);
-```
-
 ### Display Locale
 
-Set the language used for generating locale labels:
+Change the language used for auto-generated labels:
 
 ```php
+// Labels generated in French (e.g., "Anglais" for English)
 $switch->displayLocale('fr');
 ```
 
-## Modal Configuration
+## Appearance
+
+### Circular
+
+Make flags and avatars fully rounded:
+
+```php
+$switch->circular();
+```
+
+### Flag & Avatar Sizing (Modal)
+
+Control sizes in modal radio cards:
 
 ```php
 $switch
     ->displayMode(DisplayMode::Modal)
-    ->columns(3)                              // grid columns (1 = single column)
-    ->modalWidth('2xl')                       // sm, md, lg, xl, 2xl, etc.
-    ->modalHeading('Select your language')    // custom heading
-    ->modalIcon('heroicon-o-language')        // heading icon
-    ->modalIconColor('primary')               // icon color
-    ->modalSlideOver();                       // slide-over instead of centered
+    ->flagHeight('h-20')       // Default: 'h-16'
+    ->charAvatarHeight('size-10'); // Default: 'size-8'
 ```
 
-### Flag Height (Modal Flags-Only Cards)
+## Placement
 
-Control the flag image height in modal flag showcase cards:
+### Render Hook
+
+Place the switch at any [Filament render hook](https://filamentphp.com/docs/5.x/support/render-hooks):
 
 ```php
-$switch
-    ->flagsOnly()
-    ->displayMode(DisplayMode::Modal)
-    ->columns(3)
-    ->flagHeight('h-16');  // default: 'h-16'. Options: 'h-12', 'h-20', 'h-24'
+use Filament\View\PanelsRenderHook;
+
+$switch->renderHook(PanelsRenderHook::SIDEBAR_NAV_END);
 ```
 
-### Char Avatar Height (Modal Cards)
+The trigger automatically adapts its design to match the surrounding UI:
 
-Control the char avatar size in modal radio cards:
+| Hook Location | Trigger Design |
+|---|---|
+| Topbar hooks (`GLOBAL_SEARCH_*`, `TOPBAR_*`) | Icon button |
+| Sidebar nav (`SIDEBAR_NAV_*`) | Sidebar navigation item |
+| Sidebar footer (`SIDEBAR_FOOTER`, `USER_MENU_BEFORE/AFTER`) | Sidebar footer button |
+| User menu (`USER_MENU_PROFILE_*`) | Dropdown menu item |
 
-```php
-$switch
-    ->displayMode(DisplayMode::Modal)
-    ->columns(2)
-    ->charAvatarHeight('size-10');  // default: 'size-8'
-```
+### Smart Defaults
 
-## Custom Content
+When you don't set a render hook, the plugin picks the best one based on your panel:
 
-Override the locale list or individual item rendering:
-
-```php
-// Custom list view
-$switch->contentView('my-views.custom-locale-list');
-
-// Custom item view
-$switch->itemView('my-views.custom-locale-item');
-```
-
-## Dropdown Configuration
-
-### Max Height
-
-```php
-$switch->maxHeight('max-h-96');
-```
+| Panel Config | Default Position |
+|---|---|
+| Topbar enabled | After global search |
+| Topbar enabled + `inline()` | Inside user menu |
+| Topbar disabled | Before user menu (sidebar) |
 
 ### Dropdown Placement
+
+Control which direction the dropdown opens:
 
 ```php
 $switch->dropdownPlacement('top-end');
 ```
 
-## Panel Exclusion
+### Max Height
+
+Limit the dropdown list height:
 
 ```php
-$switch->excludes(['app']);
+$switch->maxHeight('200px');
 ```
 
-## Locale Preference
+## Panel Exclusion
 
-Provide a custom locale resolver (e.g., from user profile):
+Hide the switch from specific panels:
+
+```php
+$switch->excludes(['admin']);
+```
+
+## User Preferred Locale
+
+Resolve the user's preferred locale from their profile or any source:
 
 ```php
 $switch->userPreferredLocale(fn () => auth()->user()?->locale);
 ```
 
-## Event
+The locale resolution order is:
+1. Session
+2. Query parameter (`?locale=`)
+3. Request input
+4. Cookie
+5. User preferred locale (this setting)
+6. `app.locale` config
+7. Browser `Accept-Language` header
 
-The `LocaleChanged` event is dispatched whenever the locale is switched:
+## Custom Views
+
+### Custom Locale List
+
+Replace the entire locale list rendering:
 
 ```php
-use BezhanSalleh\LanguageSwitch\Events\LocaleChanged;
-
-Event::listen(function (LocaleChanged $event) {
-    auth()->user()->update(['locale' => $event->locale]);
-});
+$switch->contentView('my-views.locale-list');
 ```
 
-## Views
+### Custom Locale Item
 
-Publish views for deep customization:
+Replace how each individual locale renders in the list:
+
+```php
+$switch->itemView('my-views.locale-item');
+```
+
+### Publishing Views
+
+Publish all views for deep customization:
 
 ```bash
 php artisan vendor:publish --tag="filament-language-switch-views"
+```
+
+## Event
+
+A `LocaleChanged` event fires whenever the locale switches:
+
+```php
+use BezhanSalleh\LanguageSwitch\Events\LocaleChanged;
+use Illuminate\Support\Facades\Event;
+
+Event::listen(function (LocaleChanged $event) {
+    auth()->user()?->update(['locale' => $event->locale]);
+});
+```
+
+## Debug Panel
+
+When `APP_DEBUG=true` and `APP_ENV=local`, a floating debug panel appears in the bottom-right corner. It lets you hot-swap every configuration option live in the browser:
+
+- Toggle topbar on/off to test both layouts
+- Switch between display modes, trigger styles, render hooks
+- Toggle flags, circular, native labels, inline
+- Adjust modal width, columns, slide-over
+- Change trigger icon
+- Reset returns to your configured defaults
+
+No code changes needed — just click and test.
+
+## Full Example
+
+```php
+use BezhanSalleh\LanguageSwitch\Enums\DisplayMode;
+use BezhanSalleh\LanguageSwitch\LanguageSwitch;
+use Filament\Support\Icons\Heroicon;
+
+LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+    $switch
+        ->locales(['en', 'fr', 'ar', 'de', 'es'])
+        ->flags([
+            'en' => asset('flags/us.svg'),
+            'fr' => asset('flags/fr.svg'),
+            'ar' => asset('flags/sa.svg'),
+            'de' => asset('flags/de.svg'),
+            'es' => asset('flags/es.svg'),
+        ])
+        ->displayMode(DisplayMode::Modal)
+        ->columns(2)
+        ->modalWidth('lg')
+        ->circular()
+        ->nativeLabel()
+        ->triggerIcon(Heroicon::GlobeAlt)
+        ->triggerStyle('flag-label')
+        ->excludes(['admin'])
+        ->userPreferredLocale(fn () => auth()->user()?->locale);
+});
 ```
 
 ## Changelog
