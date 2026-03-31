@@ -12,6 +12,11 @@
     $itemView = $ls->getItemView();
     $flagHeight = $ls->getFlagHeight();
     $charAvatarHeight = $ls->getCharAvatarHeight();
+    $triggerStyle = $ls->getTriggerStyle();
+    $triggerIcon = $ls->getTriggerIcon();
+    $triggerView = $ls->getTriggerView();
+    $hasLabel = str_contains($triggerStyle, '-label');
+    $baseStyle = str_replace('-label', '', $triggerStyle);
 
     $currentLocale = app()->getLocale();
     $currentLabel = $ls->getLabel($currentLocale);
@@ -25,7 +30,7 @@
     $outsidePanelsPlacement = $ls->getOutsidePanelPlacement()->value;
 @endphp
 
-<div @class(['fi-ls', 'fi-circular' => $isCircular, 'fi-flags-only' => $isFlagsOnly])>
+<div @class(['fi-ls w-full', 'fi-circular' => $isCircular, 'fi-flags-only' => $isFlagsOnly])>
     @if ($isVisibleOutsidePanels)
         {{-- Deprecated: outside panel fixed positioning --}}
         <div @class([

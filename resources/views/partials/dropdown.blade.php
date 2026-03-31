@@ -11,9 +11,10 @@
     :teleport="$renderContext === 'topbar'"
     :placement="$dropdownPlacement"
     :max-height="$maxHeight"
+    @class(['w-full' => in_array($renderContext, ['nav', 'sidebar'])])
 >
     <x-slot name="trigger">
-        @include('language-switch::partials.trigger')
+        <x-language-switch::trigger />
     </x-slot>
 
     @include($contentView ?? 'language-switch::partials.list')

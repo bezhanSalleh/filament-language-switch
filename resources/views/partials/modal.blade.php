@@ -1,14 +1,10 @@
-@include('language-switch::partials.trigger', [
-    'attributes' => new \Illuminate\View\ComponentAttributeBag([
-        'x-on:click' => "\$dispatch('open-modal', { id: 'fls-modal' })",
-    ]),
-])
+<x-language-switch::trigger x-on:click="$dispatch('open-modal', { id: 'fls-modal' })" />
 
 <x-filament::modal
     id="fls-modal"
     teleport="body"
     :heading="$ls->getModalHeading()"
-    :width="$ls->getModalWidth() ?? 'md'"
+    :width="$ls->getModalWidth() ?? 'sm'"
     :slide-over="$ls->isModalSlideOver()"
     :sticky-header="$ls->isModalSlideOver()"
     :icon="$ls->getModalIcon()"

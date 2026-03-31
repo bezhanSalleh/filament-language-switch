@@ -6,6 +6,7 @@ namespace BezhanSalleh\LanguageSwitch\Concerns;
 
 use BezhanSalleh\LanguageSwitch\Enums\DisplayMode;
 use Closure;
+use Filament\Support\Icons\Heroicon;
 
 trait HasAppearance
 {
@@ -24,6 +25,10 @@ trait HasAppearance
     protected string | Closure $flagHeight = 'h-16';
 
     protected string | Closure $charAvatarHeight = 'size-8';
+
+    protected string | Closure | null $triggerStyle = null;
+
+    protected string | Heroicon | Closure $triggerIcon = Heroicon::Language;
 
     public function circular(bool | Closure $condition = true): static
     {
@@ -138,5 +143,46 @@ trait HasAppearance
     public function getCharAvatarHeight(): string
     {
         return (string) $this->evaluate($this->charAvatarHeight);
+    }
+
+    /**
+     * Set the trigger style independently from render context.
+     * Options: 'icon', 'icon-label', 'avatar', 'avatar-label', 'flag', 'flag-label'.
+     * When null, smart defaults apply based on render context.
+     */
+    public function triggerStyle(string | Closure | null $style): static
+    {
+        $this->triggerStyle = $style;
+
+        return $this;
+    }
+
+    public function getTriggerStyle(): string
+    {
+        $style = $this->evaluate($this->triggerStyle);
+
+        if ($style !== null) {
+            return $style;
+        }
+
+        $context = $this->getRenderContext();
+        $hasFlags = filled($this->evaluate($this->flags));
+
+        return match ($context) {
+            'topbar' => $hasFlags ? 'flag' : 'icon',
+            default => 'icon-label',
+        };
+    }
+
+    public function triggerIcon(string | Heroicon | Closure $icon): static
+    {
+        $this->triggerIcon = $icon;
+
+        return $this;
+    }
+
+    public function getTriggerIcon(): string | Heroicon
+    {
+        return $this->evaluate($this->triggerIcon);
     }
 }

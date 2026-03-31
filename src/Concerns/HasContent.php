@@ -12,6 +12,8 @@ trait HasContent
 
     protected string | Closure | null $itemView = null;
 
+    protected string | Closure | null $triggerView = null;
+
     /**
      * Set a custom Blade view for the locale list content.
      * The view receives $ls (LanguageSwitch instance) and all resolved config variables.
@@ -42,5 +44,21 @@ trait HasContent
     public function getItemView(): ?string
     {
         return $this->evaluate($this->itemView);
+    }
+
+    /**
+     * Set a custom Blade view for the trigger.
+     * The view receives all trigger variables ($renderContext, $triggerStyle, $currentLocale, etc.).
+     */
+    public function triggerView(string | Closure | null $view): static
+    {
+        $this->triggerView = $view;
+
+        return $this;
+    }
+
+    public function getTriggerView(): ?string
+    {
+        return $this->evaluate($this->triggerView);
     }
 }

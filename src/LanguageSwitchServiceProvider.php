@@ -129,6 +129,14 @@ class LanguageSwitchServiceProvider extends PackageServiceProvider
             if (! empty($overrides['renderHook'])) {
                 $switch->renderHook((string) $overrides['renderHook']);
             }
+
+            if (! empty($overrides['triggerStyle'])) {
+                $switch->triggerStyle((string) $overrides['triggerStyle']);
+            }
+
+            if (! empty($overrides['triggerIcon'])) {
+                $switch->triggerIcon((string) $overrides['triggerIcon']);
+            }
         }, isImportant: true);
 
         Livewire::component('language-switch-debug-panel', LanguageSwitchDebugPanel::class);

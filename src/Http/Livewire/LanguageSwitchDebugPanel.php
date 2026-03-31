@@ -35,7 +35,11 @@ class LanguageSwitchDebugPanel extends Component
 
     public string $charAvatarHeight = 'size-8';
 
-    public string $renderHook = '';
+    public string $renderHook = 'panels::sidebar.logo.after';
+
+    public string $triggerStyle = '';
+
+    public string $triggerIcon = 'heroicon-o-language';
 
     public function mount(): void
     {
@@ -74,6 +78,8 @@ class LanguageSwitchDebugPanel extends Component
             'flagHeight' => $this->flagHeight,
             'charAvatarHeight' => $this->charAvatarHeight,
             'renderHook' => $this->renderHook,
+            'triggerStyle' => $this->triggerStyle,
+            'triggerIcon' => $this->triggerIcon,
         ]);
 
         $this->redirect(request()->header('Referer', url()->current()));

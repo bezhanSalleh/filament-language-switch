@@ -28,7 +28,7 @@
         @class([
             'fi-ls-item group relative aspect-[4/3] flex items-center justify-center rounded-xl transition-all duration-200 outline-none',
             'ring-1 ring-primary-600 bg-primary-50/30 dark:ring-primary-500 dark:bg-primary-400/10 pointer-events-none' => $isActive,
-            'ring-1 ring-gray-100 bg-gray-50/50 hover:ring-gray-200 dark:ring-white/10 dark:bg-white/[0.02] dark:hover:ring-white/20' => ! $isActive,
+            'ring-1 ring-gray-100 bg-gray-50/50 hover:ring-gray-200 dark:ring-white/10 dark:bg-white/2 dark:hover:ring-white/20' => ! $isActive,
         ])
     >
         @if ($isActive)
@@ -40,11 +40,11 @@
             </span>
         @endif
 
-        <div class="w-[55%] aspect-[3/2] overflow-hidden rounded-sm shadow-sm bg-white transition-transform duration-300 group-hover:scale-110 dark:bg-gray-800">
+        <div class="w-[55%] aspect-3/2 overflow-hidden rounded-sm shadow-sm bg-white transition-transform duration-300 group-hover:scale-110 dark:bg-gray-800">
             <x-language-switch::flag
                 :src="$flag"
                 :alt="$label"
-                class="!rounded-none w-full h-full"
+                class="rounded-none! w-full h-full"
             />
         </div>
     </button>
@@ -57,9 +57,9 @@
             wire:click="changeLocale('{{ $locale }}')"
         @endif
         @class([
-            'fi-ls-item relative flex items-center gap-3 rounded-lg border p-3 transition duration-75 outline-none',
-            'border-primary-600 bg-primary-50 ring-1 ring-primary-600 dark:border-primary-500 dark:bg-primary-400/10 dark:ring-primary-500 pointer-events-none' => $isActive,
-            'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50 dark:border-white/10 dark:bg-white/5 dark:hover:border-white/20 dark:hover:bg-white/10' => ! $isActive,
+            'fi-ls-item relative group flex items-center shadow-sm gap-3 rounded-lg p-3 transition duration-75 outline-none',
+            'ring-1 ring-primary-600 bg-primary-50 dark:ring-primary-500/20 dark:bg-primary-400/10 pointer-events-none' => $isActive,
+            'ring-1 ring-gray-950/8 bg-white hover:ring-primary-500/30 dark:ring-white/8 dark:bg-white/5 dark:hover:ring-primary-500/30 hover:ring-2' => ! $isActive,
         ])
     >
         @if ($isActive)
@@ -73,7 +73,7 @@
             <x-language-switch::flag
                 :src="$flag"
                 :alt="$label"
-                @class(['fi-circular' => $isCircular])
+                @class(['group-hover:scale-105 transition-transform duration-150 ease-in', 'fi-circular' => $isCircular])
             />
         @elseif ($charAvatar)
             <x-language-switch::char-avatar
