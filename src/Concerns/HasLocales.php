@@ -7,8 +7,6 @@ namespace BezhanSalleh\LanguageSwitch\Concerns;
 use BezhanSalleh\LanguageSwitch\Events\LocaleChanged;
 use Closure;
 use Exception;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Redirector;
 
 trait HasLocales
 {
@@ -131,7 +129,7 @@ trait HasLocales
             request()->input('locale') ??
             request()->cookie('filament_language_switch_locale') ??
             $this->getUserPreferredLocale() ??
-            config('app.locale', 'en') ??
+            config('app.locale') ??
             request()->getPreferredLanguage();
 
         return in_array($locale, $this->getLocales(), true) ? $locale : config('app.locale');
@@ -165,14 +163,12 @@ trait HasLocales
             : str($locale)->upper()->toString();
     }
 
-    public static function trigger(string $locale): Redirector | RedirectResponse
+    public static function trigger(string $locale): void
     {
         session()->put('locale', $locale);
 
         cookie()->queue(cookie()->forever('filament_language_switch_locale', $locale));
 
         event(new LocaleChanged($locale));
-
-        return redirect(request()->header('Referer'));
     }
 }

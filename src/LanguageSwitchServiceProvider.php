@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BezhanSalleh\LanguageSwitch;
 
 use BezhanSalleh\LanguageSwitch\Http\Livewire\LanguageSwitchComponent;
@@ -42,24 +44,17 @@ class LanguageSwitchServiceProvider extends PackageServiceProvider
 
     protected function reorderCurrentPanelMiddlewareStack(Panel $panel): void
     {
-        $middlewareStack = invade($panel)->getMiddleware();
+        $middlewareStack = invade($panel)->middleware;
 
-        $middleware = SwitchLanguageLocale::class;
-        $order = 'before';
-        $referenceMiddleware = DispatchServingFilamentEvent::class;
+        if (in_array(SwitchLanguageLocale::class, $middlewareStack, true)) {
+            return;
+        }
 
-        $middleware = is_array($middleware) ? collect($middleware) : collect([$middleware]);
+        $position = array_search(DispatchServingFilamentEvent::class, $middlewareStack, true);
+        $position = $position !== false ? $position : 0;
 
-        $middlewareCollection = collect($middlewareStack);
+        array_splice($middlewareStack, $position, 0, [SwitchLanguageLocale::class]);
 
-        $referenceIndex = $middlewareCollection->search($referenceMiddleware);
-        $position = $order === 'before' ? $referenceIndex : $referenceIndex + 1;
-        $position = $referenceMiddleware === null || $referenceIndex === false ? ($order === 'after' ? $middlewareCollection->count() : 0) : $position;
-
-        invade($panel)->middleware = $middlewareCollection
-            ->slice(0, $position)
-            ->concat($middleware)
-            ->concat($middlewareCollection->slice($position))
-            ->toArray();
+        invade($panel)->middleware = $middlewareStack;
     }
 }

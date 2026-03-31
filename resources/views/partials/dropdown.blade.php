@@ -1,14 +1,14 @@
 @php
     $dropdownPlacement = match (true) {
         filled($customPlacement) => $customPlacement,
-        in_array($renderContext, ['nav', 'sidebar']) => ($rtl ? 'left-start' : 'right-start'),
+        in_array($renderContext, ['nav', 'sidebar']) => 'top-start',
         $rtl => 'bottom-start',
         default => 'bottom-end',
     };
 @endphp
 
 <x-filament::dropdown
-    teleport
+    :teleport="$renderContext === 'topbar'"
     :placement="$dropdownPlacement"
     :max-height="$maxHeight"
 >

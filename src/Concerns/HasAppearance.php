@@ -44,7 +44,7 @@ trait HasAppearance
         return $this;
     }
 
-    public function displayMode(DisplayMode | string | Closure $mode): static
+    public function displayMode(DisplayMode | Closure $mode): static
     {
         $this->displayMode = $mode;
 

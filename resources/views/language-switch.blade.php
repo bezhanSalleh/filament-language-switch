@@ -19,7 +19,6 @@
 
     $rtl = __('filament-panels::layout.direction') === 'rtl';
     $customPlacement = $ls->getDropdownPlacement();
-    $placement = $customPlacement ?? ($rtl ? 'bottom-start' : 'bottom-end');
 
     // Deprecated: outside panel support
     $isVisibleOutsidePanels = $ls->isVisibleOutsidePanels();

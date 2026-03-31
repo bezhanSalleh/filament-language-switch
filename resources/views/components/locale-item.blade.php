@@ -6,6 +6,8 @@
     'isFlagsOnly' => false,
     'isCircular' => false,
     'isModal' => false,
+    'flagHeight' => 'h-16',
+    'charAvatarHeight' => 'size-8',
 ])
 
 @php
@@ -77,7 +79,7 @@
             <x-language-switch::char-avatar
                 :locale="$locale"
                 :active="$isActive"
-                class="size-8"
+                :class="$charAvatarHeight"
             />
         @endif
 
@@ -130,7 +132,6 @@
         @endif
 
         @if ($isFlagsOnly)
-            {{-- No label, no check --}}
         @else
             <span @class([
                 'fi-dropdown-list-item-label',

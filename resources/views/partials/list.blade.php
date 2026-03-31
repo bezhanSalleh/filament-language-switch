@@ -37,8 +37,8 @@
                 'isFlagsOnly' => $isFlagsOnly,
                 'isCircular' => $isCircular,
                 'isModal' => false,
-                'flagHeight' => $flagHeight ?? 'h-16',
-                'charAvatarHeight' => $charAvatarHeight ?? 'size-8',
+                'flagHeight' => $flagHeight,
+                'charAvatarHeight' => $charAvatarHeight,
             ])
         @endforeach
     </x-filament::dropdown.list>

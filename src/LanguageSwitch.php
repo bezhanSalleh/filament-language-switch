@@ -58,10 +58,8 @@ class LanguageSwitch extends Component
         $static = static::make();
 
         if ($static->isVisible()) {
-            $hook = $static->getRenderHook() ?? $static->getDefaultRenderHook();
-
             FilamentView::registerRenderHook(
-                name: $hook,
+                name: $static->getResolvedRenderHook(),
                 hook: fn (): string => Blade::render("<livewire:language-switch-component key='fls' />"),
             );
         }

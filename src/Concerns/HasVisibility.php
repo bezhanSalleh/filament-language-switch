@@ -65,7 +65,7 @@ trait HasVisibility
         $hasTopbar = $panel->hasTopbar();
 
         return match (true) {
-            $this->isInline() && $hasTopbar => PanelsRenderHook::USER_MENU_PROFILE_AFTER,
+            $this->isInline() => PanelsRenderHook::USER_MENU_PROFILE_AFTER,
             ! $hasTopbar => PanelsRenderHook::USER_MENU_BEFORE,
             default => PanelsRenderHook::GLOBAL_SEARCH_AFTER,
         };
@@ -94,21 +94,22 @@ trait HasVisibility
     /**
      * Determine the render context based on the active render hook.
      *
-     * Returns one of: 'nav', 'sidebar', 'topbar', 'user-menu'
-     *
-     * - 'nav': inside sidebar nav list (SIDEBAR_NAV_START/END) — use sidebar nav item design
-     * - 'sidebar': inside sidebar footer area (SIDEBAR_FOOTER, USER_MENU_BEFORE/AFTER) — use sidebar button design
-     * - 'topbar': inside topbar (GLOBAL_SEARCH_*, TOPBAR_*) — use icon button design
-     * - 'user-menu': inside user menu dropdown (USER_MENU_PROFILE_*) — use dropdown list item design
+     * Matches against actual PanelsRenderHook constant values:
+     *   nav:       panels::sidebar.nav.start, panels::sidebar.nav.end
+     *   sidebar:   panels::sidebar.footer, panels::sidebar.logo.*, panels::sidebar.start,
+     *              panels::user-menu.before, panels::user-menu.after
+     *   user-menu: panels::user-menu.profile.before, panels::user-menu.profile.after
+     *   topbar:    panels::global-search.*, panels::topbar.*
      */
     public function getRenderContext(): string
     {
         $hook = $this->getResolvedRenderHook();
 
         return match (true) {
-            str_contains($hook, 'sidebar.nav') => 'nav',
-            str_contains($hook, 'sidebar') => 'sidebar',
-            str_contains($hook, 'user-menu') => 'user-menu',
+            str_contains((string) $hook, '::sidebar.nav.') => 'nav',
+            str_contains((string) $hook, '::sidebar.') => 'sidebar',
+            str_contains((string) $hook, 'user-menu.profile.') => 'user-menu',
+            str_contains((string) $hook, 'user-menu.') => 'sidebar',
             default => 'topbar',
         };
     }

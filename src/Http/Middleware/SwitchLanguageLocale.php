@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BezhanSalleh\LanguageSwitch\Http\Middleware;
 
 use BezhanSalleh\LanguageSwitch\LanguageSwitch;
