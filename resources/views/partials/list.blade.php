@@ -6,11 +6,15 @@
     {{-- Modal/Slide-over: radio cards or flag showcase --}}
     <div
         @class([
-            'grid gap-4',
-            'place-content-center' => $isFlagsOnly,
-            'w-fit mx-auto' => $isFlagsOnly && $columns <= 1,
+            'grid',
+            'gap-4' => ! $isFlagsOnly,
+            'gap-4 justify-center' => $isFlagsOnly,
         ])
-        @style(["grid-template-columns: repeat({$columns}, minmax(0, 1fr))" => $columns > 1])
+        @style([
+            "grid-template-columns: repeat({$columns}, minmax(0, 1fr))" => ! $isFlagsOnly && $columns > 1,
+            "grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr))" => $isFlagsOnly && $columns <= 1,
+            "grid-template-columns: repeat({$columns}, 6rem)" => $isFlagsOnly && $columns > 1,
+        ])
     >
         @foreach ($locales as $locale)
             @include($itemView ?? 'language-switch::components.locale-item', [

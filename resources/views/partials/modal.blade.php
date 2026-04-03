@@ -9,6 +9,7 @@
     :sticky-header="$ls->isModalSlideOver()"
     :icon="$ls->getModalIcon()"
     :icon-color="$ls->getModalIconColor()"
+    :class="$isFlagsOnly ? '[&_.fi-modal-window]:w-fit' : ''"
 >
     @include($contentView ?? 'language-switch::partials.list')
 </x-filament::modal>
