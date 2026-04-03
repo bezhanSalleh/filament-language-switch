@@ -70,7 +70,7 @@ class LanguageSwitchDebugPanel extends Component
             'topbar' => $this->topbar,
             'displayMode' => $this->displayMode,
             'circular' => $this->circular,
-            'columns' => $this->columns,
+            'columns' => (int) $this->columns,
             'nativeLabel' => $this->nativeLabel,
             'flagsOnly' => $this->flagsOnly,
             'useFlags' => $this->useFlags,
