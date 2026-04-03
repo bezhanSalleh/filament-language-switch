@@ -32,7 +32,7 @@
 
 <div @class([
     'fi-ls',
-    'w-full' => $renderContext === 'nav',
+    'w-full' => in_array($renderContext, ['nav', 'sidebar']),
     'fi-circular' => $isCircular,
     'fi-flags-only' => $isFlagsOnly,
 ])>

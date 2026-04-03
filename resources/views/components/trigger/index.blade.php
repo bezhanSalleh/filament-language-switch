@@ -27,46 +27,42 @@
 @else
     @switch($renderContext)
         @case('nav')
-            {{-- Sidebar nav: match fi-sidebar-item structure exactly --}}
-            <ul class="fi-sidebar-nav-groups">
-                <li class="fi-sidebar-item fi-sidebar-item-has-url">
-                    <button
-                        type="button"
-                        @if ($isSidebarCollapsibleOnDesktop)
-                            x-data="{ tooltip: false }"
-                            x-effect="tooltip = $store.sidebar.isOpen ? false : { content: @js($currentLabel), placement: document.dir === 'rtl' ? 'left' : 'right', theme: $store.theme }"
-                            x-tooltip.html="tooltip"
-                        @endif
-                        {{ $attributes->class(['fi-sidebar-item-btn fi-ls-trigger']) }}
-                    >
-                        @if ($isUrlFlag)
-                            <x-filament::avatar :src="$flagSrc" :alt="$currentLabel" size="sm" :circular="$isCircular" />
-                        @elseif ($baseStyle === 'avatar')
-                            <span class="flex size-6 items-center justify-center font-semibold text-sm text-gray-400 dark:text-gray-500">
-                                {{ str($currentLocale)->length() > 2 ? str($currentLocale)->substr(0, 2)->upper() : str($currentLocale)->upper() }}
-                            </span>
-                        @else
-                            {{
-                                \Filament\Support\generate_icon_html($triggerIcon, 'language-switch::trigger', new \Illuminate\View\ComponentAttributeBag([
-                                    'class' => 'fi-sidebar-item-icon',
-                                ]), size: \Filament\Support\Enums\IconSize::Large)
-                            }}
-                        @endif
+            {{-- Sidebar nav: plain button matching fi-sidebar-database-notifications-btn --}}
+            <button
+                type="button"
+                @if ($isSidebarCollapsibleOnDesktop)
+                    x-data="{ tooltip: false }"
+                    x-effect="tooltip = $store.sidebar.isOpen ? false : { content: @js($currentLabel), placement: document.dir === 'rtl' ? 'left' : 'right', theme: $store.theme }"
+                    x-tooltip.html="tooltip"
+                @endif
+                {{ $attributes->class(['fi-sidebar-database-notifications-btn fi-ls-trigger']) }}
+            >
+                @if ($isUrlFlag)
+                    <x-filament::avatar :src="$flagSrc" :alt="$currentLabel" size="sm" :circular="$isCircular" />
+                @elseif ($baseStyle === 'avatar')
+                    <span class="flex size-6 items-center justify-center font-semibold text-sm text-gray-400 dark:text-gray-500">
+                        {{ str($currentLocale)->length() > 2 ? str($currentLocale)->substr(0, 2)->upper() : str($currentLocale)->upper() }}
+                    </span>
+                @else
+                    {{
+                        \Filament\Support\generate_icon_html($triggerIcon, 'language-switch::trigger', new \Illuminate\View\ComponentAttributeBag([
+                            'class' => 'h-6 w-6 shrink-0 text-gray-400 dark:text-gray-500',
+                        ]))
+                    }}
+                @endif
 
-                        @if ($hasLabel)
-                            <span
-                                @if ($isSidebarCollapsibleOnDesktop)
-                                    x-show="$store.sidebar.isOpen"
-                                    x-transition:enter="fi-transition-enter"
-                                    x-transition:enter-start="fi-transition-enter-start"
-                                    x-transition:enter-end="fi-transition-enter-end"
-                                @endif
-                                class="fi-sidebar-item-label text-start"
-                            >{{ $currentLabel }}</span>
+                @if ($hasLabel)
+                    <span
+                        @if ($isSidebarCollapsibleOnDesktop)
+                            x-show="$store.sidebar.isOpen"
+                            x-transition:enter="fi-transition-enter"
+                            x-transition:enter-start="fi-transition-enter-start"
+                            x-transition:enter-end="fi-transition-enter-end"
                         @endif
-                    </button>
-                </li>
-            </ul>
+                        class="fi-sidebar-database-notifications-btn-label"
+                    >{{ $currentLabel }}</span>
+                @endif
+            </button>
             @break
 
         @case('user-menu')

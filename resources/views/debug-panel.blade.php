@@ -48,7 +48,7 @@
 
         <div class="h-px bg-white/6"></div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/6">
+        <div class="max-h-[60vh] overflow-y-auto md:max-h-none md:overflow-visible grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/6">
 
             {{-- Column 1: Trigger --}}
             <div class="space-y-3 p-4">

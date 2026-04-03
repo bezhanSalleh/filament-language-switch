@@ -95,11 +95,10 @@ trait HasVisibility
      * Determine the render context based on the active render hook.
      *
      * Matches against actual PanelsRenderHook constant values:
-     *   nav:       panels::sidebar.nav.start, panels::sidebar.nav.end
-     *   sidebar:   panels::sidebar.footer, panels::sidebar.logo.*, panels::sidebar.start,
+     *   topbar:    panels::global-search.*, panels::topbar.*, panels::sidebar.logo.*
+     *   sidebar:   panels::sidebar.nav.*, panels::sidebar.footer, panels::sidebar.start,
      *              panels::user-menu.before, panels::user-menu.after
      *   user-menu: panels::user-menu.profile.before, panels::user-menu.profile.after
-     *   topbar:    panels::global-search.*, panels::topbar.*
      */
     public function getRenderContext(): string
     {
