@@ -12,7 +12,7 @@
     :placement="$dropdownPlacement"
     :max-height="$maxHeight"
     @class([
-        'w-full' => $renderContext === 'nav' && ! $isFlagsOnly,
+        'w-full [&>.fi-dropdown-trigger]:w-full' => $renderContext === 'nav' && ! $isFlagsOnly,
         '[&_.fi-dropdown-panel]:w-fit' => $isFlagsOnly,
     ])
 >
