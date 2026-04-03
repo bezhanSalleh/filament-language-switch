@@ -12,7 +12,7 @@
     :placement="$dropdownPlacement"
     :max-height="$maxHeight"
     @class([
-        'w-full' => in_array($renderContext, ['nav', 'sidebar']) && ! $isFlagsOnly,
+        'w-full' => $renderContext === 'nav' && ! $isFlagsOnly,
         '[&_.fi-dropdown-panel]:w-fit' => $isFlagsOnly,
     ])
 >
@@ -21,4 +21,5 @@
     </x-slot>
 
     @include($contentView ?? 'language-switch::partials.list')
+    
 </x-filament::dropdown>

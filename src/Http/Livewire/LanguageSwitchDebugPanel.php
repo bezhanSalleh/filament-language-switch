@@ -37,7 +37,9 @@ class LanguageSwitchDebugPanel extends Component
 
     public function mount(): void
     {
-        $this->topbar = filament()->getCurrentOrDefaultPanel()->hasTopbar();
+        $panel = filament()->getCurrentOrDefaultPanel();
+
+        $this->topbar = $panel->hasTopbar();
 
         $overrides = session('language-switch-debug', []);
 
@@ -82,6 +84,11 @@ class LanguageSwitchDebugPanel extends Component
         ]);
 
         $this->redirect(request()->header('Referer', url()->current()));
+    }
+
+    public function applyIcon(): void
+    {
+        $this->updated('triggerIcon');
     }
 
     public function resetDebug(): void

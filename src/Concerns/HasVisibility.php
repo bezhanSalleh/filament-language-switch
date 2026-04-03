@@ -107,6 +107,7 @@ trait HasVisibility
 
         return match (true) {
             str_contains((string) $hook, '::sidebar.nav.') => 'nav',
+            str_contains((string) $hook, '::sidebar.logo.') => 'topbar',
             str_contains((string) $hook, '::sidebar.') => 'sidebar',
             str_contains((string) $hook, 'user-menu.profile.') => 'user-menu',
             str_contains((string) $hook, 'user-menu.') => 'sidebar',

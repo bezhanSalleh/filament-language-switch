@@ -163,16 +163,22 @@
         @default
             {{-- Topbar --}}
             @if ($hasLabel)
+                {{-- With label: icon/avatar/flag + text --}}
                 <button
                     type="button"
                     aria-label="{{ $currentLabel }}"
-                    x-tooltip="{ content: @js($currentLabel), theme: $store.theme }"
-                    {{ $attributes->class(['fi-icon-btn fi-ls-trigger']) }}
+                    {{
+                        $attributes->class([
+                            'fi-icon-btn fi-ls-trigger',
+                            'bg-gray-100 dark:bg-gray-800',
+                            'rounded-full!' => $isCircular,
+                        ])
+                    }}
                 >
                     @if ($isUrlFlag)
                         <x-filament::avatar :src="$flagSrc" :alt="$currentLabel" size="sm" :circular="$isCircular" />
                     @elseif ($baseStyle === 'avatar')
-                        <span class="flex size-6 items-center justify-center shrink-0 font-semibold text-sm text-gray-400 dark:text-gray-500">
+                        <span class="flex size-5 items-center justify-center shrink-0 font-semibold text-xs text-primary-500 dark:text-primary-400">
                             {{ str($currentLocale)->length() > 2 ? str($currentLocale)->substr(0, 2)->upper() : str($currentLocale)->upper() }}
                         </span>
                     @else
@@ -183,28 +189,40 @@
                     <span class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ $currentLabel }}</span>
                 </button>
             @elseif ($isVisual)
+                {{-- No label, visual (flag/avatar): icon-btn with bg --}}
                 <button
                     type="button"
                     aria-label="{{ $currentLabel }}"
                     x-tooltip="{ content: @js($currentLabel), theme: $store.theme }"
-                    {{ $attributes->class(['fi-icon-btn fi-ls-trigger bg-gray-100 rounded-full! dark:bg-gray-800']) }}
+                    {{
+                        $attributes->class([
+                            'fi-icon-btn fi-ls-trigger',
+                            'rounded-full!' => $isCircular,
+                            'bg-gray-100 dark:bg-gray-800',
+                        ])
+                    }}
                     style="min-width: 36px;"
                 >
                     @if ($isUrlFlag)
                         <x-filament::avatar :src="$flagSrc" :alt="$currentLabel" size="sm" :circular="$isCircular" />
                     @else
-                        <span class="flex size-6 items-center justify-center shrink-0 font-semibold text-sm text-gray-500">
+                        <span class="flex size-6 items-center justify-center shrink-0 font-semibold text-sm text-primary-500 dark:text-primary-400">
                             {{ str($currentLocale)->length() > 2 ? str($currentLocale)->substr(0, 2)->upper() : str($currentLocale)->upper() }}
                         </span>
                     @endif
                 </button>
             @else
+                {{-- No label, icon only: native Filament icon-button --}}
                 <x-filament::icon-button
                     :icon="$triggerIcon"
                     icon-alias="language-switch::trigger"
                     :tooltip="$currentLabel"
                     :label="$currentLabel"
-                    class="fi-ls-trigger bg-gray-100 rounded-full! dark:bg-gray-800"
+                    @class([
+                        'fi-ls-trigger',
+                        'rounded-full!' => $isCircular,
+                        'bg-gray-100 dark:bg-gray-800',
+                    ])
                     style="min-width: 36px;"
                     {{ $attributes }}
                 />

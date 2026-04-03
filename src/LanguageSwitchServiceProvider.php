@@ -138,6 +138,9 @@ class LanguageSwitchServiceProvider extends PackageServiceProvider
         Livewire::component('language-switch-debug-panel', LanguageSwitchDebugPanel::class);
 
         Filament::serving(function (): void {
+            filament()->getCurrentOrDefaultPanel()->colors([
+                'primary' => '#fe984a',
+            ]);
             FilamentView::registerRenderHook(
                 name: PanelsRenderHook::BODY_END,
                 hook: fn (): string => Blade::render('<livewire:language-switch-debug-panel />'),
