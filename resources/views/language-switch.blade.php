@@ -30,12 +30,7 @@
     $outsidePanelsPlacement = $ls->getOutsidePanelPlacement()->value;
 @endphp
 
-<div @class([
-    'fi-ls',
-    'w-full' => in_array($renderContext, ['nav', 'sidebar']),
-    'fi-circular' => $isCircular,
-    'fi-flags-only' => $isFlagsOnly,
-])>
+<div @class(['fi-ls', 'fi-circular' => $isCircular, 'fi-flags-only' => $isFlagsOnly])>
     @if ($isVisibleOutsidePanels)
         {{-- Deprecated: outside panel fixed positioning --}}
         <div @class([

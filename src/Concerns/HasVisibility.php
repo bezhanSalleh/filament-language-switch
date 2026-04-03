@@ -94,18 +94,16 @@ trait HasVisibility
     /**
      * Determine the render context based on the active render hook.
      *
-     * Matches against actual PanelsRenderHook constant values:
-     *   topbar:    panels::global-search.*, panels::topbar.*, panels::sidebar.logo.*
-     *   sidebar:   panels::sidebar.nav.*, panels::sidebar.footer, panels::sidebar.start,
-     *              panels::user-menu.before, panels::user-menu.after
-     *   user-menu: panels::user-menu.profile.before, panels::user-menu.profile.after
+     * Matches against PanelsRenderHook constant values:
+     *   topbar:    global-search.*, topbar.*, sidebar.logo.*
+     *   sidebar:   sidebar.nav.*, sidebar.footer, sidebar.start, user-menu.before/after
+     *   user-menu: user-menu.profile.before/after
      */
     public function getRenderContext(): string
     {
         $hook = $this->getResolvedRenderHook();
 
         return match (true) {
-            str_contains((string) $hook, '::sidebar.nav.') => 'nav',
             str_contains((string) $hook, '::sidebar.logo.') => 'topbar',
             str_contains((string) $hook, '::sidebar.') => 'sidebar',
             str_contains((string) $hook, 'user-menu.profile.') => 'user-menu',
