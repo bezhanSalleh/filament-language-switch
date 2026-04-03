@@ -90,10 +90,6 @@ class LanguageSwitchServiceProvider extends PackageServiceProvider
                 $switch->circular((bool) $overrides['circular']);
             }
 
-            if (isset($overrides['inline'])) {
-                $switch->inline((bool) $overrides['inline']);
-            }
-
             if (isset($overrides['columns'])) {
                 $switch->columns((int) $overrides['columns']);
             }

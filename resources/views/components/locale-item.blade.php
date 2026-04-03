@@ -26,9 +26,9 @@
             theme: $store.theme,
         }"
         @class([
-            'fi-ls-item group relative rounded-lg p-2 transition-all duration-200 outline-none overflow-visible',
-            'ring-1 ring-primary-600 shadow-sm dark:ring-primary-500 pointer-events-none' => $isActive,
-            'ring-1 ring-gray-950/8 hover:ring-gray-950/15 hover:shadow-sm dark:ring-white/8 dark:hover:ring-white/15' => ! $isActive,
+            'fi-ls-item group relative rounded-xl shadow-sm p-2 outline-none overflow-visible bg-gray-50 ring-1 dark:bg-gray-400/10',
+            'ring-primary-500/50 dark:ring-primary-400 pointer-events-none' => $isActive,
+            'ring-gray-950/5 dark:ring-white/10 hover:ring-gray-950/10 dark:hover:ring-white/15 transition-colors duration-75 ease-in' => ! $isActive,
         ])
     >
         @if ($isActive)
@@ -44,7 +44,7 @@
             src="{{ $flag }}"
             alt="{{ $label }}"
             loading="lazy"
-            class="block w-full rounded object-cover"
+            class="block w-full rounded-lg object-cover group-hover:scale-105 transition-transform duration-75 ease-in"
         />
     </button>
 

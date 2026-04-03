@@ -17,8 +17,6 @@ class LanguageSwitchDebugPanel extends Component
 
     public bool $circular = false;
 
-    public bool $inline = false;
-
     public int $columns = 1;
 
     public bool $nativeLabel = false;
@@ -27,19 +25,15 @@ class LanguageSwitchDebugPanel extends Component
 
     public bool $useFlags = false;
 
-    public string $modalWidth = 'md';
+    public string $modalWidth = 'sm';
 
     public bool $modalSlideOver = false;
 
-    public string $flagHeight = 'h-16';
-
-    public string $charAvatarHeight = 'size-8';
-
-    public string $renderHook = 'panels::sidebar.logo.after';
+    public string $renderHook = '';
 
     public string $triggerStyle = '';
 
-    public string $triggerIcon = 'heroicon-o-language';
+    public string $triggerIcon = '';
 
     public function mount(): void
     {
@@ -64,19 +58,24 @@ class LanguageSwitchDebugPanel extends Component
             filament()->getCurrentOrDefaultPanel()->topbar($this->topbar);
         }
 
+        if ($property === 'useFlags' && ! $this->useFlags) {
+            $this->flagsOnly = false;
+
+            if (in_array($this->triggerStyle, ['flag', 'flag-label'])) {
+                $this->triggerStyle = '';
+            }
+        }
+
         session()->put('language-switch-debug', [
             'topbar' => $this->topbar,
             'displayMode' => $this->displayMode,
             'circular' => $this->circular,
-            'inline' => $this->inline,
             'columns' => $this->columns,
             'nativeLabel' => $this->nativeLabel,
             'flagsOnly' => $this->flagsOnly,
             'useFlags' => $this->useFlags,
             'modalWidth' => $this->modalWidth,
             'modalSlideOver' => $this->modalSlideOver,
-            'flagHeight' => $this->flagHeight,
-            'charAvatarHeight' => $this->charAvatarHeight,
             'renderHook' => $this->renderHook,
             'triggerStyle' => $this->triggerStyle,
             'triggerIcon' => $this->triggerIcon,
