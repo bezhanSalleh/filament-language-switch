@@ -8,6 +8,7 @@
         @class([
             'grid gap-4',
             'place-content-center' => $isFlagsOnly,
+            'w-fit mx-auto' => $isFlagsOnly && $columns <= 1,
         ])
         @style(["grid-template-columns: repeat({$columns}, minmax(0, 1fr))" => $columns > 1])
     >

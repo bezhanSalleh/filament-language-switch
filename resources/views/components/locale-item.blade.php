@@ -26,13 +26,13 @@
             theme: $store.theme,
         }"
         @class([
-            'fi-ls-item group relative aspect-[4/3] flex items-center justify-center rounded-xl transition-all duration-200 outline-none',
-            'ring-1 ring-primary-600 bg-primary-50/30 dark:ring-primary-500 dark:bg-primary-400/10 pointer-events-none' => $isActive,
-            'ring-1 ring-gray-100 bg-gray-50/50 hover:ring-gray-200 dark:ring-white/10 dark:bg-white/2 dark:hover:ring-white/20' => ! $isActive,
+            'fi-ls-item group relative flex items-center justify-center rounded-xl p-4 transition-all duration-200 outline-none',
+            'ring-1 ring-primary-600 bg-primary-50 shadow-sm dark:ring-primary-500 dark:bg-primary-400/10 pointer-events-none' => $isActive,
+            'ring-1 ring-gray-950/8 bg-white hover:ring-gray-950/15 hover:shadow-sm dark:ring-white/8 dark:bg-white/5 dark:hover:ring-white/15' => ! $isActive,
         ])
     >
         @if ($isActive)
-            <span class="absolute -top-1.5 -end-1.5 z-10 flex size-6 items-center justify-center rounded-full ring-2 ring-white bg-primary-600 shadow-md dark:ring-gray-900 dark:bg-primary-500">
+            <span class="absolute -top-1.5 -end-1.5 z-10 flex size-5 items-center justify-center rounded-full ring-2 ring-white bg-primary-600 shadow-sm dark:ring-gray-900 dark:bg-primary-500">
                 <x-filament::icon
                     icon="heroicon-s-check"
                     class="size-3 text-white"
@@ -40,13 +40,12 @@
             </span>
         @endif
 
-        <div class="w-[55%] aspect-3/2 overflow-hidden rounded-sm shadow-sm bg-white transition-transform duration-300 group-hover:scale-110 dark:bg-gray-800">
-            <x-language-switch::flag
-                :src="$flag"
-                :alt="$label"
-                class="rounded-none! w-full h-full"
-            />
-        </div>
+        <img
+            src="{{ $flag }}"
+            alt="{{ $label }}"
+            loading="lazy"
+            class="h-10 w-16 rounded-sm object-cover shadow-sm transition-transform duration-200 group-hover:scale-105"
+        />
     </button>
 
 @elseif ($isModal)
@@ -108,7 +107,7 @@
         @class([
             'fi-dropdown-list-item fi-ls-item whitespace-nowrap',
             'bg-primary-50 dark:bg-primary-400/10 pointer-events-none' => $isActive,
-            'justify-center' => $isFlagsOnly,
+            'justify-center p-1.5' => $isFlagsOnly,
         ])
     >
         @if ($flag)
@@ -116,8 +115,8 @@
                 :src="$flag"
                 :alt="$label"
                 @class([
-                    'fi-size-sm',
-                    'fi-circular' => $isCircular,
+                    $isFlagsOnly ? 'h-7 w-11 rounded-sm! object-cover' : 'fi-size-sm',
+                    'fi-circular' => $isCircular && ! $isFlagsOnly,
                 ])
             />
         @elseif ($charAvatar)

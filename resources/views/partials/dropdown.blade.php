@@ -11,7 +11,10 @@
     :teleport="$renderContext === 'topbar'"
     :placement="$dropdownPlacement"
     :max-height="$maxHeight"
-    @class(['w-full' => in_array($renderContext, ['nav', 'sidebar'])])
+    @class([
+        'w-full' => in_array($renderContext, ['nav', 'sidebar']) && ! $isFlagsOnly,
+        '[&_.fi-dropdown-panel]:w-fit' => $isFlagsOnly,
+    ])
 >
     <x-slot name="trigger">
         <x-language-switch::trigger />
