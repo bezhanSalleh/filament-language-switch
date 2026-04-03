@@ -1,5 +1,6 @@
 @php
-    $labelClass = 'text-xs text-gray-400';
+    $labelClass = 'text-xs text-[#F0C8A0]/60';
+    $sectionClass = 'text-[10px] font-semibold uppercase tracking-widest text-[#9B7BD4]';
     $isModal = $displayMode === 'modal';
     $wrapperClass = '[&_.fi-input-wrp]:!h-8 [&_.fi-input-wrp]:!min-h-0';
     $selectClass = '!text-xs !py-1';
@@ -14,7 +15,7 @@
         type="button"
         x-on:click="open = ! open"
         x-tooltip="{ content: 'Language Switch Debug', theme: $store.theme }"
-        class="flex size-10 items-center justify-center rounded-full bg-gray-950 text-gray-400 shadow ring-1 ring-white/10 transition hover:text-white hover:ring-white/20"
+        class="flex size-10 items-center justify-center rounded-full bg-[#2D1B69] text-[#F0C8A0] shadow ring-1 ring-[#9B7BD4]/30 transition hover:text-white hover:ring-[#9B7BD4]/60"
     >
         {{
             \Filament\Support\generate_icon_html(\Filament\Support\Icons\Heroicon::Language, attributes: new \Illuminate\View\ComponentAttributeBag([
@@ -51,7 +52,7 @@
 
             {{-- Column 1: Trigger --}}
             <div class="space-y-3 p-4">
-                <h4 class="text-[10px] font-semibold uppercase tracking-widest text-gray-500">Trigger</h4>
+                <h4 class="{{ $sectionClass }}">Trigger</h4>
 
                 <div class="flex items-center justify-between">
                     <span class="{{ $labelClass }}">Topbar</span>
@@ -113,7 +114,7 @@
 
             {{-- Column 2: Display --}}
             <div class="space-y-3 p-4">
-                <h4 class="text-[10px] font-semibold uppercase tracking-widest text-gray-500">Display</h4>
+                <h4 class="{{ $sectionClass }}">Display</h4>
 
                 <div class="space-y-1 {{ $wrapperClass }}">
                     <span class="{{ $labelClass }}">Mode</span>
@@ -159,7 +160,7 @@
 
             {{-- Column 3: Appearance --}}
             <div class="space-y-3 p-4">
-                <h4 class="text-[10px] font-semibold uppercase tracking-widest text-gray-500">Appearance</h4>
+                <h4 class="{{ $sectionClass }}">Appearance</h4>
 
                 <div class="flex items-center justify-between">
                     <span class="{{ $labelClass }}">Circular</span>

@@ -8,7 +8,7 @@
 @endphp
 
 <x-filament::dropdown
-    :teleport="$renderContext === 'topbar'"
+    :teleport="$renderContext === 'topbar' && ! str_contains($ls->getResolvedRenderHook(), '::sidebar.')"
     :placement="$dropdownPlacement"
     :max-height="$maxHeight"
     @class([

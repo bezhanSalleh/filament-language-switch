@@ -15,6 +15,8 @@
     $baseStyle = str_replace('-label', '', $triggerStyle);
 
     $isSidebarCollapsibleOnDesktop = filament()->isSidebarCollapsibleOnDesktop();
+    $resolvedHook = $ls->getResolvedRenderHook();
+    $isInSidebarLogo = str_contains($resolvedHook, '::sidebar.logo.');
     $isVisual = in_array($baseStyle, ['flag', 'avatar']);
     $flagSrc = ($baseStyle === 'flag' && $currentFlag) ? $currentFlag : null;
     $isUrlFlag = $flagSrc && filter_var($flagSrc, FILTER_VALIDATE_URL);
@@ -25,18 +27,17 @@
 @else
     @switch($renderContext)
         @case('nav')
-            {{-- Sidebar nav: <li><a> matching fi-sidebar-item --}}
-            <ul class="fi-sidebar-nav-groups w-full">
+            {{-- Sidebar nav: match fi-sidebar-item structure exactly --}}
+            <ul class="fi-sidebar-nav-groups">
                 <li class="fi-sidebar-item fi-sidebar-item-has-url">
-                    <a
-                        href="#"
-                        x-on:click.prevent
+                    <button
+                        type="button"
                         @if ($isSidebarCollapsibleOnDesktop)
                             x-data="{ tooltip: false }"
                             x-effect="tooltip = $store.sidebar.isOpen ? false : { content: @js($currentLabel), placement: document.dir === 'rtl' ? 'left' : 'right', theme: $store.theme }"
                             x-tooltip.html="tooltip"
                         @endif
-                        {{ $attributes->class(['fi-sidebar-item-btn fi-ls-trigger w-full']) }}
+                        {{ $attributes->class(['fi-sidebar-item-btn fi-ls-trigger']) }}
                     >
                         @if ($isUrlFlag)
                             <x-filament::avatar :src="$flagSrc" :alt="$currentLabel" size="sm" :circular="$isCircular" />
@@ -63,7 +64,7 @@
                                 class="fi-sidebar-item-label text-start"
                             >{{ $currentLabel }}</span>
                         @endif
-                    </a>
+                    </button>
                 </li>
             </ul>
             @break
@@ -161,24 +162,33 @@
             @break
 
         @default
-            {{-- Topbar --}}
+            {{-- Topbar (also used for sidebar logo hooks) --}}
+            <div
+                @if ($isInSidebarLogo && $isSidebarCollapsibleOnDesktop)
+                    x-show="$store.sidebar.isOpen"
+                    x-transition:enter="fi-transition-enter"
+                    x-transition:enter-start="fi-transition-enter-start"
+                    x-transition:enter-end="fi-transition-enter-end"
+                    x-cloak
+                @endif
+            >
             @if ($hasLabel)
-                {{-- With label: icon/avatar/flag + text --}}
+                {{-- With label: visual/icon + text, regular flex button (not fi-icon-btn) --}}
                 <button
                     type="button"
                     aria-label="{{ $currentLabel }}"
                     {{
                         $attributes->class([
-                            'fi-icon-btn fi-ls-trigger',
-                            'bg-gray-100 dark:bg-gray-800',
-                            'rounded-full!' => $isCircular,
+                            'fi-ls-trigger flex shrink-0 items-center gap-x-2 rounded-lg px-3 py-2 outline-none transition duration-75',
+                            'text-gray-500 hover:text-gray-700 hover:bg-gray-50 focus-visible:bg-gray-50',
+                            'dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-white/5 dark:focus-visible:bg-white/5',
                         ])
                     }}
                 >
                     @if ($isUrlFlag)
                         <x-filament::avatar :src="$flagSrc" :alt="$currentLabel" size="sm" :circular="$isCircular" />
                     @elseif ($baseStyle === 'avatar')
-                        <span class="flex size-5 items-center justify-center shrink-0 font-semibold text-xs text-primary-500 dark:text-primary-400">
+                        <span class="flex size-5 items-center justify-center shrink-0 rounded bg-primary-50 font-semibold text-xs text-primary-600 dark:bg-primary-400/10 dark:text-primary-400">
                             {{ str($currentLocale)->length() > 2 ? str($currentLocale)->substr(0, 2)->upper() : str($currentLocale)->upper() }}
                         </span>
                     @else
@@ -186,7 +196,7 @@
                             \Filament\Support\generate_icon_html($triggerIcon, 'language-switch::trigger')
                         }}
                     @endif
-                    <span class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ $currentLabel }}</span>
+                    <span class="text-sm font-medium">{{ $currentLabel }}</span>
                 </button>
             @elseif ($isVisual)
                 {{-- No label, visual (flag/avatar): icon-btn with bg --}}
@@ -227,5 +237,6 @@
                     {{ $attributes }}
                 />
             @endif
+            </div>
     @endswitch
 @endif
