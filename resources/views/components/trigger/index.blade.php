@@ -150,7 +150,7 @@
                     :tooltip="$currentLabel"
                     :label="$currentLabel"
                     :attributes="$attributes->merge([
-                        'x-show' => ($isInSidebarLogo && $isSidebarCollapsibleOnDesktop) ? '\$store.sidebar.isOpen' : false,
+                        'x-show' => ($isInSidebarLogo && $isSidebarCollapsibleOnDesktop) ? '$store.sidebar.isOpen' : false,
                         'x-cloak' => ($isInSidebarLogo && $isSidebarCollapsibleOnDesktop) ? '' : false,
                         'style' => 'min-width: 36px;',
                     ])->class([

@@ -284,20 +284,20 @@ The trigger automatically adapts its design to match the surrounding UI:
 
 | Hook Location | Trigger Design |
 |---|---|
-| Topbar hooks (`GLOBAL_SEARCH_*`, `TOPBAR_*`) | Icon button |
-| Sidebar nav (`SIDEBAR_NAV_*`) | Sidebar navigation item |
-| Sidebar footer (`SIDEBAR_FOOTER`, `USER_MENU_BEFORE/AFTER`) | Sidebar footer button |
-| User menu (`USER_MENU_PROFILE_*`) | Dropdown menu item |
+| `GLOBAL_SEARCH_*`, `TOPBAR_*` | Icon button (matches topbar icons) |
+| `SIDEBAR_LOGO_*` | Icon button (compact, hides when sidebar collapses) |
+| `SIDEBAR_NAV_*`, `SIDEBAR_FOOTER`, `USER_MENU_BEFORE/AFTER` | Sidebar button (matches notifications/panel-switch) |
+| `USER_MENU_PROFILE_*` | Dropdown list item (matches user menu items) |
 
 ### Smart Defaults
 
 When you don't set a render hook, the plugin picks the best one based on your panel:
 
-| Panel Config | Default Position |
-|---|---|
-| Topbar enabled | After global search |
-| Topbar enabled + `inline()` | Inside user menu |
-| Topbar disabled | Before user menu (sidebar) |
+| Panel Config | Default Hook | Where it appears |
+|---|---|---|
+| Topbar enabled | `GLOBAL_SEARCH_AFTER` | Topbar, after search bar |
+| Topbar disabled | `USER_MENU_BEFORE` | Sidebar footer, before user menu |
+| `inline()` | `USER_MENU_PROFILE_AFTER` | Inside user menu dropdown |
 
 ### Dropdown Placement
 
