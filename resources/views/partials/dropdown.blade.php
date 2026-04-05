@@ -1,30 +1,18 @@
-@php
-    $resolvedHook = $ls->getResolvedRenderHook();
-    $isInSidebar = str_contains($resolvedHook, '::sidebar.') || str_contains($resolvedHook, 'user-menu.');
-    $isInSidebarNav = str_contains($resolvedHook, '::sidebar.nav.');
-    $isInTopbarEdge = str_contains($resolvedHook, '::topbar.end');
-
-    $dropdownPlacement = match (true) {
-        filled($customPlacement) => $customPlacement,
-        $renderContext === 'sidebar' => 'top-start',
-        $rtl => 'bottom-start',
-        default => 'bottom-end',
-    };
-@endphp
-
 <x-filament::dropdown
-    :teleport="! $isInSidebar"
-    :placement="$dropdownPlacement"
+    :teleport="$layout->shouldTeleport"
+    :placement="$layout->placement"
     :max-height="$maxHeight"
     @class([
-        '-mx-2' => $isInSidebarNav,
-        'ms-2' => $isInTopbarEdge,
+        '-mx-2' => $layout->spacingKey === 'sidebar-nav',
+        'mx-2' => $layout->spacingKey === 'topbar-edge',
+        '-me-2' => $layout->spacingKey === 'user-menu-before',
+        '-ms-2' => $layout->spacingKey === 'user-menu-after',
         '[&_.fi-dropdown-panel]:w-fit' => $isFlagsOnly,
     ])
 >
     <x-slot name="trigger">
-        <x-language-switch::trigger />
+        <x-language-switch::trigger :layout="$layout" />
     </x-slot>
 
-    @include($contentView ?? 'language-switch::partials.list')
+    @include('language-switch::partials.list')
 </x-filament::dropdown>

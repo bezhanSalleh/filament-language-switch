@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BezhanSalleh\LanguageSwitch\Concerns;
 
 use BezhanSalleh\LanguageSwitch\Enums\DisplayMode;
+use BezhanSalleh\LanguageSwitch\Enums\TriggerStyle;
 use Closure;
 use Filament\Support\Icons\Heroicon;
 
@@ -14,19 +15,19 @@ trait HasAppearance
 
     protected bool | Closure $isInline = false;
 
-    protected string | Closure | DisplayMode $displayMode = DisplayMode::Dropdown;
+    protected DisplayMode | Closure $displayMode = DisplayMode::Dropdown;
 
     protected string | Closure | null $dropdownPlacement = null;
 
     protected int | Closure $columns = 1;
 
-    protected string | Closure $maxHeight = 'max-content';
+    protected string | Closure $maxHeight = '24rem';
 
     protected string | Closure $flagHeight = 'h-16';
 
-    protected string | Closure $charAvatarHeight = 'size-8';
+    protected string | Closure $avatarHeight = 'size-8';
 
-    protected string | Closure | null $triggerStyle = null;
+    protected TriggerStyle | Closure | null $triggerStyle = null;
 
     protected string | Heroicon | Closure $triggerIcon = Heroicon::Language;
 
@@ -89,13 +90,7 @@ trait HasAppearance
 
     public function getDisplayMode(): DisplayMode
     {
-        $mode = $this->evaluate($this->displayMode);
-
-        if ($mode instanceof DisplayMode) {
-            return $mode;
-        }
-
-        return DisplayMode::tryFrom($mode) ?? DisplayMode::Dropdown;
+        return $this->evaluate($this->displayMode);
     }
 
     public function getDropdownPlacement(): ?string
@@ -130,38 +125,49 @@ trait HasAppearance
     }
 
     /**
-     * Set the char avatar size class for modal cards.
+     * Set the avatar size class for modal cards.
      * Default: 'size-8'. Examples: 'size-10', 'size-12'.
      */
-    public function charAvatarHeight(string | Closure $height): static
+    public function avatarHeight(string | Closure $height): static
     {
-        $this->charAvatarHeight = $height;
+        $this->avatarHeight = $height;
 
         return $this;
     }
 
-    public function getCharAvatarHeight(): string
+    public function getAvatarHeight(): string
     {
-        return (string) $this->evaluate($this->charAvatarHeight);
+        return (string) $this->evaluate($this->avatarHeight);
     }
 
     /**
-     * Set the trigger style independently from render context.
-     * Options: 'icon', 'icon-label', 'avatar', 'avatar-label', 'flag', 'flag-label'.
-     * When null, smart defaults apply based on render context.
+     * Configure the trigger's style and/or icon in a single call.
+     *
+     * Examples:
+     *   $switch->trigger(style: TriggerStyle::Flag);
+     *   $switch->trigger(style: TriggerStyle::IconLabel, icon: Heroicon::GlobeAlt);
+     *   $switch->trigger(icon: 'phosphor-translate');
      */
-    public function triggerStyle(string | Closure | null $style): static
-    {
-        $this->triggerStyle = $style;
+    public function trigger(
+        TriggerStyle | Closure | null $style = null,
+        string | Heroicon | Closure | null $icon = null,
+    ): static {
+        if ($style !== null) {
+            $this->triggerStyle = $style;
+        }
+
+        if ($icon !== null) {
+            $this->triggerIcon = $icon;
+        }
 
         return $this;
     }
 
-    public function getTriggerStyle(): string
+    public function getTriggerStyle(): TriggerStyle
     {
         $style = $this->evaluate($this->triggerStyle);
 
-        if ($style !== null) {
+        if ($style instanceof TriggerStyle) {
             return $style;
         }
 
@@ -169,16 +175,9 @@ trait HasAppearance
         $hasFlags = filled($this->evaluate($this->flags));
 
         return match ($context) {
-            'topbar' => $hasFlags ? 'flag' : 'icon',
-            default => 'icon-label',
+            'topbar' => $hasFlags ? TriggerStyle::Flag : TriggerStyle::Icon,
+            default => TriggerStyle::IconLabel,
         };
-    }
-
-    public function triggerIcon(string | Heroicon | Closure $icon): static
-    {
-        $this->triggerIcon = $icon;
-
-        return $this;
     }
 
     public function getTriggerIcon(): string | Heroicon

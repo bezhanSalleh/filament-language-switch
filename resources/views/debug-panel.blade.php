@@ -70,6 +70,7 @@
                             <option value="avatar-label">Avatar + Label</option>
                             <option value="flag" @disabled(! $useFlags)>Flag</option>
                             <option value="flag-label" @disabled(! $useFlags)>Flag + Label</option>
+                            <option value="label">Label Only</option>
                         </x-filament::input.select>
                     </x-filament::input.wrapper>
                 </div>

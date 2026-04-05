@@ -14,7 +14,7 @@ class LanguageSwitchComponent extends Component
     #[On('language-switched')]
     public function changeLocale(string $locale): void
     {
-        LanguageSwitch::trigger(locale: $locale);
+        LanguageSwitch::switchLocale(locale: $locale);
 
         $this->redirect(request()->header('Referer', url()->current()));
     }

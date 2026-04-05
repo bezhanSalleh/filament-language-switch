@@ -2,12 +2,12 @@
     'locale',
     'label',
     'flag' => null,
-    'charAvatar' => null,
+    'avatar' => null,
     'isFlagsOnly' => false,
     'isCircular' => false,
     'isModal' => false,
     'flagHeight' => 'h-16',
-    'charAvatarHeight' => 'size-8',
+    'avatarHeight' => 'size-8',
 ])
 
 @php
@@ -44,7 +44,7 @@
             src="{{ $flag }}"
             alt="{{ $label }}"
             loading="lazy"
-            class="block w-full rounded-lg object-cover group-hover:scale-105 transition-transform duration-75 ease-in"
+            @class(['block w-full rounded-lg object-cover group-hover:scale-105 transition-transform duration-75 ease-in', $flagHeight])
         />
     </button>
 
@@ -74,12 +74,17 @@
                 :alt="$label"
                 @class(['group-hover:scale-105 transition-transform duration-150 ease-in', 'fi-circular' => $isCircular])
             />
-        @elseif ($charAvatar)
-            <x-language-switch::char-avatar
-                :locale="$locale"
-                :active="$isActive"
-                :class="$charAvatarHeight"
-            />
+        @elseif ($avatar)
+            <span @class([
+                'fi-ls-avatar flex items-center justify-center shrink-0 font-semibold text-xs',
+                $avatarHeight,
+                'rounded-full' => $isCircular,
+                'rounded-md' => ! $isCircular,
+                'bg-primary-500/20 text-primary-600 dark:text-primary-400' => $isActive,
+                'bg-gray-100 text-gray-600 dark:bg-white/5 dark:text-gray-400' => ! $isActive,
+            ])>
+                {{ $avatar }}
+            </span>
         @endif
 
         <span @class([
@@ -119,19 +124,19 @@
                     'fi-circular' => $isCircular && ! $isFlagsOnly,
                 ])
             />
-        @elseif ($charAvatar)
-            <x-language-switch::char-avatar
-                :locale="$locale"
-                :active="$isActive"
-                @class([
-                    'size-6',
-                    'rounded-full' => $isCircular,
-                ])
-            />
+        @elseif ($avatar)
+            <span @class([
+                'fi-ls-avatar flex size-6 items-center justify-center shrink-0 font-semibold text-xs',
+                'rounded-full' => $isCircular,
+                'rounded-md' => ! $isCircular,
+                'bg-primary-500/20 text-primary-600 dark:text-primary-400' => $isActive,
+                'bg-gray-100 text-gray-600 dark:bg-white/5 dark:text-gray-400' => ! $isActive,
+            ])>
+                {{ $avatar }}
+            </span>
         @endif
 
-        @if ($isFlagsOnly)
-        @else
+        @unless ($isFlagsOnly)
             <span @class([
                 'fi-dropdown-list-item-label',
                 'text-primary-600 dark:text-primary-400' => $isActive,
@@ -145,6 +150,6 @@
                     class="ms-auto h-5 w-5 shrink-0 text-primary-600 dark:text-primary-400"
                 />
             @endif
-        @endif
+        @endunless
     </button>
 @endif

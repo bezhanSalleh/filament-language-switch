@@ -17,16 +17,16 @@
         ])
     >
         @foreach ($locales as $locale)
-            @include($itemView ?? 'language-switch::components.locale-item', [
+            @include('language-switch::components.locale-item', [
                 'locale' => $locale,
                 'label' => $ls->getLabel($locale),
                 'flag' => $hasFlags ? $ls->getFlag($locale) : null,
-                'charAvatar' => ! $hasFlags ? $ls->getCharAvatar($locale) : null,
+                'avatar' => ! $hasFlags ? $ls->getAvatar($locale) : null,
                 'isFlagsOnly' => $isFlagsOnly,
                 'isCircular' => $isCircular,
                 'isModal' => true,
                 'flagHeight' => $flagHeight,
-                'charAvatarHeight' => $charAvatarHeight,
+                'avatarHeight' => $avatarHeight,
             ])
         @endforeach
     </div>
@@ -34,16 +34,16 @@
     {{-- Dropdown: standard list rows --}}
     <x-filament::dropdown.list>
         @foreach ($locales as $locale)
-            @include($itemView ?? 'language-switch::components.locale-item', [
+            @include('language-switch::components.locale-item', [
                 'locale' => $locale,
                 'label' => $ls->getLabel($locale),
                 'flag' => $hasFlags ? $ls->getFlag($locale) : null,
-                'charAvatar' => ! $hasFlags ? $ls->getCharAvatar($locale) : null,
+                'avatar' => ! $hasFlags ? $ls->getAvatar($locale) : null,
                 'isFlagsOnly' => $isFlagsOnly,
                 'isCircular' => $isCircular,
                 'isModal' => false,
                 'flagHeight' => $flagHeight,
-                'charAvatarHeight' => $charAvatarHeight,
+                'avatarHeight' => $avatarHeight,
             ])
         @endforeach
     </x-filament::dropdown.list>

@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace BezhanSalleh\LanguageSwitch;
 
 use BezhanSalleh\LanguageSwitch\Enums\DisplayMode;
+use BezhanSalleh\LanguageSwitch\Enums\TriggerStyle;
 use BezhanSalleh\LanguageSwitch\Http\Livewire\LanguageSwitchComponent;
 use BezhanSalleh\LanguageSwitch\Http\Livewire\LanguageSwitchDebugPanel;
 use BezhanSalleh\LanguageSwitch\Http\Middleware\SwitchLanguageLocale;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\NavigationBuilder;
-use Filament\Navigation\NavigationItem;
 use Filament\Panel;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
@@ -42,7 +41,9 @@ class LanguageSwitchServiceProvider extends PackageServiceProvider
             LanguageSwitch::boot();
         });
 
-        $this->bootDebugPanel();
+        if (app()->isLocal() && config('app.debug')) {
+            $this->bootDebugPanel();
+        }
     }
 
     public function registerPluginMiddleware(): void
@@ -69,11 +70,7 @@ class LanguageSwitchServiceProvider extends PackageServiceProvider
 
     protected function bootDebugPanel(): void
     {
-        if (! app()->isLocal() || ! config('app.debug')) {
-            return;
-        }
-
-        LanguageSwitch::configureUsing(function (LanguageSwitch $switch): void {
+        LanguageSwitch::configureUsing(function (LanguageSwitch $languageSwitch): void {
             $overrides = session('language-switch-debug', []);
             $panel = filament()->getCurrentOrDefaultPanel();
             if (empty($overrides)) {
@@ -85,64 +82,60 @@ class LanguageSwitchServiceProvider extends PackageServiceProvider
             }
 
             if (isset($overrides['displayMode'])) {
-                $switch->displayMode(DisplayMode::from($overrides['displayMode']));
+                $languageSwitch->displayMode(DisplayMode::from($overrides['displayMode']));
             }
 
             if (isset($overrides['circular'])) {
-                $switch->circular((bool) $overrides['circular']);
+                $languageSwitch->circular((bool) $overrides['circular']);
             }
 
             if (isset($overrides['columns'])) {
-                $switch->columns((int) $overrides['columns']);
+                $languageSwitch->columns((int) $overrides['columns']);
             }
 
             if (isset($overrides['nativeLabel'])) {
-                $switch->nativeLabel((bool) $overrides['nativeLabel']);
+                $languageSwitch->nativeLabel((bool) $overrides['nativeLabel']);
             }
 
             if (isset($overrides['flagsOnly'])) {
-                $switch->flagsOnly((bool) $overrides['flagsOnly']);
+                $languageSwitch->flagsOnly((bool) $overrides['flagsOnly']);
             }
 
             if (isset($overrides['useFlags']) && ! $overrides['useFlags']) {
-                $switch->flags([]);
+                $languageSwitch->flags([]);
             }
 
             if (isset($overrides['modalWidth'])) {
-                $switch->modalWidth((string) $overrides['modalWidth']);
+                $languageSwitch->modalWidth((string) $overrides['modalWidth']);
             }
 
             if (isset($overrides['modalSlideOver'])) {
-                $switch->modalSlideOver((bool) $overrides['modalSlideOver']);
+                $languageSwitch->modalSlideOver((bool) $overrides['modalSlideOver']);
             }
 
             if (isset($overrides['flagHeight'])) {
-                $switch->flagHeight((string) $overrides['flagHeight']);
+                $languageSwitch->flagHeight((string) $overrides['flagHeight']);
             }
 
-            if (isset($overrides['charAvatarHeight'])) {
-                $switch->charAvatarHeight((string) $overrides['charAvatarHeight']);
+            if (isset($overrides['avatarHeight'])) {
+                $languageSwitch->avatarHeight((string) $overrides['avatarHeight']);
             }
 
             if (! empty($overrides['renderHook'])) {
-                $switch->renderHook((string) $overrides['renderHook']);
+                $languageSwitch->renderHook((string) $overrides['renderHook']);
             }
 
-            if (! empty($overrides['triggerStyle'])) {
-                $switch->triggerStyle((string) $overrides['triggerStyle']);
-            }
-
-            if (! empty($overrides['triggerIcon'])) {
-                $switch->triggerIcon((string) $overrides['triggerIcon']);
+            if (! empty($overrides['triggerStyle']) || ! empty($overrides['triggerIcon'])) {
+                $languageSwitch->trigger(
+                    style: empty($overrides['triggerStyle']) ? null : TriggerStyle::from($overrides['triggerStyle']),
+                    icon: empty($overrides['triggerIcon']) ? null : (string) $overrides['triggerIcon'],
+                );
             }
         }, isImportant: true);
 
         Livewire::component('language-switch-debug-panel', LanguageSwitchDebugPanel::class);
 
         Filament::serving(function (): void {
-            filament()->getCurrentOrDefaultPanel()->colors([
-                'primary' => '#fe984a',
-            ]);
             FilamentView::registerRenderHook(
                 name: PanelsRenderHook::BODY_END,
                 hook: fn (): string => Blade::render('<livewire:language-switch-debug-panel />'),

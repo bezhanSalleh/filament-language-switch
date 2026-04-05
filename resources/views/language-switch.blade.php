@@ -1,26 +1,16 @@
 @php
     $ls = \BezhanSalleh\LanguageSwitch\LanguageSwitch::make();
+    $layout = $ls->getTriggerLayout();
+
     $locales = $ls->getLocales();
     $isCircular = $ls->isCircular();
     $isFlagsOnly = $ls->isFlagsOnly();
     $hasFlags = filled($ls->getFlags());
     $displayMode = $ls->getDisplayMode();
-    $renderContext = $ls->getRenderContext();
     $columns = $ls->getColumns();
     $maxHeight = $ls->getMaxHeight();
-    $contentView = $ls->getContentView();
-    $itemView = $ls->getItemView();
     $flagHeight = $ls->getFlagHeight();
-    $charAvatarHeight = $ls->getCharAvatarHeight();
-    $triggerStyle = $ls->getTriggerStyle();
-    $triggerIcon = $ls->getTriggerIcon();
-    $triggerView = $ls->getTriggerView();
-    $hasLabel = str_contains($triggerStyle, '-label');
-    $baseStyle = str_replace('-label', '', $triggerStyle);
-
-    $currentLocale = app()->getLocale();
-    $currentLabel = $ls->getLabel($currentLocale);
-    $currentFlag = $hasFlags ? $ls->getFlag($currentLocale) : null;
+    $avatarHeight = $ls->getAvatarHeight();
 
     $rtl = __('filament-panels::layout.direction') === 'rtl';
     $customPlacement = $ls->getDropdownPlacement();

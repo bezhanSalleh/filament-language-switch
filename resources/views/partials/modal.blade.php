@@ -1,4 +1,7 @@
-<x-language-switch::trigger x-on:click="$dispatch('open-modal', { id: 'fls-modal' })" />
+<x-language-switch::trigger
+    :layout="$layout"
+    x-on:click="$dispatch('open-modal', { id: 'fls-modal' })"
+/>
 
 <x-filament::modal
     id="fls-modal"
@@ -11,5 +14,5 @@
     :icon-color="$ls->getModalIconColor()"
     :class="$isFlagsOnly ? '[&_.fi-modal-window]:w-fit' : ''"
 >
-    @include($contentView ?? 'language-switch::partials.list')
+    @include('language-switch::partials.list')
 </x-filament::modal>

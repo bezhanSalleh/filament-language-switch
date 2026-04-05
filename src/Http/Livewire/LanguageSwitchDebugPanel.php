@@ -63,7 +63,7 @@ class LanguageSwitchDebugPanel extends Component
         if ($property === 'useFlags' && ! $this->useFlags) {
             $this->flagsOnly = false;
 
-            if (in_array($this->triggerStyle, ['flag', 'flag-label'])) {
+            if (in_array($this->triggerStyle, ['flag', 'flag-label'], true)) {
                 $this->triggerStyle = '';
             }
         }
@@ -72,7 +72,7 @@ class LanguageSwitchDebugPanel extends Component
             'topbar' => $this->topbar,
             'displayMode' => $this->displayMode,
             'circular' => $this->circular,
-            'columns' => (int) $this->columns,
+            'columns' => $this->columns,
             'nativeLabel' => $this->nativeLabel,
             'flagsOnly' => $this->flagsOnly,
             'useFlags' => $this->useFlags,

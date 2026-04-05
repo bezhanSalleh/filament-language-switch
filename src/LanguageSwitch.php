@@ -12,10 +12,10 @@ use Illuminate\Support\Facades\Blade;
 class LanguageSwitch extends Component
 {
     use Concerns\HasAppearance;
-    use Concerns\HasContent;
     use Concerns\HasDeprecatedOutsidePanel;
     use Concerns\HasLocales;
     use Concerns\HasModal;
+    use Concerns\HasTriggerLayout;
     use Concerns\HasVisibility;
 
     public static function make(): static

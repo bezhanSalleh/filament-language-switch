@@ -17,7 +17,7 @@
 
 # Language Switch
 
-Zero-config language switching for Filament Panels. Drop it in, provide your locales, and you're done. The plugin auto-detects your panel layout and renders in the right place with the right design.
+Zero-config language switching for Filament Panels. Drop it in, provide your locales, and you're done. The plugin auto-detects your panel layout and renders in the right place with the right design — topbar icon button, sidebar nav item, user menu item — without any manual wiring.
 
 ## Compatibility
 
@@ -67,7 +67,7 @@ That's it. The switch appears in your topbar automatically. When the panel has n
 
 ### Dropdown (default)
 
-The trigger opens a dropdown with your locales:
+The trigger opens a dropdown with your locales. The list is scrollable by default (`max-height: 24rem`), so it stays usable with many locales:
 
 ```php
 $switch->locales(['en', 'fr', 'ar']);
@@ -117,22 +117,51 @@ $switch
 
 ## Trigger
 
+The trigger is configured through a single unified `trigger()` method that takes a style and/or an icon. Both are optional — pass whichever you want to override.
+
+### Trigger Style
+
+Use the `TriggerStyle` enum to control what the trigger shows. The default adapts to the render context automatically (e.g. flag if you've set flags, otherwise icon in topbar; icon+label in sidebar/user menu), so you only need to call this when you want to override it:
+
+```php
+use BezhanSalleh\LanguageSwitch\Enums\TriggerStyle;
+
+// Visual only
+$switch->trigger(style: TriggerStyle::Icon);    // language icon
+$switch->trigger(style: TriggerStyle::Flag);    // flag image (requires ->flags())
+$switch->trigger(style: TriggerStyle::Avatar);  // locale abbreviation (EN, FR, AR)
+
+// Visual with label
+$switch->trigger(style: TriggerStyle::IconLabel);    // icon + locale name
+$switch->trigger(style: TriggerStyle::FlagLabel);    // flag + locale name
+$switch->trigger(style: TriggerStyle::AvatarLabel);  // abbreviation + locale name
+
+// Label only — no visual
+$switch->trigger(style: TriggerStyle::Label);
+```
+
 ### Trigger Icon
 
-The trigger uses the language icon by default. Change it to any icon from your installed [Blade Icons](https://blade-ui-kit.com/blade-icons) packages:
+The trigger uses the language icon by default. Pass any icon from your installed [Blade Icons](https://blade-ui-kit.com/blade-icons) packages, or a `Heroicon` enum case:
 
 ```php
 use Filament\Support\Icons\Heroicon;
 
-// Using Filament's Heroicon enum
-$switch->triggerIcon(Heroicon::GlobeAlt);
+// Just change the icon (style stays as default)
+$switch->trigger(icon: Heroicon::GlobeAlt);
 
-// Using any Blade Icons string
-$switch->triggerIcon('heroicon-o-globe-alt');
-$switch->triggerIcon('phosphor-translate');
+// Any Blade Icons string works too
+$switch->trigger(icon: 'heroicon-o-globe-alt');
+$switch->trigger(icon: 'phosphor-translate');
+
+// Or change both in one call
+$switch->trigger(
+    style: TriggerStyle::IconLabel,
+    icon: Heroicon::GlobeAlt,
+);
 ```
 
-You can also override it globally via Filament's icon alias system:
+You can also override the icon globally via Filament's icon alias system:
 
 ```php
 use Filament\Support\Facades\FilamentIcon;
@@ -142,47 +171,13 @@ FilamentIcon::register([
 ]);
 ```
 
-### Trigger Style
-
-Control what the trigger shows. The default adapts to context automatically, but you can override it:
-
-```php
-// Icon only (default for topbar)
-$switch->triggerStyle('icon');
-
-// Icon with locale name
-$switch->triggerStyle('icon-label');
-
-// Locale abbreviation (EN, FR, AR)
-$switch->triggerStyle('avatar');
-
-// Abbreviation with locale name
-$switch->triggerStyle('avatar-label');
-
-// Flag image (requires flags() to be set)
-$switch->triggerStyle('flag');
-
-// Flag with locale name
-$switch->triggerStyle('flag-label');
-```
-
 ### Inline
 
-Renders the trigger as a menu item inside the user menu instead of a standalone button:
+Renders the trigger as a menu item inside the user menu instead of a standalone button. Combine with `displayMode()` to pick what opens (dropdown or modal) when the item is clicked:
 
 ```php
 $switch->inline();
 ```
-
-### Custom Trigger View
-
-Replace the trigger entirely with your own Blade view:
-
-```php
-$switch->triggerView('my-views.language-trigger');
-```
-
-Your view receives all configuration variables (`$renderContext`, `$triggerStyle`, `$currentLocale`, `$currentLabel`, `$currentFlag`, `$isCircular`, etc.).
 
 ## Flags
 
@@ -264,8 +259,8 @@ Control sizes in modal radio cards:
 ```php
 $switch
     ->displayMode(DisplayMode::Modal)
-    ->flagHeight('h-20')       // Default: 'h-16'
-    ->charAvatarHeight('size-10'); // Default: 'size-8'
+    ->flagHeight('h-20')     // Default: 'h-16'
+    ->avatarHeight('size-10'); // Default: 'size-8'
 ```
 
 ## Placement
@@ -286,7 +281,9 @@ The trigger automatically adapts its design to match the surrounding UI:
 |---|---|
 | `GLOBAL_SEARCH_*`, `TOPBAR_*` | Icon button (matches topbar icons) |
 | `SIDEBAR_LOGO_*` | Icon button (compact, hides when sidebar collapses) |
-| `SIDEBAR_NAV_*`, `SIDEBAR_FOOTER`, `USER_MENU_BEFORE/AFTER` | Sidebar button (matches notifications/panel-switch) |
+| `SIDEBAR_START`, `SIDEBAR_NAV_*`, `SIDEBAR_FOOTER` | Sidebar nav item (matches Dashboard, Welcome, etc.) |
+| `USER_MENU_BEFORE/AFTER` (topbar on) | Icon button inside user menu area |
+| `USER_MENU_BEFORE/AFTER` (topbar off) | Sidebar footer button (matches notifications) |
 | `USER_MENU_PROFILE_*` | Dropdown list item (matches user menu items) |
 
 ### Smart Defaults
@@ -309,10 +306,11 @@ $switch->dropdownPlacement('top-end');
 
 ### Max Height
 
-Limit the dropdown list height:
+The dropdown is scrollable by default (`24rem`). Override it for a different limit, or pass `'max-content'` to disable scrolling:
 
 ```php
-$switch->maxHeight('200px');
+$switch->maxHeight('30rem');
+$switch->maxHeight('max-content'); // no scroll, grows to fit content
 ```
 
 ## Panel Exclusion
@@ -334,37 +332,20 @@ $switch->userPreferredLocale(fn () => auth()->user()?->locale);
 The locale resolution order is:
 1. Session
 2. Query parameter (`?locale=`)
-3. Request input
-4. Cookie
-5. User preferred locale (this setting)
+3. User preferred locale (this setting)
+4. Browser `Accept-Language` header
+5. Cookie
 6. `app.locale` config
-7. Browser `Accept-Language` header
 
-## Custom Views
+## Customization
 
-### Custom Locale List
-
-Replace the entire locale list rendering:
-
-```php
-$switch->contentView('my-views.locale-list');
-```
-
-### Custom Locale Item
-
-Replace how each individual locale renders in the list:
-
-```php
-$switch->itemView('my-views.locale-item');
-```
-
-### Publishing Views
-
-Publish all views for deep customization:
+For deep customization, publish the plugin's views and edit them in your app:
 
 ```bash
 php artisan vendor:publish --tag="filament-language-switch-views"
 ```
+
+Published views live in `resources/views/vendor/language-switch/` and override the package versions automatically. For small tweaks, prefer targeting the plugin's stable CSS hooks (`fi-ls`, `fi-ls-trigger`, `fi-ls-item`, etc.) from your own stylesheet rather than publishing views.
 
 ## Event
 
@@ -396,6 +377,7 @@ No code changes needed — just click and test.
 
 ```php
 use BezhanSalleh\LanguageSwitch\Enums\DisplayMode;
+use BezhanSalleh\LanguageSwitch\Enums\TriggerStyle;
 use BezhanSalleh\LanguageSwitch\LanguageSwitch;
 use Filament\Support\Icons\Heroicon;
 
@@ -414,12 +396,23 @@ LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
         ->modalWidth('lg')
         ->circular()
         ->nativeLabel()
-        ->triggerIcon(Heroicon::GlobeAlt)
-        ->triggerStyle('flag-label')
+        ->trigger(
+            style: TriggerStyle::FlagLabel,
+            icon: Heroicon::GlobeAlt,
+        )
         ->excludes(['admin'])
         ->userPreferredLocale(fn () => auth()->user()?->locale);
 });
 ```
+
+## Upgrading
+
+If you're coming from an earlier release of v5, a few APIs were consolidated:
+
+- `triggerStyle('flag-label')` → `trigger(style: TriggerStyle::FlagLabel)`
+- `triggerIcon(Heroicon::GlobeAlt)` → `trigger(icon: Heroicon::GlobeAlt)`
+- `charAvatarHeight('size-10')` → `avatarHeight('size-10')`
+- `contentView()`, `itemView()`, `triggerView()` were removed — publish the views instead (`php artisan vendor:publish --tag="filament-language-switch-views"`).
 
 ## Changelog
 

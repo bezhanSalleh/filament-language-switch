@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace BezhanSalleh\LanguageSwitch\Enums;
 
+/**
+ * @deprecated Only used by the deprecated outside-panel API. Use `dropdownPlacement(string)` for current placement configuration.
+ */
 enum Placement: string
 {
     case TopLeft = 'top-left';

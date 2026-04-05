@@ -16,13 +16,6 @@ trait HasVisibility
 
     protected string | Closure | null $renderHook = null;
 
-    public function visible(bool | Closure $condition = true): static
-    {
-        $this->visibleInsidePanels = $condition;
-
-        return $this;
-    }
-
     public function excludes(array | Closure $excludes): static
     {
         $this->excludes = $excludes;
@@ -92,24 +85,15 @@ trait HasVisibility
     }
 
     /**
-     * Determine the render context based on the active render hook.
-     *
-     * Matches against PanelsRenderHook constant values:
-     *   topbar:    global-search.*, topbar.*, sidebar.logo.*
-     *   sidebar:   sidebar.nav.*, sidebar.footer, sidebar.start, user-menu.before/after
-     *   user-menu: user-menu.profile.before/after
+     * Determine the render context based on the active render hook and panel config.
+     * Delegates to HasTriggerLayout::classifyHook() which is the single source of truth.
      */
     public function getRenderContext(): string
     {
-        $hook = $this->getResolvedRenderHook();
-
-        return match (true) {
-            str_contains((string) $hook, '::sidebar.logo.') => 'topbar',
-            str_contains((string) $hook, '::sidebar.') => 'sidebar',
-            str_contains((string) $hook, 'user-menu.profile.') => 'user-menu',
-            str_contains((string) $hook, 'user-menu.') => 'sidebar',
-            default => 'topbar',
-        };
+        return $this->classifyHook(
+            $this->getResolvedRenderHook(),
+            $this->getCurrentPanel()->hasTopbar(),
+        )['context'];
     }
 
     public function getResolvedRenderHook(): string

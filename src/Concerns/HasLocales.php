@@ -119,18 +119,17 @@ trait HasLocales
 
     public function getUserPreferredLocale(): ?string
     {
-        return $this->evaluate($this->userPreferredLocale) ?? null;
+        return $this->evaluate($this->userPreferredLocale);
     }
 
     public function getPreferredLocale(): string
     {
         $locale = session()->get('locale') ??
             request()->query('locale') ??
-            request()->input('locale') ??
-            request()->cookie('filament_language_switch_locale') ??
             $this->getUserPreferredLocale() ??
-            config('app.locale') ??
-            request()->getPreferredLanguage();
+            request()->getPreferredLanguage($this->getLocales()) ??
+            request()->cookie('filament_language_switch_locale') ??
+            config('app.locale');
 
         return in_array($locale, $this->getLocales(), true) ? $locale : config('app.locale');
     }
@@ -156,14 +155,14 @@ trait HasLocales
         return $this->getFlags()[$locale] ?? str($locale)->upper()->toString();
     }
 
-    public function getCharAvatar(string $locale): string
+    public function getAvatar(string $locale): string
     {
         return str($locale)->length() > 2
             ? str($locale)->substr(0, 2)->upper()->toString()
             : str($locale)->upper()->toString();
     }
 
-    public static function trigger(string $locale): void
+    public static function switchLocale(string $locale): void
     {
         session()->put('locale', $locale);
 
