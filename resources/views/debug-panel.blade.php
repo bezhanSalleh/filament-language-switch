@@ -5,7 +5,7 @@
     $wrapperClass = '[&_.fi-input-wrp]:h-8! [&_.fi-input-wrp]:min-h-0!';
     $selectClass = 'text-xs! py-1!';
     $inputFieldClass = 'text-xs! py-1!';
-    $toggleClass = 'items-center h-5 w-9 [&>:first-child]:size-3.5! [&.fi-toggle-on>:first-child]:translate-x-4! [&.fi-toggle-off>:first-child]:translate-x-0.5! [&.fi-toggle-on>:first-child]:rtl:-translate-x-3.5!';
+    $toggleClass = 'items-center h-5 w-9 [&>:first-child]:size-3.5! [&.fi-toggle-on>:first-child]:translate-x-4! [&.fi-toggle-off>:first-child]:translate-x-0.5! [&.fi-toggle-on>:first-child]:rtl:-translate-x-4! [&.fi-toggle-off>:first-child]:rtl:-translate-x-0.5!';
 @endphp
 
 <div
@@ -36,7 +36,7 @@
         x-transition:leave-end="opacity-0 scale-95"
         x-anchor.bottom-end.offset.8="$el.previousElementSibling"
         dir="ltr"
-        class="w-80 md:w-3xl max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl bg-black shadow-2xl ring-1 ring-white/5"
+        class="w-80 md:w-4xl max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl bg-black shadow-2xl ring-1 ring-white/5"
     >
         {{-- Header --}}
         <div class="flex items-center justify-between px-4 py-2.5">
@@ -49,7 +49,7 @@
 
         <div class="h-px bg-white/6"></div>
 
-        <div class="max-h-[60vh] overflow-y-auto md:max-h-none md:overflow-visible grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/6">
+        <div class="max-h-[60vh] overflow-y-auto md:max-h-none md:overflow-visible grid grid-cols-1 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-white/6">
 
             {{-- Column 1: Trigger --}}
             <div class="space-y-3 p-4">
@@ -113,6 +113,7 @@
                         </x-filament::input.select>
                     </x-filament::input.wrapper>
                 </div>
+
             </div>
 
             {{-- Column 2: Display --}}
@@ -183,6 +184,60 @@
                 <div @class(['flex items-center justify-between', 'opacity-40 pointer-events-none' => ! $useFlags])>
                     <span class="{{ $labelClass }}">Flags Only</span>
                     <x-filament::toggle class="{{ $toggleClass }}" :state="$flagsOnly ? 'true' : 'false'" wire:click="$toggle('flagsOnly')" :disabled="! $useFlags" />
+                </div>
+            </div>
+
+            {{-- Column 4: Outside Panels --}}
+            <div class="space-y-3 p-4">
+                <h4 class="{{ $sectionClass }}">Outside Panels</h4>
+
+                <div class="flex items-center justify-between">
+                    <span class="{{ $labelClass }}">Enabled</span>
+                    <x-filament::toggle class="{{ $toggleClass }}" :state="$outsidePanels ? 'true' : 'false'" wire:click="$toggle('outsidePanels')" />
+                </div>
+
+                <div @class(['space-y-1 ' . $wrapperClass, 'opacity-40 pointer-events-none' => ! $outsidePanels])>
+                    <span class="{{ $labelClass }}">Placement</span>
+                    <x-filament::input.wrapper :disabled="! $outsidePanels">
+                        <x-filament::input.select class="{{ $selectClass }}" wire:model.live="outsidePanelPlacement" :disabled="! $outsidePanels">
+                            <option value="top-start">Top Start</option>
+                            <option value="top-center">Top Center</option>
+                            <option value="top-end">Top End</option>
+                            <option value="bottom-start">Bottom Start</option>
+                            <option value="bottom-center">Bottom Center</option>
+                            <option value="bottom-end">Bottom End</option>
+                        </x-filament::input.select>
+                    </x-filament::input.wrapper>
+                </div>
+
+                <div @class(['space-y-1 ' . $wrapperClass, 'opacity-40 pointer-events-none' => ! $outsidePanels])>
+                    <span class="{{ $labelClass }}">Mode</span>
+                    <x-filament::input.wrapper :disabled="! $outsidePanels">
+                        <x-filament::input.select class="{{ $selectClass }}" wire:model.live="outsidePanelPlacementMode" :disabled="! $outsidePanels">
+                            <option value="fixed">Fixed</option>
+                            <option value="sticky">Sticky</option>
+                            <option value="relative">Relative</option>
+                        </x-filament::input.select>
+                    </x-filament::input.wrapper>
+                </div>
+
+                <div @class(['space-y-1 ' . $wrapperClass, 'opacity-40 pointer-events-none' => ! $outsidePanels])>
+                    <span class="{{ $labelClass }}">Render Hook</span>
+                    <x-filament::input.wrapper :disabled="! $outsidePanels">
+                        <x-filament::input.select class="{{ $selectClass }}" wire:model.live="outsidePanelsRenderHook" :disabled="! $outsidePanels">
+                            <option value="">Auto (from placement)</option>
+                            <optgroup label="Simple Layout">
+                                <option value="panels::simple-layout.start">Simple Layout Start</option>
+                                <option value="panels::simple-layout.end">Simple Layout End</option>
+                            </optgroup>
+                            <optgroup label="User Menu">
+                                <option value="panels::user-menu.before">Before</option>
+                                <option value="panels::user-menu.after">After</option>
+                                <option value="panels::user-menu.profile.before">Profile Before</option>
+                                <option value="panels::user-menu.profile.after">Profile After</option>
+                            </optgroup>
+                        </x-filament::input.select>
+                    </x-filament::input.wrapper>
                 </div>
             </div>
         </div>

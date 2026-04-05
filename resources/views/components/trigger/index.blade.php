@@ -39,14 +39,19 @@
             x-show="$store.sidebar.isOpen"
             x-cloak
         @endif
+        @php
+            $isButtonShell = in_array($layout->renderContext, ['topbar', 'outside-panel'], true);
+        @endphp
         {{
             $attributes->class([
                 'fi-ls-trigger',
-                'flex shrink-0 items-center h-9 gap-x-2 bg-gray-100 dark:bg-gray-800 transition duration-75 outline-none' => $layout->renderContext === 'topbar',
-                'w-9 justify-center' => $layout->renderContext === 'topbar' && ! $layout->hasLabel,
-                'px-3' => $layout->renderContext === 'topbar' && $layout->hasLabel,
-                'rounded-full' => $layout->renderContext === 'topbar' && $layout->isCircular,
-                'rounded-lg' => $layout->renderContext === 'topbar' && ! $layout->isCircular,
+                'flex shrink-0 items-center h-9 gap-x-2 transition duration-75 outline-none' => $isButtonShell,
+                'bg-gray-100 dark:bg-gray-800' => $layout->renderContext === 'topbar',
+                'bg-white dark:bg-gray-900 shadow ring-1 ring-gray-950/5 dark:ring-white/10' => $layout->renderContext === 'outside-panel',
+                'w-9 justify-center' => $isButtonShell && ! $layout->hasLabel,
+                'px-3' => $isButtonShell && $layout->hasLabel,
+                'rounded-full' => $isButtonShell && $layout->isCircular,
+                'rounded-lg' => $isButtonShell && ! $layout->isCircular,
                 'fi-sidebar-item-btn w-full hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5' => $layout->sidebarVariant === 'nav-item',
                 'fi-sidebar-database-notifications-btn' => $layout->sidebarVariant === 'footer-item',
             ])
@@ -91,7 +96,7 @@
                     x-show="$store.sidebar.isOpen"
                 @endif
                 @class([
-                    'text-sm font-medium text-gray-700 dark:text-gray-200' => $layout->renderContext === 'topbar',
+                    'text-sm font-medium text-gray-700 dark:text-gray-200' => in_array($layout->renderContext, ['topbar', 'outside-panel'], true),
                     'fi-sidebar-item-label text-start' => $layout->sidebarVariant === 'nav-item',
                     'fi-sidebar-database-notifications-btn-label' => $layout->sidebarVariant === 'footer-item',
                 ])

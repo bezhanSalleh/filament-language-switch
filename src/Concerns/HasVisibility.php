@@ -86,6 +86,10 @@ trait HasVisibility
 
     public function getResolvedRenderHook(): string
     {
+        if ($this->isVisibleOutsidePanels()) {
+            return $this->getOutsidePanelsRenderHook();
+        }
+
         return $this->getRenderHook() ?? $this->getDefaultRenderHook();
     }
 }

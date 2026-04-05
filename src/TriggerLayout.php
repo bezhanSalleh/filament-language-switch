@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace BezhanSalleh\LanguageSwitch;
 
+use BezhanSalleh\LanguageSwitch\Enums\Placement;
+use BezhanSalleh\LanguageSwitch\Enums\PlacementMode;
 use BezhanSalleh\LanguageSwitch\Enums\TriggerStyle;
 use Filament\Support\Icons\Heroicon;
 
@@ -30,5 +32,9 @@ final readonly class TriggerLayout
         public string $currentLabel,
         public string $currentAvatar,
         public string | Heroicon $triggerIcon,
+        public ?Placement $outsidePanelPlacement = null,
+        public ?PlacementMode $outsidePanelPlacementMode = null,
+        public ?string $outsidePanelPositionClasses = null,
+        public ?string $outsidePanelSelfAlignClass = null,
     ) {}
 }

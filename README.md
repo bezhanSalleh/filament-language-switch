@@ -277,6 +277,9 @@ The trigger automatically adapts its design to match the surrounding UI:
 | `USER_MENU_BEFORE/AFTER` (topbar on) | Icon button inside user menu area |
 | `USER_MENU_BEFORE/AFTER` (topbar off) | Sidebar footer button (matches notifications) |
 | `USER_MENU_PROFILE_*` | Dropdown list item (matches user menu items) |
+| `SIMPLE_LAYOUT_START/END` | Floating button (see [Outside Panels](#outside-panels)) |
+
+> **Any other hook works too.** If you pass a hook the plugin doesn't explicitly classify, it still registers and renders a default icon button — but the visual fit is on you. Use the stable CSS hooks (`fi-ls`, `fi-ls-trigger`, etc.) from your own stylesheet, or publish the views for structural changes.
 
 ### Smart Defaults
 
@@ -308,6 +311,92 @@ The dropdown is scrollable by default (`24rem`). Override it for a different lim
 ```php
 $switch->maxHeight('30rem');
 $switch->maxHeight('max-content'); // no scroll, grows to fit content
+```
+
+## Outside Panels
+
+Filament's unauthenticated pages (login, register, password reset, email verification) render in a **simple layout** — no sidebar, no topbar, just the centered form card. You can show the language switcher on these pages so visitors can translate the UI before they sign in.
+
+```php
+use BezhanSalleh\LanguageSwitch\Enums\Placement;
+
+$switch
+    ->visibleOutsidePanels()
+    ->outsidePanelPlacement(Placement::TopEnd);
+```
+
+The switcher renders as a floating button anchored to one of six positions. `Placement` values are RTL-aware — `start`/`end` auto-flip for right-to-left locales:
+
+| Placement | Position |
+|---|---|
+| `Placement::TopStart` | Top-left (LTR) / top-right (RTL) |
+| `Placement::TopCenter` | Top-center |
+| `Placement::TopEnd` | Top-right (LTR) / top-left (RTL) |
+| `Placement::BottomStart` | Bottom-left (LTR) / bottom-right (RTL) |
+| `Placement::BottomCenter` | Bottom-center |
+| `Placement::BottomEnd` | Bottom-right (LTR) / bottom-left (RTL) |
+
+### Placement mode
+
+`outsidePanelPlacement()` accepts an optional second argument that controls **how** the switcher is attached to the page:
+
+```php
+use BezhanSalleh\LanguageSwitch\Enums\Placement;
+use BezhanSalleh\LanguageSwitch\Enums\PlacementMode;
+
+$switch->outsidePanelPlacement(Placement::TopCenter, PlacementMode::Relative);
+```
+
+| Mode | Behavior |
+|---|---|
+| `PlacementMode::Fixed` *(default)* | `position: fixed` overlay — stays put on scroll |
+| `PlacementMode::Sticky` | `position: sticky` — scrolls with the page until it hits the anchor edge, then sticks |
+| `PlacementMode::Relative` | Natural document flow — renders inline inside `.fi-simple-layout` (above the form when using a `Top*` placement, below it when using a `Bottom*` placement). Horizontal axis (`Start` / `Center` / `End`) maps to `self-start` / `self-center` / `self-end` |
+
+Use `Relative` when you want the switcher to push the form card down rather than overlay it, or when you'd rather inline it than float it.
+
+### Auto-docking into the user menu
+
+When all of these are true, `TopEnd` **automatically docks into the user menu** via `USER_MENU_BEFORE` instead of anchoring as a floating overlay:
+
+- `PlacementMode::Fixed`
+- The current route is in the outside-panel list (e.g. a simple profile page)
+- The user is authenticated
+- The panel has a user menu (`->userMenu()`)
+
+This avoids the collision between the floating overlay and Filament's own `.fi-simple-layout-header` (also anchored at `top-0 end-0`). To force a floating overlay regardless, either switch to `PlacementMode::Relative` or pin a different hook explicitly:
+
+```php
+// Force floating overlay even when a user menu is present
+$switch
+    ->outsidePanelPlacement(Placement::TopEnd)
+    ->outsidePanelsRenderHook(\Filament\View\PanelsRenderHook::SIMPLE_LAYOUT_START);
+
+// Or render as an item inside the user menu dropdown itself
+$switch->outsidePanelsRenderHook(\Filament\View\PanelsRenderHook::USER_MENU_PROFILE_AFTER);
+```
+
+### Which routes it shows on
+
+By default the switcher appears on Filament's standard auth routes. Override the list if your panel uses different route names:
+
+```php
+$switch->outsidePanelRoutes([
+    'auth.login',
+    'auth.register',
+    'auth.password-reset.request',
+    'auth.password-reset.reset',
+]);
+```
+
+The default list is `['auth.login', 'auth.profile', 'auth.register']`. The profile route is automatically excluded from the match unless the current panel uses a simple profile page (`->profile(isSimple: true)`), since a full-layout profile page already has a topbar/sidebar where the switcher lives.
+
+### Render hook anchor
+
+The floating button is anchored to `SIMPLE_LAYOUT_START` for top placements and `SIMPLE_LAYOUT_END` for bottom placements — derived automatically from the placement you pick. If you need to anchor to a different hook in the simple layout, override it:
+
+```php
+$switch->outsidePanelsRenderHook(\Filament\View\PanelsRenderHook::SIMPLE_LAYOUT_START);
 ```
 
 ## Panel Exclusion
@@ -359,12 +448,13 @@ Event::listen(function (LocaleChanged $event) {
 
 ## Debug Panel
 
-When `APP_DEBUG=true` and `APP_ENV=local`, a floating debug panel appears in the bottom-right corner. It lets you hot-swap every configuration option live in the browser:
+When `APP_DEBUG=true` and `APP_ENV=local`, a floating configurator appears in the bottom-right corner. It lets you hot-swap every configuration option live in the browser:
 
 - Toggle topbar on/off to test both layouts
 - Switch between display modes, trigger styles, render hooks
-- Toggle flags, circular, native labels, inline
+- Toggle flags, circular, native labels
 - Adjust modal width, columns, slide-over
+- Toggle outside panels + pick a placement
 - Change trigger icon
 - Reset returns to your configured defaults
 
@@ -411,6 +501,9 @@ If you're coming from an earlier release of v5, a few APIs were consolidated:
 - `charAvatarHeight('size-10')` → `avatarHeight('size-10')`
 - `inline()` was removed — use `renderHook(PanelsRenderHook::USER_MENU_PROFILE_AFTER)` (or `USER_MENU_PROFILE_BEFORE`) explicitly instead.
 - `contentView()`, `itemView()`, `triggerView()` were removed — publish the views instead (`php artisan vendor:publish --tag="filament-language-switch-views"`).
+- `visible(insidePanels: true, outsidePanels: true)` → `visible()` + `visibleOutsidePanels()` (the two-argument form is gone).
+- `Placement` enum cases renamed for RTL awareness: `TopLeft` → `TopStart`, `TopRight` → `TopEnd`, `BottomLeft` → `BottomStart`, `BottomRight` → `BottomEnd` (centers unchanged).
+- Outside-panel support is no longer deprecated — `visibleOutsidePanels()`, `outsidePanelRoutes()`, `outsidePanelPlacement()`, and `outsidePanelsRenderHook()` are first-class again.
 
 ## Changelog
 

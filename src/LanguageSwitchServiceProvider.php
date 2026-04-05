@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace BezhanSalleh\LanguageSwitch;
 
 use BezhanSalleh\LanguageSwitch\Enums\DisplayMode;
+use BezhanSalleh\LanguageSwitch\Enums\Placement;
+use BezhanSalleh\LanguageSwitch\Enums\PlacementMode;
 use BezhanSalleh\LanguageSwitch\Enums\TriggerStyle;
 use BezhanSalleh\LanguageSwitch\Http\Livewire\LanguageSwitchComponent;
 use BezhanSalleh\LanguageSwitch\Http\Livewire\LanguageSwitchDebugPanel;
@@ -130,6 +132,23 @@ class LanguageSwitchServiceProvider extends PackageServiceProvider
                     style: empty($overrides['triggerStyle']) ? null : TriggerStyle::from($overrides['triggerStyle']),
                     icon: empty($overrides['triggerIcon']) ? null : (string) $overrides['triggerIcon'],
                 );
+            }
+
+            if (isset($overrides['outsidePanels'])) {
+                $languageSwitch->visibleOutsidePanels((bool) $overrides['outsidePanels']);
+            }
+
+            if (! empty($overrides['outsidePanelPlacement']) || ! empty($overrides['outsidePanelPlacementMode'])) {
+                $languageSwitch->outsidePanelPlacement(
+                    placement: Placement::from((string) ($overrides['outsidePanelPlacement'] ?? 'top-end')),
+                    mode: empty($overrides['outsidePanelPlacementMode'])
+                        ? null
+                        : PlacementMode::from((string) $overrides['outsidePanelPlacementMode']),
+                );
+            }
+
+            if (! empty($overrides['outsidePanelsRenderHook'])) {
+                $languageSwitch->outsidePanelsRenderHook((string) $overrides['outsidePanelsRenderHook']);
             }
         }, isImportant: true);
 

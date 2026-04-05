@@ -15,25 +15,23 @@
     $rtl = __('filament-panels::layout.direction') === 'rtl';
     $customPlacement = $ls->getDropdownPlacement();
 
-    // Deprecated: outside panel support
-    $isVisibleOutsidePanels = $ls->isVisibleOutsidePanels();
-    $outsidePanelsPlacement = $ls->getOutsidePanelPlacement()->value;
+    $placementMode = $layout->outsidePanelPlacementMode;
 @endphp
 
 <div @class(['fi-ls', 'fi-circular' => $isCircular, 'fi-flags-only' => $isFlagsOnly])>
-    @if ($isVisibleOutsidePanels)
-        {{-- Deprecated: outside panel fixed positioning --}}
+    @if ($layout->renderContext === 'outside-panel')
         <div @class([
-            'fixed w-fit flex p-4 z-50',
-            'top-0' => str_contains($outsidePanelsPlacement, 'top'),
-            'bottom-0' => str_contains($outsidePanelsPlacement, 'bottom'),
-            'justify-start' => str_contains($outsidePanelsPlacement, 'left'),
-            'justify-end' => str_contains($outsidePanelsPlacement, 'right'),
-            'justify-center' => str_contains($outsidePanelsPlacement, 'center'),
+            'fi-ls-floating fixed z-40 flex p-4' => $placementMode === \BezhanSalleh\LanguageSwitch\Enums\PlacementMode::Fixed,
+            'fi-ls-sticky sticky z-40 flex p-4' => $placementMode === \BezhanSalleh\LanguageSwitch\Enums\PlacementMode::Sticky,
+            'fi-ls-inline flex p-4' => $placementMode === \BezhanSalleh\LanguageSwitch\Enums\PlacementMode::Relative,
+            $layout->outsidePanelPositionClasses => $placementMode !== \BezhanSalleh\LanguageSwitch\Enums\PlacementMode::Relative,
+            $layout->outsidePanelSelfAlignClass => $placementMode === \BezhanSalleh\LanguageSwitch\Enums\PlacementMode::Relative,
         ])>
-            <div class="rounded-lg bg-gray-50 dark:bg-gray-950">
+            @if ($displayMode === \BezhanSalleh\LanguageSwitch\Enums\DisplayMode::Modal)
+                @include('language-switch::partials.modal')
+            @else
                 @include('language-switch::partials.dropdown')
-            </div>
+            @endif
         </div>
     @elseif ($displayMode === \BezhanSalleh\LanguageSwitch\Enums\DisplayMode::Modal)
         @include('language-switch::partials.modal')

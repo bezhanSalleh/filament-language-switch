@@ -12,9 +12,9 @@ use Illuminate\Support\Facades\Blade;
 class LanguageSwitch extends Component
 {
     use Concerns\HasAppearance;
-    use Concerns\HasDeprecatedOutsidePanel;
     use Concerns\HasLocales;
     use Concerns\HasModal;
+    use Concerns\HasOutsidePanel;
     use Concerns\HasTriggerLayout;
     use Concerns\HasVisibility;
 
@@ -33,43 +33,24 @@ class LanguageSwitch extends Component
         return $static;
     }
 
-    /**
-     * Backward-compatible visible() that supports the deprecated $outsidePanels parameter.
-     */
-    public function visible(bool | Closure $insidePanels = true, bool | Closure $outsidePanels = false): static
+    public function visible(bool | Closure $condition = true): static
     {
-        $this->visibleInsidePanels = $insidePanels;
-
-        $this->visibleOutsidePanels = $outsidePanels;
+        $this->visibleInsidePanels = $condition;
 
         return $this;
-    }
-
-    /**
-     * @deprecated Use isVisible() instead.
-     */
-    public function isVisibleInsidePanels(): bool
-    {
-        return $this->isVisible();
     }
 
     public static function boot(): void
     {
         $static = static::make();
 
-        if ($static->isVisible()) {
-            FilamentView::registerRenderHook(
-                name: $static->getResolvedRenderHook(),
-                hook: fn (): string => Blade::render("<livewire:language-switch-component key='fls' />"),
-            );
+        if (! $static->isVisible()) {
+            return;
         }
 
-        // Deprecated: outside panel support (kept for backward compatibility)
-        if ($static->isVisibleOutsidePanels()) {
-            FilamentView::registerRenderHook(
-                name: $static->getOutsidePanelsRenderHook(),
-                hook: fn (): string => Blade::render("<livewire:language-switch-component key='fls-outside' />"),
-            );
-        }
+        FilamentView::registerRenderHook(
+            name: $static->getResolvedRenderHook(),
+            hook: fn (): string => Blade::render("<livewire:language-switch-component key='fls' />"),
+        );
     }
 }

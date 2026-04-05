@@ -35,6 +35,14 @@ class LanguageSwitchDebugPanel extends Component
 
     public string $triggerIcon = '';
 
+    public bool $outsidePanels = false;
+
+    public string $outsidePanelPlacement = 'top-end';
+
+    public string $outsidePanelPlacementMode = 'fixed';
+
+    public string $outsidePanelsRenderHook = '';
+
     public function mount(): void
     {
         $panel = filament()->getCurrentOrDefaultPanel();
@@ -81,6 +89,10 @@ class LanguageSwitchDebugPanel extends Component
             'renderHook' => $this->renderHook,
             'triggerStyle' => $this->triggerStyle,
             'triggerIcon' => $this->triggerIcon,
+            'outsidePanels' => $this->outsidePanels,
+            'outsidePanelPlacement' => $this->outsidePanelPlacement,
+            'outsidePanelPlacementMode' => $this->outsidePanelPlacementMode,
+            'outsidePanelsRenderHook' => $this->outsidePanelsRenderHook,
         ]);
 
         $this->redirect(request()->header('Referer', url()->current()));
