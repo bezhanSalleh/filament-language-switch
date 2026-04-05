@@ -2,9 +2,10 @@
     $labelClass = 'text-xs text-[#F0C8A0]/60';
     $sectionClass = 'text-[10px] font-semibold uppercase tracking-widest text-[#9B7BD4]';
     $isModal = $displayMode === 'modal';
-    $wrapperClass = '[&_.fi-input-wrp]:!h-8 [&_.fi-input-wrp]:!min-h-0';
-    $selectClass = '!text-xs !py-1';
-    $inputFieldClass = '!text-xs !py-1';
+    $wrapperClass = '[&_.fi-input-wrp]:h-8! [&_.fi-input-wrp]:min-h-0!';
+    $selectClass = 'text-xs! py-1!';
+    $inputFieldClass = 'text-xs! py-1!';
+    $toggleClass = 'items-center h-5 w-9 [&>:first-child]:size-3.5! [&.fi-toggle-on>:first-child]:translate-x-4! [&.fi-toggle-off>:first-child]:translate-x-0.5! [&.fi-toggle-on>:first-child]:rtl:-translate-x-3.5!';
 @endphp
 
 <div
@@ -56,7 +57,7 @@
 
                 <div class="flex items-center justify-between">
                     <span class="{{ $labelClass }}">Topbar</span>
-                    <x-filament::toggle class="h-5 w-9 [&>:first-child]:size-3.5! [&.fi-toggle-on>:first-child]:translate-x-3.5! [&.fi-toggle-on>:first-child]:rtl:-translate-x-3.5!" :state="$topbar ? 'true' : 'false'" wire:click="$toggle('topbar')" />
+                    <x-filament::toggle class="{{ $toggleClass }}" :state="$topbar ? 'true' : 'false'" wire:click="$toggle('topbar')" />
                 </div>
 
                 <div class="space-y-1 {{ $wrapperClass }}">
@@ -156,7 +157,7 @@
 
                 <div @class(['flex items-center justify-between', 'opacity-40 pointer-events-none' => ! $isModal])>
                     <span class="{{ $labelClass }}">Slide-over</span>
-                    <x-filament::toggle class="!h-5 !w-9 [&>:first-child]:!size-3.5 [&.fi-toggle-on>:first-child]:!translate-x-3.5 [&.fi-toggle-on>:first-child]:rtl:!-translate-x-3.5" :state="$modalSlideOver ? 'true' : 'false'" wire:click="$toggle('modalSlideOver')" :disabled="! $isModal" />
+                    <x-filament::toggle class="{{ $toggleClass }}" :state="$modalSlideOver ? 'true' : 'false'" wire:click="$toggle('modalSlideOver')" :disabled="! $isModal" />
                 </div>
             </div>
 
@@ -166,22 +167,22 @@
 
                 <div class="flex items-center justify-between">
                     <span class="{{ $labelClass }}">Circular</span>
-                    <x-filament::toggle class="!h-5 !w-9 [&>:first-child]:!size-3.5 [&.fi-toggle-on>:first-child]:!translate-x-3.5 [&.fi-toggle-on>:first-child]:rtl:!-translate-x-3.5" :state="$circular ? 'true' : 'false'" wire:click="$toggle('circular')" />
+                    <x-filament::toggle class="{{ $toggleClass }}" :state="$circular ? 'true' : 'false'" wire:click="$toggle('circular')" />
                 </div>
 
                 <div class="flex items-center justify-between">
                     <span class="{{ $labelClass }}">Native Labels</span>
-                    <x-filament::toggle class="!h-5 !w-9 [&>:first-child]:!size-3.5 [&.fi-toggle-on>:first-child]:!translate-x-3.5 [&.fi-toggle-on>:first-child]:rtl:!-translate-x-3.5" :state="$nativeLabel ? 'true' : 'false'" wire:click="$toggle('nativeLabel')" />
+                    <x-filament::toggle class="{{ $toggleClass }}" :state="$nativeLabel ? 'true' : 'false'" wire:click="$toggle('nativeLabel')" />
                 </div>
 
                 <div class="flex items-center justify-between">
                     <span class="{{ $labelClass }}">Use Flags</span>
-                    <x-filament::toggle class="!h-5 !w-9 [&>:first-child]:!size-3.5 [&.fi-toggle-on>:first-child]:!translate-x-3.5 [&.fi-toggle-on>:first-child]:rtl:!-translate-x-3.5" :state="$useFlags ? 'true' : 'false'" wire:click="$toggle('useFlags')" />
+                    <x-filament::toggle class="{{ $toggleClass }}" :state="$useFlags ? 'true' : 'false'" wire:click="$toggle('useFlags')" />
                 </div>
 
                 <div @class(['flex items-center justify-between', 'opacity-40 pointer-events-none' => ! $useFlags])>
                     <span class="{{ $labelClass }}">Flags Only</span>
-                    <x-filament::toggle class="!h-5 !w-9 [&>:first-child]:!size-3.5 [&.fi-toggle-on>:first-child]:!translate-x-3.5 [&.fi-toggle-on>:first-child]:rtl:!-translate-x-3.5" :state="$flagsOnly ? 'true' : 'false'" wire:click="$toggle('flagsOnly')" :disabled="! $useFlags" />
+                    <x-filament::toggle class="{{ $toggleClass }}" :state="$flagsOnly ? 'true' : 'false'" wire:click="$toggle('flagsOnly')" :disabled="! $useFlags" />
                 </div>
             </div>
         </div>
