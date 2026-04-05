@@ -108,13 +108,13 @@ trait HasOutsidePanel
         return $this->defaultOutsidePanelAnchorHook($placement, $mode);
     }
 
-    protected function defaultOutsidePanelAnchorHook(Placement $placement, PlacementMode $mode): string
+    protected function defaultOutsidePanelAnchorHook(Placement $placement, PlacementMode $placementMode): string
     {
         $isTop = $placement->isTop();
 
         // Pinned elements use position: fixed — body hooks give them a direct-body-child
         // parent, which is the most reliable containing block for fixed positioning.
-        if ($mode === PlacementMode::Pinned) {
+        if ($placementMode === PlacementMode::Pinned) {
             return $isTop
                 ? PanelsRenderHook::BODY_START
                 : PanelsRenderHook::BODY_END;

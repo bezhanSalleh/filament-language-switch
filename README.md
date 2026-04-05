@@ -24,7 +24,6 @@ Zero-config language switching for Filament Panels. Drop it in, provide your loc
 
 ## Table of Contents
 
-- [Compatibility](#compatibility)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [Display Modes](#display-modes)
@@ -42,14 +41,7 @@ Zero-config language switching for Filament Panels. Drop it in, provide your loc
 - [Control Panel](#control-panel)
 - [Full Example](#full-example)
 - [Upgrading](#upgrading)
-
-## Compatibility
-
-| Package Version | Filament Version | 
-|----------------|---------------------|
-| [v1](https://github.com/bezhanSalleh/filament-language-switch/tree/1.x) | [v2](https://filamentphp.com/docs/2.x/admin/installation) |
-| [v3](https://github.com/bezhanSalleh/filament-language-switch/tree/3.x) | [v3](https://filamentphp.com/docs/3.x/panels/installation) |
-| v4 | [v4](https://filamentphp.com/docs/4.x/introduction/installation) & [v5](https://filamentphp.com/docs/5.x/introduction/installation) |
+- [Version Support](#version-support)
 
 ## Installation
 
