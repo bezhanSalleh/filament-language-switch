@@ -7,6 +7,7 @@
         'mx-2' => $layout->spacingKey === 'topbar-edge',
         '-me-2' => $layout->spacingKey === 'user-menu-before',
         '-ms-2' => $layout->spacingKey === 'user-menu-after',
+        '[&_.fi-dropdown-panel]:overscroll-y-contain',
         '[&_.fi-dropdown-panel]:w-fit' => $isFlagsOnly,
     ])
 >
