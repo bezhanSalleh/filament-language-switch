@@ -12,8 +12,6 @@ class LanguageSwitchControlPanel extends Component
 {
     protected const SESSION_KEY = 'language-switch-control';
 
-    public bool $isOpen = false;
-
     public bool $live = true;
 
     public bool $isDirty = false;
@@ -91,9 +89,9 @@ class LanguageSwitchControlPanel extends Component
         }
     }
 
-    public function updated(string $property): void
+    public function updated($property, $value = null): void
     {
-        if (in_array($property, ['isOpen', 'live', 'isDirty'], true)) {
+        if (in_array($property, ['live', 'isDirty'], true)) {
             return;
         }
 
@@ -142,7 +140,7 @@ class LanguageSwitchControlPanel extends Component
         $this->updated('triggerIcon');
     }
 
-    public function apply(): void
+    public function applyOverrides(): void
     {
         $this->isDirty = false;
 

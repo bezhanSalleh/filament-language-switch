@@ -438,23 +438,23 @@ $switch
 
 ## Inline embedding in custom pages
 
-`visibleOutsidePanels()` handles the standard auth pages automatically. If you have a custom page, a form section, or any arbitrary location where you want the switcher inline — independent of the outside-panel machinery — drop in the Blade component:
+The render-hook system handles the common cases automatically — topbar, sidebar, user menu, simple layout. If you need to drop the switcher into a custom page section or arbitrary location in your own views, use the Blade component:
 
 ```blade
-<x-filament-language-switch::inline />
+<x-language-switch::inline />
 ```
 
-It renders the same Livewire component and respects all your usual config (trigger style, flags, display mode, circular, etc.) — the only difference is the placement. The render hook system isn't involved; the component lives exactly where you put it in the view.
+It mounts the same `<livewire:language-switch-component>` directly at the tag's position — no render hook required. The trigger uses whatever styling your current configuration resolves to (for example, if your effective render hook is in the topbar, you'll get a topbar-style icon button inline in your view). If you need a different visual in your custom location, override with `->renderHook(...)` in a dedicated configureUsing callback or publish the views for full control.
 
-You can use it alongside `->visibleOutsidePanels()` (auto-rendering on standard auth pages **and** manual embed on a custom page) or instead of it (pure manual placement only).
-
-If you're rendering it in multiple places on the same page, pass a unique key:
+Passing an explicit key is recommended when embedding in a parent component that re-renders, or when placing multiple instances on the same page:
 
 ```blade
-<x-filament-language-switch::inline key="switch-header" />
+<x-language-switch::inline key="switch-header" />
 ...
-<x-filament-language-switch::inline key="switch-footer" />
+<x-language-switch::inline key="switch-footer" />
 ```
+
+If omitted, a unique key is auto-generated via `uniqid()` on every render, which is fine for static pages but can cause the component to re-mount unnecessarily on dynamic parent updates.
 
 ## Panel Exclusion
 
@@ -485,7 +485,7 @@ The locale resolution order is:
 For deep customization, publish the plugin's views and edit them in your app:
 
 ```bash
-php artisan vendor:publish --tag="filament-language-switch-views"
+php artisan vendor:publish --tag="language-switch-views"
 ```
 
 Published views live in `resources/views/vendor/language-switch/` and override the package versions automatically. For small tweaks, prefer targeting the plugin's stable CSS hooks (`fi-ls`, `fi-ls-trigger`, `fi-ls-item`, etc.) from your own stylesheet rather than publishing views.
@@ -578,22 +578,48 @@ LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
 });
 ```
 
-## Upgrading
+## Upgrading from v4 to v5
 
-If you're coming from an earlier release of v5, a few APIs were consolidated:
+> **Branches:** v4 lives on [`main`](https://github.com/bezhansalleh/filament-language-switch/tree/main), v5 lives on the `5.x` branch (currently the `enhancement` branch pre-release). The list below compares the two so you can see exactly what changed.
 
-- `triggerStyle('flag-label')` → `trigger(style: TriggerStyle::FlagLabel)`
-- `triggerIcon(Heroicon::GlobeAlt)` → `trigger(icon: Heroicon::GlobeAlt)`
-- `charAvatarHeight('size-10')` → `avatarHeight('size-10')`
-- The old `inline()` PHP setter method (which was a shortcut for rendering inside the user menu) was removed — use `renderHook(PanelsRenderHook::USER_MENU_PROFILE_AFTER)` explicitly for that behavior. Not to be confused with the new `<x-filament-language-switch::inline />` Blade component, which is a different feature for arbitrary inline embedding in your own views.
-- `contentView()`, `itemView()`, `triggerView()` were removed — publish the views instead (`php artisan vendor:publish --tag="filament-language-switch-views"`).
-- `visible(insidePanels: true, outsidePanels: true)` → `visible()` + `visibleOutsidePanels()` (the two-argument form is gone).
-- `Placement` enum cases renamed for RTL awareness: `TopLeft` → `TopStart`, `TopRight` → `TopEnd`, `BottomLeft` → `BottomStart`, `BottomRight` → `BottomEnd` (centers unchanged).
-- Outside-panel support is no longer deprecated — `visibleOutsidePanels()`, `outsidePanelRoutes()`, `outsidePanelPlacement()`, and `outsidePanelsRenderHook()` are first-class again.
-- `PlacementMode` has three cases with clear CSS-aligned semantics: `Pinned` (CSS `position: fixed`, always visible during scroll), `Static` (CSS `position: static`, in flow — **new default**), `Relative` (CSS `position: relative`, in flow but positioned for custom CSS offsets). The old `Fixed` / `Sticky` names have been removed — `Pinned` is the replacement for the "always visible" behavior, and `Static` is the new in-flow default.
-- The outside-panel anchor hook is now **mode-aware**: `Pinned` resolves to `BODY_START` / `BODY_END`, while `Static` and `Relative` resolve to `SIMPLE_LAYOUT_START` / `SIMPLE_LAYOUT_END` so in-flow elements share the viewport with the form card instead of extending body height. All derived from the placement's vertical axis. Explicit override via `outsidePanelsRenderHook()` still works.
-- New `<x-filament-language-switch::inline />` Blade component for inline embedding in custom pages, independent of the outside-panel system.
-- The old "debug panel" (previously auto-enabled in local + debug) is now the **Control Panel** — opt-in via `->controlPanel()` in your configuration. Its purpose is configuration/previewing, not debugging, hence the rename. The old session key (`language-switch-debug`) has been replaced with `language-switch-control`. The control panel now supports a live / manual toggle via `->controlPanel(live: false)` — changes accumulate in the session and apply on a single click of Apply. Section layout changed from a four-column grid to an accordion that stays compact on mobile and desktop.
+v5 is backwards-compatible for the common case — if all you do is `->locales([...])` and optionally `->flags([...])`, your existing v4 configuration still works. Everything below is either an additive change or a small rename/signature tweak. No v4 setter was silently deleted; everything v4 could do, v5 can still do.
+
+### Signature changes (migrate these)
+
+| v4 | v5 |
+|---|---|
+| `->visible(insidePanels: true, outsidePanels: true)` | `->visible()` + `->visibleOutsidePanels()` |
+| `Placement::TopLeft` / `TopRight` | `Placement::TopStart` / `TopEnd` |
+| `Placement::BottomLeft` / `BottomRight` | `Placement::BottomStart` / `BottomEnd` |
+| `->outsidePanelPlacement(Placement::TopRight)` | `->outsidePanelPlacement(Placement::TopEnd)` — same enum, new case name, plus an optional second `PlacementMode` argument |
+
+`Placement::TopCenter` and `BottomCenter` keep their names. The `start`/`end` rename is for RTL awareness — the values auto-flip in right-to-left locales via CSS logical properties.
+
+### Default value changes
+
+| Setting | v4 default | v5 default | Why |
+|---|---|---|---|
+| `maxHeight` | `'max-content'` (no scroll) | `'18rem'` (scrollable) | Dropdowns with many locales stay usable; pass `->maxHeight('max-content')` to restore the v4 behavior |
+| `renderHook` | `'panels::global-search.after'` (always) | Context-aware: `GLOBAL_SEARCH_AFTER` when the panel has a topbar, `SIDEBAR_LOGO_AFTER` when it doesn't | Ships in the right place for both topbar and sidebar-only panels without manual config |
+| `outsidePanelsRenderHook` | `'panels::body.start'` (always) | Derived from placement + mode (see [Outside Panels](#outside-panels)) | In-flow modes live inside `.fi-simple-layout` so they don't extend body height |
+| `outsidePanelPlacement` | `Placement::TopRight` | `Placement::TopEnd` | Same position, RTL-aware name |
+
+### New capabilities in v5
+
+These are purely additive — v4 had none of them, and if you don't call the new methods, nothing changes.
+
+- **Trigger customization.** New `->trigger(style: TriggerStyle::..., icon: ...)` method backed by the `TriggerStyle` enum (`Icon`, `IconLabel`, `Avatar`, `AvatarLabel`, `Flag`, `FlagLabel`, `Label`). v4 had no equivalent — the trigger was always a language icon. See [Trigger](#trigger).
+- **Modal display mode.** New `->displayMode(DisplayMode::Modal)` plus `->modalHeading()`, `->modalWidth()`, `->modalSlideOver()`, `->modalIcon()`, `->modalIconColor()`, `->columns()`, `->flagHeight()`, `->avatarHeight()`. v4 only supported the dropdown. See [Display Modes](#display-modes).
+- **`PlacementMode` for outside panels.** The `outsidePanelPlacement()` setter now accepts an optional second argument — `PlacementMode::Static` (default, in document flow), `PlacementMode::Pinned` (CSS `position: fixed`, always visible during scroll), or `PlacementMode::Relative` (in flow but positioned for custom CSS offsets). v4's outside-panel rendering always pinned as a fixed overlay with no control over flow behavior.
+- **Auto-docking into the user menu.** When `Pinned` would collide with `.fi-simple-layout-header` (authed user on a simple profile page), v5 automatically routes to `USER_MENU_BEFORE` instead of fighting the header's `top-0 end-0` anchor. v4 had no awareness of this collision.
+- **Smart hook classification.** Every supported render hook is classified into a render context (`topbar`, `sidebar`, `user-menu`, `outside-panel`) that drives a matching trigger design — sidebar nav item style at `SIDEBAR_NAV_*`, dropdown list item style at `USER_MENU_PROFILE_*`, etc. v4 used the same single dropdown-trigger design at every hook.
+- **`->dropdownPlacement()`.** New method to control which direction the dropdown panel opens from the trigger (`bottom-end`, `top-start`, etc.). v4 had no equivalent.
+- **`<x-language-switch::inline />` Blade component.** Drop the switcher into any arbitrary location in your own views — a form section, a custom page, a sidebar widget. v4 had no way to manually embed the switcher; it could only appear at a render hook.
+- **Developer Control Panel.** Opt-in via `->controlPanel()` — a floating configurator that lets you hot-swap every setting live in the browser without editing your service provider. Supports a `live: false` mode for batched Apply. v4 had no equivalent.
+
+### Architectural refactor (internal — no user-facing impact)
+
+v4's `LanguageSwitch` class was monolithic (~40 methods in one file). v5 splits it into concerns: `HasLocales`, `HasAppearance`, `HasModal`, `HasVisibility`, `HasOutsidePanel`, `HasTriggerLayout`, `HasControlPanel`. The public API is preserved — this only matters if you were extending the class or reading the source.
 
 ## Changelog
 

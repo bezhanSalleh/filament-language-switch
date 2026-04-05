@@ -3,7 +3,7 @@
 ])
 
 @php
-    $key ??= 'fls-inline-' . md5((string) microtime(true));
+    $key ??= uniqid('fls-inline-', true);
 @endphp
 
 <livewire:language-switch-component :key="$key" />
