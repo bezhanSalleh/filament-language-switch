@@ -14,6 +14,7 @@ use Filament\Support\Facades\FilamentView;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Blade;
+use Str;
 
 class LanguageSwitch extends Component
 {
@@ -212,11 +213,11 @@ class LanguageSwitch extends Component
 
     public function getOutsidePanelRoutes(): array
     {
-        return (array) $this->evaluate(
-            collect($this->outsidePanelRoutes)
-                ->filter(fn ($route): bool => str($route)->contains(needles: 'profile') && $this->getCurrentPanel()->isProfilePageSimple())
-                ->toArray()
-        );
+        return collect((array) $this->evaluate($this->outsidePanelRoutes))
+            ->reject(fn (string $route): bool => str($route)->contains('profile')
+                && ! $this->getCurrentPanel()->isProfilePageSimple())
+            ->values()
+            ->toArray();
     }
 
     public function getExcludes(): array
@@ -302,7 +303,7 @@ class LanguageSwitch extends Component
         return $this->evaluate($this->visibleInsidePanels)
             && count($this->getLocales()) > 1
             && $this->isCurrentPanelIncluded()
-            && str(request()->route()?->getName())->doesntContain($this->getOutsidePanelRoutes());
+            && Str::of(request()->route()?->getName())->doesntContain($this->getOutsidePanelRoutes());
     }
 
     public function isVisibleOutsidePanels(): bool
