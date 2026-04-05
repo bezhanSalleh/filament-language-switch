@@ -171,14 +171,6 @@ FilamentIcon::register([
 ]);
 ```
 
-### Inline
-
-Renders the trigger as a menu item inside the user menu instead of a standalone button. Combine with `displayMode()` to pick what opens (dropdown or modal) when the item is clicked:
-
-```php
-$switch->inline();
-```
-
 ## Flags
 
 Associate each locale with a flag image:
@@ -293,8 +285,13 @@ When you don't set a render hook, the plugin picks the best one based on your pa
 | Panel Config | Default Hook | Where it appears |
 |---|---|---|
 | Topbar enabled | `GLOBAL_SEARCH_AFTER` | Topbar, after search bar |
-| Topbar disabled | `SIDEBAR_FOOTER` | Below the sidebar footer |
-| `inline()` | `USER_MENU_PROFILE_AFTER` | Inside user menu dropdown |
+| Topbar disabled | `SIDEBAR_LOGO_AFTER` | Sidebar header, next to the logo |
+
+To render inside the user menu as a menu item, set the render hook explicitly:
+
+```php
+$switch->renderHook(PanelsRenderHook::USER_MENU_PROFILE_AFTER);
+```
 
 ### Dropdown Placement
 
@@ -412,6 +409,7 @@ If you're coming from an earlier release of v5, a few APIs were consolidated:
 - `triggerStyle('flag-label')` → `trigger(style: TriggerStyle::FlagLabel)`
 - `triggerIcon(Heroicon::GlobeAlt)` → `trigger(icon: Heroicon::GlobeAlt)`
 - `charAvatarHeight('size-10')` → `avatarHeight('size-10')`
+- `inline()` was removed — use `renderHook(PanelsRenderHook::USER_MENU_PROFILE_AFTER)` (or `USER_MENU_PROFILE_BEFORE`) explicitly instead.
 - `contentView()`, `itemView()`, `triggerView()` were removed — publish the views instead (`php artisan vendor:publish --tag="filament-language-switch-views"`).
 
 ## Changelog

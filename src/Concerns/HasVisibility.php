@@ -49,19 +49,11 @@ trait HasVisibility
         return $hook ? (string) $hook : null;
     }
 
-    /**
-     * Smart detection of the best render hook based on panel configuration.
-     */
     public function getDefaultRenderHook(): string
     {
-        $panel = $this->getCurrentPanel();
-        $hasTopbar = $panel->hasTopbar();
-
-        return match (true) {
-            $this->isInline() => PanelsRenderHook::USER_MENU_PROFILE_AFTER,
-            ! $hasTopbar => PanelsRenderHook::SIDEBAR_FOOTER,
-            default => PanelsRenderHook::GLOBAL_SEARCH_AFTER,
-        };
+        return $this->getCurrentPanel()->hasTopbar()
+            ? PanelsRenderHook::GLOBAL_SEARCH_AFTER
+            : PanelsRenderHook::SIDEBAR_LOGO_AFTER;
     }
 
     /**
@@ -84,10 +76,6 @@ trait HasVisibility
         return array_key_exists($this->getCurrentPanel()->getId(), $this->getPanels());
     }
 
-    /**
-     * Determine the render context based on the active render hook and panel config.
-     * Delegates to HasTriggerLayout::classifyHook() which is the single source of truth.
-     */
     public function getRenderContext(): string
     {
         return $this->classifyHook(

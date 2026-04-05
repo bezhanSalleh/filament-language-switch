@@ -1,7 +1,6 @@
 @props(['layout'])
 
 @if ($layout->triggerShell === 'dropdown-list-item')
-    {{-- User menu variant --}}
     @if ($layout->contentType === 'flag' && $layout->isUrlFlag)
         <x-filament::dropdown.list.item
             :image="$layout->flagSrc"
@@ -30,7 +29,6 @@
         </x-filament::dropdown.list.item>
     @endif
 @else
-    {{-- Button variant: topbar + sidebar --}}
     <button
         type="button"
         aria-label="{{ $layout->currentLabel }}"
@@ -44,25 +42,16 @@
         {{
             $attributes->class([
                 'fi-ls-trigger',
-                // Topbar shell
                 'flex shrink-0 items-center h-9 gap-x-2 bg-gray-100 dark:bg-gray-800 transition duration-75 outline-none' => $layout->renderContext === 'topbar',
                 'w-9 justify-center' => $layout->renderContext === 'topbar' && ! $layout->hasLabel,
                 'px-3' => $layout->renderContext === 'topbar' && $layout->hasLabel,
                 'rounded-full' => $layout->renderContext === 'topbar' && $layout->isCircular,
                 'rounded-lg' => $layout->renderContext === 'topbar' && ! $layout->isCircular,
-                // Sidebar shell — nav area uses fi-sidebar-item-btn (matches Welcome, Dashboard),
-                // footer area uses fi-sidebar-database-notifications-btn (matches notifications, switch panels).
-                // w-full because the button is a flex item inside .fi-dropdown-trigger and wouldn't
-                // naturally fill the width the way Filament's <a> inside <li> does.
-                // Hover/focus classes are added explicitly because Filament's .fi-sidebar-item-btn
-                // hover CSS is scoped to .fi-sidebar-item.fi-sidebar-item-has-url > .fi-sidebar-item-btn,
-                // which requires an <li> parent wrapper we don't have.
                 'fi-sidebar-item-btn w-full hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5' => $layout->sidebarVariant === 'nav-item',
                 'fi-sidebar-database-notifications-btn' => $layout->sidebarVariant === 'footer-item',
             ])
         }}
     >
-        {{-- Visual content (omitted when contentType === 'label') --}}
         @if ($layout->hasVisual)
             @if ($layout->contentType === 'flag' && $layout->isUrlFlag)
                 <x-filament::avatar
@@ -83,7 +72,6 @@
                         ]), size: \Filament\Support\Enums\IconSize::Large)
                     }}
                 @elseif ($layout->sidebarVariant === 'footer-item')
-                    {{-- fi-sidebar-database-notifications-btn > .fi-icon already applies color from parent --}}
                     {{
                         \Filament\Support\generate_icon_html($layout->triggerIcon, 'language-switch::trigger', size: \Filament\Support\Enums\IconSize::Large)
                     }}
@@ -97,7 +85,6 @@
             @endif
         @endif
 
-        {{-- Label --}}
         @if ($layout->hasLabel)
             <span
                 @if ($layout->renderContext === 'sidebar')

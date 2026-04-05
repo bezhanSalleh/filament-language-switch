@@ -13,8 +13,6 @@ trait HasAppearance
 {
     protected bool | Closure $isCircular = false;
 
-    protected bool | Closure $isInline = false;
-
     protected DisplayMode | Closure $displayMode = DisplayMode::Dropdown;
 
     protected string | Closure | null $dropdownPlacement = null;
@@ -34,18 +32,6 @@ trait HasAppearance
     public function circular(bool | Closure $condition = true): static
     {
         $this->isCircular = $condition;
-
-        return $this;
-    }
-
-    /**
-     * Render the trigger as a menu item (user menu / sidebar nav item)
-     * instead of a standalone button. The display mode (dropdown/modal)
-     * controls what opens when the trigger is clicked.
-     */
-    public function inline(bool | Closure $condition = true): static
-    {
-        $this->isInline = $condition;
 
         return $this;
     }
@@ -83,11 +69,6 @@ trait HasAppearance
         return (bool) $this->evaluate($this->isCircular);
     }
 
-    public function isInline(): bool
-    {
-        return (bool) $this->evaluate($this->isInline);
-    }
-
     public function getDisplayMode(): DisplayMode
     {
         return $this->evaluate($this->displayMode);
@@ -108,10 +89,6 @@ trait HasAppearance
         return (string) $this->evaluate($this->maxHeight);
     }
 
-    /**
-     * Set the flag height class for modal flagsOnly cards.
-     * Default: 'h-16'. Examples: 'h-12', 'h-20', 'h-24'.
-     */
     public function flagHeight(string | Closure $height): static
     {
         $this->flagHeight = $height;
@@ -124,10 +101,6 @@ trait HasAppearance
         return (string) $this->evaluate($this->flagHeight);
     }
 
-    /**
-     * Set the avatar size class for modal cards.
-     * Default: 'size-8'. Examples: 'size-10', 'size-12'.
-     */
     public function avatarHeight(string | Closure $height): static
     {
         $this->avatarHeight = $height;
@@ -140,14 +113,6 @@ trait HasAppearance
         return (string) $this->evaluate($this->avatarHeight);
     }
 
-    /**
-     * Configure the trigger's style and/or icon in a single call.
-     *
-     * Examples:
-     *   $switch->trigger(style: TriggerStyle::Flag);
-     *   $switch->trigger(style: TriggerStyle::IconLabel, icon: Heroicon::GlobeAlt);
-     *   $switch->trigger(icon: 'phosphor-translate');
-     */
     public function trigger(
         TriggerStyle | Closure | null $style = null,
         string | Heroicon | Closure | null $icon = null,

@@ -49,11 +49,7 @@ trait HasTriggerLayout
     }
 
     /**
-     * Single source of truth: given a render hook, return its layout requirements.
-     *
-     * Uses explicit PanelsRenderHook constants to avoid substring ambiguity.
-     *
-     * @return array{inSidebar: bool, context: string, placement: string, spacingKey: string, hideWhenCollapsed: bool}
+     * @return array<string, bool|string|null>
      */
     protected function classifyHook(string $hook, bool $hasTopbar): array
     {
@@ -97,9 +93,6 @@ trait HasTriggerLayout
             default => 'bottom-end',
         };
 
-        // User menu before/after spacing only applies when topbar is on
-        // (topbar user menu is tight — needs -me-2/-ms-2). When topbar is off
-        // the hook renders in .fi-sidebar-footer which already has its own spacing.
         $spacingKey = match ($hook) {
             PanelsRenderHook::SIDEBAR_NAV_START, PanelsRenderHook::SIDEBAR_NAV_END => 'sidebar-nav',
             PanelsRenderHook::TOPBAR_START, PanelsRenderHook::TOPBAR_END => 'topbar-edge',
@@ -108,14 +101,9 @@ trait HasTriggerLayout
             default => 'none',
         };
 
-        // Which sidebar button variant to use (matches the surrounding Filament components)
         $sidebarVariant = match ($context) {
             'sidebar' => match (true) {
-                // User menu hooks (when topbar is off): use fi-sidebar-database-notifications-btn
-                // (matches notifications, switch panels — sits in the footer area)
                 in_array($hook, $userMenuOuterHooks, true) => 'footer-item',
-                // All other sidebar hooks (nav start/end, footer, start): use fi-sidebar-item-btn
-                // (matches Welcome, Dashboard, and the rest of the nav items)
                 default => 'nav-item',
             },
             default => null,
@@ -123,6 +111,13 @@ trait HasTriggerLayout
 
         $hideWhenCollapsed = in_array($hook, $sidebarLogoHooks, true);
 
-        return ['inSidebar' => $inSidebar, 'context' => $context, 'placement' => $placement, 'spacingKey' => $spacingKey, 'sidebarVariant' => $sidebarVariant, 'hideWhenCollapsed' => $hideWhenCollapsed];
+        return [
+            'inSidebar' => $inSidebar,
+            'context' => $context,
+            'placement' => $placement,
+            'spacingKey' => $spacingKey,
+            'sidebarVariant' => $sidebarVariant,
+            'hideWhenCollapsed' => $hideWhenCollapsed,
+        ];
     }
 }
