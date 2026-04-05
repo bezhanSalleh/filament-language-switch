@@ -77,13 +77,11 @@ trait HasDeprecatedOutsidePanel
      */
     public function getOutsidePanelRoutes(): array
     {
-        return (array) $this->evaluate(
-            $this->outsidePanelRoutes ?? [
-                'auth.login',
-                'auth.profile',
-                'auth.register',
-            ]
-        );
+        return collect((array) $this->evaluate($this->outsidePanelRoutes))
+            ->reject(fn (string $route): bool => str($route)->contains('profile')
+                && ! $this->getCurrentPanel()->isProfilePageSimple())
+            ->values()
+            ->toArray();
     }
 
     /**
