@@ -10,6 +10,8 @@ use BezhanSalleh\LanguageSwitch\Http\Livewire\LanguageSwitchDebugPanel;
 use BezhanSalleh\LanguageSwitch\Http\Middleware\SwitchLanguageLocale;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationBuilder;
+use Filament\Navigation\NavigationItem;
 use Filament\Panel;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
@@ -73,13 +75,13 @@ class LanguageSwitchServiceProvider extends PackageServiceProvider
 
         LanguageSwitch::configureUsing(function (LanguageSwitch $switch): void {
             $overrides = session('language-switch-debug', []);
-
+            $panel = filament()->getCurrentOrDefaultPanel();
             if (empty($overrides)) {
                 return;
             }
 
             if (isset($overrides['topbar'])) {
-                filament()->getCurrentOrDefaultPanel()->topbar((bool) $overrides['topbar']);
+                $panel->topbar((bool) $overrides['topbar']);
             }
 
             if (isset($overrides['displayMode'])) {
