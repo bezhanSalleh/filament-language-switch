@@ -17,7 +17,7 @@ trait HasOutsidePanel
 
     protected Placement | Closure $outsidePanelPlacement = Placement::TopEnd;
 
-    protected PlacementMode | Closure $outsidePanelPlacementMode = PlacementMode::Fixed;
+    protected PlacementMode | Closure $outsidePanelPlacementMode = PlacementMode::Static;
 
     protected string | Closure | null $outsidePanelsRenderHook = null;
 
@@ -89,7 +89,7 @@ trait HasOutsidePanel
     {
         $mode = $this->evaluate($this->outsidePanelPlacementMode);
 
-        return $mode instanceof PlacementMode ? $mode : PlacementMode::Fixed;
+        return $mode instanceof PlacementMode ? $mode : PlacementMode::Static;
     }
 
     public function getOutsidePanelsRenderHook(): string
@@ -103,14 +103,36 @@ trait HasOutsidePanel
         $placement = $this->getOutsidePanelPlacement();
         $mode = $this->getOutsidePanelPlacementMode();
 
-        if ($mode === PlacementMode::Fixed
+        // Pinned + TopEnd + authed user menu → dock into user menu to avoid collision
+        // with .fi-simple-layout-header (also anchored at top-0 end-0).
+        if ($mode === PlacementMode::Pinned
             && $placement === Placement::TopEnd
             && $this->shouldDockIntoSimpleLayoutUserMenu()
         ) {
             return PanelsRenderHook::USER_MENU_BEFORE;
         }
 
-        return $placement->anchorHook();
+        return $this->defaultOutsidePanelAnchorHook($placement, $mode);
+    }
+
+    protected function defaultOutsidePanelAnchorHook(Placement $placement, PlacementMode $mode): string
+    {
+        $isTop = $placement->isTop();
+
+        // Pinned elements use position: fixed — body hooks give them a direct-body-child
+        // parent, which is the most reliable containing block for fixed positioning.
+        if ($mode === PlacementMode::Pinned) {
+            return $isTop
+                ? PanelsRenderHook::BODY_START
+                : PanelsRenderHook::BODY_END;
+        }
+
+        // Static + Relative are in document flow. Anchor them inside .fi-simple-layout
+        // (min-h-dvh flex-col) so they share the viewport with the form card instead of
+        // extending the body height.
+        return $isTop
+            ? PanelsRenderHook::SIMPLE_LAYOUT_START
+            : PanelsRenderHook::SIMPLE_LAYOUT_END;
     }
 
     protected function shouldDockIntoSimpleLayoutUserMenu(): bool

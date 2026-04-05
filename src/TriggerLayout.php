@@ -34,7 +34,5 @@ final readonly class TriggerLayout
         public string | Heroicon $triggerIcon,
         public ?Placement $outsidePanelPlacement = null,
         public ?PlacementMode $outsidePanelPlacementMode = null,
-        public ?string $outsidePanelPositionClasses = null,
-        public ?string $outsidePanelSelfAlignClass = null,
     ) {}
 }

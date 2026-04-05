@@ -6,9 +6,9 @@ namespace BezhanSalleh\LanguageSwitch\Enums;
 
 enum PlacementMode: string
 {
-    case Fixed = 'fixed';
+    case Pinned = 'pinned';
 
-    case Sticky = 'sticky';
+    case Static = 'static';
 
     case Relative = 'relative';
 }

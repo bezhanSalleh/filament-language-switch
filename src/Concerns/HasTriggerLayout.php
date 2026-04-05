@@ -12,13 +12,13 @@ trait HasTriggerLayout
     public function getTriggerLayout(): TriggerLayout
     {
         $hook = $this->getResolvedRenderHook();
-        $isSimpleLayoutContext = $this->isVisibleOutsidePanels();
-        $hasTopbar = $isSimpleLayoutContext
+        $isOutsidePanel = $this->isVisibleOutsidePanels();
+        $hasTopbar = $isOutsidePanel
             ? true
             : $this->getCurrentPanel()->hasTopbar();
         $isSidebarCollapsibleOnDesktop = filament()->isSidebarCollapsibleOnDesktop();
 
-        $classification = $this->classifyHook($hook, $hasTopbar);
+        $classification = $this->classifyHook($hook, $hasTopbar, $isOutsidePanel);
 
         $style = $this->getTriggerStyle();
         $contentType = $style->visual();
@@ -54,15 +54,13 @@ trait HasTriggerLayout
             triggerIcon: $this->getTriggerIcon(),
             outsidePanelPlacement: $outsidePanelPlacement,
             outsidePanelPlacementMode: $outsidePanelPlacementMode,
-            outsidePanelPositionClasses: $outsidePanelPlacement?->toPositionClasses(),
-            outsidePanelSelfAlignClass: $outsidePanelPlacement?->toSelfAlignClass(),
         );
     }
 
     /**
      * @return array<string, bool|string|null>
      */
-    protected function classifyHook(string $hook, bool $hasTopbar): array
+    protected function classifyHook(string $hook, bool $hasTopbar, bool $isOutsidePanel = false): array
     {
         $sidebarLogoHooks = [
             PanelsRenderHook::SIDEBAR_LOGO_BEFORE,
@@ -87,6 +85,8 @@ trait HasTriggerLayout
         ];
 
         $outsidePanelHooks = [
+            PanelsRenderHook::BODY_START,
+            PanelsRenderHook::BODY_END,
             PanelsRenderHook::SIMPLE_LAYOUT_START,
             PanelsRenderHook::SIMPLE_LAYOUT_END,
         ];
@@ -97,7 +97,7 @@ trait HasTriggerLayout
             || (in_array($hook, $userMenuProfileHooks, true) && ! $hasTopbar);
 
         $context = match (true) {
-            in_array($hook, $outsidePanelHooks, true) => 'outside-panel',
+            $isOutsidePanel && in_array($hook, $outsidePanelHooks, true) => 'outside-panel',
             in_array($hook, $sidebarLogoHooks, true) => 'topbar',
             in_array($hook, $sidebarBodyHooks, true) => 'sidebar',
             in_array($hook, $userMenuProfileHooks, true) => 'user-menu',
@@ -105,9 +105,10 @@ trait HasTriggerLayout
             default => 'topbar',
         };
 
-        $placement = match ($context) {
-            'sidebar' => 'top-end',
-            'outside-panel' => $hook === PanelsRenderHook::SIMPLE_LAYOUT_END ? 'top-end' : 'bottom-end',
+        $placement = match (true) {
+            $context === 'sidebar' => 'top-end',
+            $context === 'outside-panel' && in_array($hook, [PanelsRenderHook::BODY_END, PanelsRenderHook::SIMPLE_LAYOUT_END], true) => 'top-end',
+            $context === 'outside-panel' => 'bottom-end',
             default => 'bottom-end',
         };
 

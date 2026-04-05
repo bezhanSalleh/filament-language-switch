@@ -5,7 +5,12 @@
     $wrapperClass = '[&_.fi-input-wrp]:h-8! [&_.fi-input-wrp]:min-h-0!';
     $selectClass = 'text-xs! py-1!';
     $inputFieldClass = 'text-xs! py-1!';
-    $toggleClass = 'items-center h-5 w-9 [&>:first-child]:size-3.5! [&.fi-toggle-on>:first-child]:translate-x-4! [&.fi-toggle-off>:first-child]:translate-x-0.5! [&.fi-toggle-on>:first-child]:rtl:-translate-x-4! [&.fi-toggle-off>:first-child]:rtl:-translate-x-0.5!';
+    // LTR-only overrides with !important. The debug panel forces dir="ltr" on its root,
+    // so only LTR knob positions apply. rtl: variants are intentionally omitted because
+    // Tailwind's rtl: selector matches via [dir=rtl] * (any ancestor), which breaks the
+    // dir=ltr override inside an RTL app. Filament's own rtl: base rules have no !important
+    // so our LTR overrides win in all directions.
+    $toggleClass = 'items-center h-5 w-9 [&>:first-child]:size-3.5! [&.fi-toggle-on>:first-child]:translate-x-4! [&.fi-toggle-off>:first-child]:translate-x-0.5!';
 @endphp
 
 <div
@@ -214,8 +219,8 @@
                     <span class="{{ $labelClass }}">Mode</span>
                     <x-filament::input.wrapper :disabled="! $outsidePanels">
                         <x-filament::input.select class="{{ $selectClass }}" wire:model.live="outsidePanelPlacementMode" :disabled="! $outsidePanels">
-                            <option value="fixed">Fixed</option>
-                            <option value="sticky">Sticky</option>
+                            <option value="static">Static (default)</option>
+                            <option value="pinned">Pinned</option>
                             <option value="relative">Relative</option>
                         </x-filament::input.select>
                     </x-filament::input.wrapper>
@@ -225,12 +230,8 @@
                     <span class="{{ $labelClass }}">Render Hook</span>
                     <x-filament::input.wrapper :disabled="! $outsidePanels">
                         <x-filament::input.select class="{{ $selectClass }}" wire:model.live="outsidePanelsRenderHook" :disabled="! $outsidePanels">
-                            <option value="">Auto (from placement)</option>
-                            <optgroup label="Simple Layout">
-                                <option value="panels::simple-layout.start">Simple Layout Start</option>
-                                <option value="panels::simple-layout.end">Simple Layout End</option>
-                            </optgroup>
-                            <optgroup label="User Menu">
+                            <option value="">Auto (from placement + mode)</option>
+                            <optgroup label="Dock into user menu">
                                 <option value="panels::user-menu.before">Before</option>
                                 <option value="panels::user-menu.after">After</option>
                                 <option value="panels::user-menu.profile.before">Profile Before</option>

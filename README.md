@@ -19,6 +19,27 @@
 
 Zero-config language switching for Filament Panels. Drop it in, provide your locales, and you're done. The plugin auto-detects your panel layout and renders in the right place with the right design — topbar icon button, sidebar nav item, user menu item — without any manual wiring.
 
+## Table of Contents
+
+- [Compatibility](#compatibility)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Display Modes](#display-modes)
+- [Trigger](#trigger)
+- [Flags](#flags)
+- [Labels](#labels)
+- [Appearance](#appearance)
+- [Placement](#placement)
+- [Outside Panels](#outside-panels)
+- [Inline Embedding](#inline-embedding-in-custom-pages)
+- [Panel Exclusion](#panel-exclusion)
+- [User Preferred Locale](#user-preferred-locale)
+- [Customization](#customization)
+- [Event](#event)
+- [Debug Panel](#debug-panel)
+- [Full Example](#full-example)
+- [Upgrading](#upgrading)
+
 ## Compatibility
 
 | Package | Filament |
@@ -67,7 +88,7 @@ That's it. The switch appears in your topbar automatically. When the panel has n
 
 ### Dropdown (default)
 
-The trigger opens a dropdown with your locales. The list is scrollable by default (`max-height: 24rem`), so it stays usable with many locales:
+The trigger opens a dropdown with your locales. The list is scrollable by default (`max-height: 18rem`), so it stays usable with many locales:
 
 ```php
 $switch->locales(['en', 'fr', 'ar']);
@@ -306,7 +327,7 @@ $switch->dropdownPlacement('top-end');
 
 ### Max Height
 
-The dropdown is scrollable by default (`24rem`). Override it for a different limit, or pass `'max-content'` to disable scrolling:
+The dropdown is scrollable by default (`18rem`). Override it for a different limit, or pass `'max-content'` to disable scrolling:
 
 ```php
 $switch->maxHeight('30rem');
@@ -325,7 +346,7 @@ $switch
     ->outsidePanelPlacement(Placement::TopEnd);
 ```
 
-The switcher renders as a floating button anchored to one of six positions. `Placement` values are RTL-aware — `start`/`end` auto-flip for right-to-left locales:
+By default the switcher renders as a content-sized pill anchored to the chosen `Placement`. All six placements are RTL-aware — `start`/`end` auto-flip for right-to-left locales:
 
 | Placement | Position |
 |---|---|
@@ -338,43 +359,22 @@ The switcher renders as a floating button anchored to one of six positions. `Pla
 
 ### Placement mode
 
-`outsidePanelPlacement()` accepts an optional second argument that controls **how** the switcher is attached to the page:
+`outsidePanelPlacement()` accepts an optional second argument that controls **how** the switcher is attached to the page. Three modes, each with predictable CSS semantics — the names are chosen so they match what you'd read in the published view:
 
 ```php
 use BezhanSalleh\LanguageSwitch\Enums\Placement;
 use BezhanSalleh\LanguageSwitch\Enums\PlacementMode;
 
-$switch->outsidePanelPlacement(Placement::TopCenter, PlacementMode::Relative);
+$switch->outsidePanelPlacement(Placement::TopCenter, PlacementMode::Pinned);
 ```
 
-| Mode | Behavior |
-|---|---|
-| `PlacementMode::Fixed` *(default)* | `position: fixed` overlay — stays put on scroll |
-| `PlacementMode::Sticky` | `position: sticky` — scrolls with the page until it hits the anchor edge, then sticks |
-| `PlacementMode::Relative` | Natural document flow — renders inline inside `.fi-simple-layout` (above the form when using a `Top*` placement, below it when using a `Bottom*` placement). Horizontal axis (`Start` / `Center` / `End`) maps to `self-start` / `self-center` / `self-end` |
+| Mode | CSS | Behavior |
+|---|---|---|
+| **`PlacementMode::Static`** *(default)* | `position: static` | Renders **in the document flow** inside `.fi-simple-layout`, above the form card for `Top*` placements or below it for `Bottom*`. Scrolls with the page. Content-sized pill aligned horizontally via `w-fit` + `mx-auto` / `ms-auto`. |
+| **`PlacementMode::Pinned`** | `position: fixed` | **Stays visible while scrolling** — pinned to the viewport at the chosen corner/edge as a content-sized pill. Use this when the switcher should always be reachable (e.g. long registration forms). |
+| **`PlacementMode::Relative`** | `position: relative` | Same visual as `Static` out of the box, but the element is **positioned**, so you can offset it via custom CSS (`top: 1rem`, `inset-inline-start: 2rem`, etc.) in your theme file without publishing the view. |
 
-Use `Relative` when you want the switcher to push the form card down rather than overlay it, or when you'd rather inline it than float it.
-
-### Auto-docking into the user menu
-
-When all of these are true, `TopEnd` **automatically docks into the user menu** via `USER_MENU_BEFORE` instead of anchoring as a floating overlay:
-
-- `PlacementMode::Fixed`
-- The current route is in the outside-panel list (e.g. a simple profile page)
-- The user is authenticated
-- The panel has a user menu (`->userMenu()`)
-
-This avoids the collision between the floating overlay and Filament's own `.fi-simple-layout-header` (also anchored at `top-0 end-0`). To force a floating overlay regardless, either switch to `PlacementMode::Relative` or pin a different hook explicitly:
-
-```php
-// Force floating overlay even when a user menu is present
-$switch
-    ->outsidePanelPlacement(Placement::TopEnd)
-    ->outsidePanelsRenderHook(\Filament\View\PanelsRenderHook::SIMPLE_LAYOUT_START);
-
-// Or render as an item inside the user menu dropdown itself
-$switch->outsidePanelsRenderHook(\Filament\View\PanelsRenderHook::USER_MENU_PROFILE_AFTER);
-```
+> **Naming note:** we use `Pinned` instead of `Fixed` on purpose. In CSS, `position: fixed` means "always visible, stays on screen during scroll" — which in the dev brain is usually called "sticky". To avoid that collision every time someone opens the blade file, the mode is named after the *intent* (`Pinned` = pinned to viewport), while `Static` and `Relative` use the literal CSS names because those map 1:1 to their CSS behavior.
 
 ### Which routes it shows on
 
@@ -391,12 +391,69 @@ $switch->outsidePanelRoutes([
 
 The default list is `['auth.login', 'auth.profile', 'auth.register']`. The profile route is automatically excluded from the match unless the current panel uses a simple profile page (`->profile(isSimple: true)`), since a full-layout profile page already has a topbar/sidebar where the switcher lives.
 
-### Render hook anchor
+### Render hook anchor (auto-derived)
 
-The floating button is anchored to `SIMPLE_LAYOUT_START` for top placements and `SIMPLE_LAYOUT_END` for bottom placements — derived automatically from the placement you pick. If you need to anchor to a different hook in the simple layout, override it:
+The anchor hook is derived from **both** the placement and the mode — you don't pick it manually:
+
+| Mode | Top placement | Bottom placement | Why |
+|---|---|---|---|
+| `Pinned` | `BODY_START` | `BODY_END` | Pinned uses `position: fixed`, so the element needs a parent that gives reliable viewport-relative positioning. Direct body child is ideal — no flex-parent or transform containing block in the ancestor chain. |
+| `Static` / `Relative` | `SIMPLE_LAYOUT_START` | `SIMPLE_LAYOUT_END` | In-flow elements are anchored **inside `.fi-simple-layout`** (which is `min-h-dvh flex-col`). This way the element shares the viewport with the centered form card instead of extending the body height and adding an unwanted page scroll. |
+
+You can still override explicitly — pass any hook name to `outsidePanelsRenderHook()`:
 
 ```php
-$switch->outsidePanelsRenderHook(\Filament\View\PanelsRenderHook::SIMPLE_LAYOUT_START);
+use Filament\View\PanelsRenderHook;
+
+// Dock as a profile item inside the user menu dropdown
+$switch->outsidePanelsRenderHook(PanelsRenderHook::USER_MENU_PROFILE_AFTER);
+
+// Or force body-level anchoring for an in-flow mode
+$switch
+    ->outsidePanelPlacement(Placement::BottomCenter, PlacementMode::Static)
+    ->outsidePanelsRenderHook(PanelsRenderHook::BODY_END);
+```
+
+### Auto-docking into the user menu
+
+When **all** of these are true, `TopEnd` **automatically docks into the user menu** via `USER_MENU_BEFORE` instead of anchoring as a pinned overlay:
+
+- `PlacementMode::Pinned`
+- The current route is in the outside-panel list (e.g. a simple profile page)
+- The user is authenticated
+- The panel has a user menu
+
+This avoids the collision between the pinned pill and Filament's own `.fi-simple-layout-header` (also anchored at `top-0 end-0`). `Static` and `Relative` modes don't trigger auto-docking because they're in flow and can't collide with the header.
+
+To force a pinned overlay regardless, pin a different hook explicitly:
+
+```php
+use Filament\View\PanelsRenderHook;
+
+// Force a body-start overlay even when a user menu is present
+$switch
+    ->outsidePanelPlacement(Placement::TopEnd, PlacementMode::Pinned)
+    ->outsidePanelsRenderHook(PanelsRenderHook::BODY_START);
+```
+
+## Inline embedding in custom pages
+
+`visibleOutsidePanels()` handles the standard auth pages automatically. If you have a custom page, a form section, or any arbitrary location where you want the switcher inline — independent of the outside-panel machinery — drop in the Blade component:
+
+```blade
+<x-filament-language-switch::inline />
+```
+
+It renders the same Livewire component and respects all your usual config (trigger style, flags, display mode, circular, etc.) — the only difference is the placement. The render hook system isn't involved; the component lives exactly where you put it in the view.
+
+You can use it alongside `->visibleOutsidePanels()` (auto-rendering on standard auth pages **and** manual embed on a custom page) or instead of it (pure manual placement only).
+
+If you're rendering it in multiple places on the same page, pass a unique key:
+
+```blade
+<x-filament-language-switch::inline key="switch-header" />
+...
+<x-filament-language-switch::inline key="switch-footer" />
 ```
 
 ## Panel Exclusion
@@ -448,17 +505,14 @@ Event::listen(function (LocaleChanged $event) {
 
 ## Debug Panel
 
-When `APP_DEBUG=true` and `APP_ENV=local`, a floating configurator appears in the bottom-right corner. It lets you hot-swap every configuration option live in the browser:
+When `APP_DEBUG=true` and `APP_ENV=local`, a floating configurator appears in the bottom-right corner. It lets you hot-swap every configuration option live in the browser, organized into four columns:
 
-- Toggle topbar on/off to test both layouts
-- Switch between display modes, trigger styles, render hooks
-- Toggle flags, circular, native labels
-- Adjust modal width, columns, slide-over
-- Toggle outside panels + pick a placement
-- Change trigger icon
-- Reset returns to your configured defaults
+- **Trigger** — topbar on/off, trigger style, trigger icon, render hook
+- **Display** — dropdown / modal mode, modal width, columns, slide-over
+- **Appearance** — circular, native labels, use flags, flags only
+- **Outside Panels** — enable toggle, placement, placement mode (`Pinned` / `Static` / `Relative`), and an explicit render hook override (defaults to auto, with user-menu docking targets as alternatives)
 
-No code changes needed — just click and test.
+A **Reset** button in the header clears every override and restores your configured defaults. No code changes needed — just click and test.
 
 ## Full Example
 
@@ -499,11 +553,14 @@ If you're coming from an earlier release of v5, a few APIs were consolidated:
 - `triggerStyle('flag-label')` → `trigger(style: TriggerStyle::FlagLabel)`
 - `triggerIcon(Heroicon::GlobeAlt)` → `trigger(icon: Heroicon::GlobeAlt)`
 - `charAvatarHeight('size-10')` → `avatarHeight('size-10')`
-- `inline()` was removed — use `renderHook(PanelsRenderHook::USER_MENU_PROFILE_AFTER)` (or `USER_MENU_PROFILE_BEFORE`) explicitly instead.
+- The old `inline()` PHP setter method (which was a shortcut for rendering inside the user menu) was removed — use `renderHook(PanelsRenderHook::USER_MENU_PROFILE_AFTER)` explicitly for that behavior. Not to be confused with the new `<x-filament-language-switch::inline />` Blade component, which is a different feature for arbitrary inline embedding in your own views.
 - `contentView()`, `itemView()`, `triggerView()` were removed — publish the views instead (`php artisan vendor:publish --tag="filament-language-switch-views"`).
 - `visible(insidePanels: true, outsidePanels: true)` → `visible()` + `visibleOutsidePanels()` (the two-argument form is gone).
 - `Placement` enum cases renamed for RTL awareness: `TopLeft` → `TopStart`, `TopRight` → `TopEnd`, `BottomLeft` → `BottomStart`, `BottomRight` → `BottomEnd` (centers unchanged).
 - Outside-panel support is no longer deprecated — `visibleOutsidePanels()`, `outsidePanelRoutes()`, `outsidePanelPlacement()`, and `outsidePanelsRenderHook()` are first-class again.
+- `PlacementMode` has three cases with clear CSS-aligned semantics: `Pinned` (CSS `position: fixed`, always visible during scroll), `Static` (CSS `position: static`, in flow — **new default**), `Relative` (CSS `position: relative`, in flow but positioned for custom CSS offsets). The old `Fixed` / `Sticky` names have been removed — `Pinned` is the replacement for the "always visible" behavior, and `Static` is the new in-flow default.
+- The outside-panel anchor hook is now **mode-aware**: `Pinned` resolves to `BODY_START` / `BODY_END`, while `Static` and `Relative` resolve to `SIMPLE_LAYOUT_START` / `SIMPLE_LAYOUT_END` so in-flow elements share the viewport with the form card instead of extending body height. All derived from the placement's vertical axis. Explicit override via `outsidePanelsRenderHook()` still works.
+- New `<x-filament-language-switch::inline />` Blade component for inline embedding in custom pages, independent of the outside-panel system.
 
 ## Changelog
 

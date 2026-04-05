@@ -19,7 +19,7 @@ trait HasAppearance
 
     protected int | Closure $columns = 1;
 
-    protected string | Closure $maxHeight = '24rem';
+    protected string | Closure $maxHeight = '18rem';
 
     protected string | Closure $flagHeight = 'h-16';
 

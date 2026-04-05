@@ -39,7 +39,7 @@ class LanguageSwitchDebugPanel extends Component
 
     public string $outsidePanelPlacement = 'top-end';
 
-    public string $outsidePanelPlacementMode = 'fixed';
+    public string $outsidePanelPlacementMode = 'static';
 
     public string $outsidePanelsRenderHook = '';
 
@@ -55,6 +55,31 @@ class LanguageSwitchDebugPanel extends Component
             if (property_exists($this, $key)) {
                 $this->{$key} = $value;
             }
+        }
+
+        $validOutsidePanelsRenderHooks = [
+            '',
+            'panels::user-menu.before',
+            'panels::user-menu.after',
+            'panels::user-menu.profile.before',
+            'panels::user-menu.profile.after',
+        ];
+
+        if (! in_array($this->outsidePanelsRenderHook, $validOutsidePanelsRenderHooks, true)) {
+            $this->outsidePanelsRenderHook = '';
+            session()->put('language-switch-debug', array_merge($overrides, [
+                'outsidePanelsRenderHook' => '',
+            ]));
+        }
+
+        $validPlacementModes = ['pinned', 'static', 'relative'];
+
+        if (! in_array($this->outsidePanelPlacementMode, $validPlacementModes, true)) {
+            $this->outsidePanelPlacementMode = 'static';
+            session()->put('language-switch-debug', array_merge(
+                session('language-switch-debug', []),
+                ['outsidePanelPlacementMode' => 'static'],
+            ));
         }
     }
 
