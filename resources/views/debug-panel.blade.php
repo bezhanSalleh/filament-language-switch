@@ -99,6 +99,7 @@
                                 <option value="panels::sidebar.logo.after">Logo After</option>
                                 <option value="panels::sidebar.nav.start">Nav Start</option>
                                 <option value="panels::sidebar.nav.end">Nav End</option>
+                                <option value="panels::sidebar.start">Header</option>
                                 <option value="panels::sidebar.footer">Footer</option>
                             </optgroup>
                             <optgroup label="User Menu">

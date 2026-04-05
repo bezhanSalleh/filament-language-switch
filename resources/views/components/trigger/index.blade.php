@@ -89,76 +89,44 @@
             @break
 
         @default
-            {{-- Topbar + sidebar logo --}}
-            @if ($hasLabel)
-                <button
-                    type="button"
-                    aria-label="{{ $currentLabel }}"
-                    @if ($isInSidebarLogo && $isSidebarCollapsibleOnDesktop)
-                        x-show="$store.sidebar.isOpen"
-                        x-cloak
-                    @endif
-                    {{
-                        $attributes->class([
-                            'fi-ls-trigger flex shrink-0 items-center gap-x-2 rounded-lg px-3 py-2 outline-none transition duration-75',
-                            'text-gray-500 hover:text-gray-700 hover:bg-gray-50 focus-visible:bg-gray-50',
-                            'dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-white/5 dark:focus-visible:bg-white/5',
-                        ])
-                    }}
-                >
-                    @if ($isUrlFlag)
-                        <x-filament::avatar :src="$flagSrc" :alt="$currentLabel" size="sm" :circular="$isCircular" />
-                    @elseif ($baseStyle === 'avatar')
-                        <span class="flex size-5 items-center justify-center shrink-0 rounded bg-primary-50 font-semibold text-xs text-primary-600 dark:bg-primary-400/10 dark:text-primary-400">
-                            {{ str($currentLocale)->length() > 2 ? str($currentLocale)->substr(0, 2)->upper() : str($currentLocale)->upper() }}
-                        </span>
-                    @else
-                        {{ \Filament\Support\generate_icon_html($triggerIcon, 'language-switch::trigger') }}
-                    @endif
-                    <span class="text-sm font-medium">{{ $currentLabel }}</span>
-                </button>
-            @elseif ($isVisual)
-                <button
-                    type="button"
-                    aria-label="{{ $currentLabel }}"
+            {{-- Topbar + sidebar logo: unified button design --}}
+            <button
+                type="button"
+                aria-label="{{ $currentLabel }}"
+                @unless ($hasLabel)
                     x-tooltip="{ content: @js($currentLabel), theme: $store.theme }"
-                    @if ($isInSidebarLogo && $isSidebarCollapsibleOnDesktop)
-                        x-show="$store.sidebar.isOpen"
-                        x-cloak
-                    @endif
-                    {{
-                        $attributes->class([
-                            'fi-icon-btn fi-ls-trigger',
-                            'rounded-full!' => $isCircular,
-                            'bg-gray-100 dark:bg-gray-800',
-                        ])
-                    }}
-                    style="min-width: 36px;"
-                >
-                    @if ($isUrlFlag)
-                        <x-filament::avatar :src="$flagSrc" :alt="$currentLabel" size="sm" :circular="$isCircular" />
-                    @else
-                        <span class="flex size-6 items-center justify-center shrink-0 font-semibold text-sm text-primary-500 dark:text-primary-400">
-                            {{ str($currentLocale)->length() > 2 ? str($currentLocale)->substr(0, 2)->upper() : str($currentLocale)->upper() }}
-                        </span>
-                    @endif
-                </button>
-            @else
-                <x-filament::icon-button
-                    :icon="$triggerIcon"
-                    icon-alias="language-switch::trigger"
-                    :tooltip="$currentLabel"
-                    :label="$currentLabel"
-                    :attributes="$attributes->merge([
-                        'x-show' => ($isInSidebarLogo && $isSidebarCollapsibleOnDesktop) ? '$store.sidebar.isOpen' : false,
-                        'x-cloak' => ($isInSidebarLogo && $isSidebarCollapsibleOnDesktop) ? '' : false,
-                        'style' => 'min-width: 36px;',
-                    ])->class([
-                        'fi-ls-trigger',
+                @endunless
+                @if ($isInSidebarLogo && $isSidebarCollapsibleOnDesktop)
+                    x-show="$store.sidebar.isOpen"
+                    x-cloak
+                @endif
+                {{
+                    $attributes->class([
+                        'fi-ls-trigger flex shrink-0 items-center gap-x-2 bg-gray-100 dark:bg-gray-800 transition duration-75 outline-none',
+                        'h-9 px-3' => $hasLabel,
+                        'size-9 justify-center' => ! $hasLabel,
                         'rounded-full!' => $isCircular,
-                        'bg-gray-100 dark:bg-gray-800',
-                    ])"
-                />
-            @endif
+                        'rounded-lg' => ! $isCircular,
+                    ])
+                }}
+            >
+                @if ($isUrlFlag)
+                    <x-filament::avatar :src="$flagSrc" :alt="$currentLabel" size="sm" :circular="$isCircular" />
+                @elseif ($baseStyle === 'avatar')
+                    <span class="flex size-5 items-center justify-center shrink-0 font-semibold text-xs text-primary-500 dark:text-primary-400">
+                        {{ str($currentLocale)->length() > 2 ? str($currentLocale)->substr(0, 2)->upper() : str($currentLocale)->upper() }}
+                    </span>
+                @else
+                    {{
+                        \Filament\Support\generate_icon_html($triggerIcon, 'language-switch::trigger', new \Illuminate\View\ComponentAttributeBag([
+                            'class' => 'h-5 w-5 text-gray-500 dark:text-gray-400',
+                        ]))
+                    }}
+                @endif
+
+                @if ($hasLabel)
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ $currentLabel }}</span>
+                @endif
+            </button>
     @endswitch
 @endif

@@ -296,7 +296,7 @@ When you don't set a render hook, the plugin picks the best one based on your pa
 | Panel Config | Default Hook | Where it appears |
 |---|---|---|
 | Topbar enabled | `GLOBAL_SEARCH_AFTER` | Topbar, after search bar |
-| Topbar disabled | `USER_MENU_BEFORE` | Sidebar footer, before user menu |
+| Topbar disabled | `SIDEBAR_FOOTER` | Below the sidebar footer |
 | `inline()` | `USER_MENU_PROFILE_AFTER` | Inside user menu dropdown |
 
 ### Dropdown Placement

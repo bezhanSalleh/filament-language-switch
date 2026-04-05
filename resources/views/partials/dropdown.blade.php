@@ -1,7 +1,8 @@
 @php
     $resolvedHook = $ls->getResolvedRenderHook();
+    $isInSidebar = str_contains($resolvedHook, '::sidebar.') || str_contains($resolvedHook, 'user-menu.');
     $isInSidebarNav = str_contains($resolvedHook, '::sidebar.nav.');
-    $isInTopbarEdge = str_contains($resolvedHook, '::topbar.start') || str_contains($resolvedHook, '::topbar.end');
+    $isInTopbarEdge = str_contains($resolvedHook, '::topbar.end');
 
     $dropdownPlacement = match (true) {
         filled($customPlacement) => $customPlacement,
@@ -12,12 +13,12 @@
 @endphp
 
 <x-filament::dropdown
-    :teleport="! $isInSidebarNav"
+    :teleport="! $isInSidebar"
     :placement="$dropdownPlacement"
     :max-height="$maxHeight"
     @class([
         '-mx-2' => $isInSidebarNav,
-        'mx-2' => $isInTopbarEdge,
+        'ms-2' => $isInTopbarEdge,
         '[&_.fi-dropdown-panel]:w-fit' => $isFlagsOnly,
     ])
 >

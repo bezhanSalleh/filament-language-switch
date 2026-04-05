@@ -66,7 +66,7 @@ trait HasVisibility
 
         return match (true) {
             $this->isInline() => PanelsRenderHook::USER_MENU_PROFILE_AFTER,
-            ! $hasTopbar => PanelsRenderHook::USER_MENU_BEFORE,
+            ! $hasTopbar => PanelsRenderHook::SIDEBAR_FOOTER,
             default => PanelsRenderHook::GLOBAL_SEARCH_AFTER,
         };
     }
