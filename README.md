@@ -36,7 +36,7 @@ Zero-config language switching for Filament Panels. Drop it in, provide your loc
 - [User Preferred Locale](#user-preferred-locale)
 - [Customization](#customization)
 - [Event](#event)
-- [Debug Panel](#debug-panel)
+- [Control Panel](#control-panel)
 - [Full Example](#full-example)
 - [Upgrading](#upgrading)
 
@@ -503,16 +503,48 @@ Event::listen(function (LocaleChanged $event) {
 });
 ```
 
-## Debug Panel
+## Control Panel
 
-When `APP_DEBUG=true` and `APP_ENV=local`, a floating configurator appears in the bottom-right corner. It lets you hot-swap every configuration option live in the browser, organized into four columns:
+A floating developer configurator that lets you hot-swap every configuration option live in the browser — handy for previewing trigger styles, testing render-hook placements, and checking the outside-panel modes without editing your service provider.
+
+### Enabling it
+
+Opt in explicitly via `controlPanel()`:
+
+```php
+LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+    $switch
+        ->locales(['en', 'fr', 'ar'])
+        ->controlPanel();
+});
+```
+
+Disabled by default. When you call `controlPanel()` (or `controlPanel(true)`) **and** the app is running with `APP_ENV=local` + `APP_DEBUG=true`, a small language-icon button appears at the bottom-end of every panel page. The local + debug requirement is a safety guardrail — even if you leave `controlPanel(true)` committed, it won't render in production.
+
+To disable it explicitly (e.g. in a shared configuration):
+
+```php
+$switch->controlPanel(false);
+```
+
+### Live vs manual mode
+
+By default every change (toggle, select) is applied immediately via a Livewire round-trip. If you'd rather stage multiple changes and commit them together, pass `live: false`:
+
+```php
+$switch->controlPanel(live: false);
+```
+
+In manual mode, changes are accumulated in the session and the panel header shows an **Apply** button (only enabled when you have pending changes). Click it to commit everything in one reload. **Reset** still works the same way — it wipes every accumulated override and restores your configured defaults.
+
+### Sections
+
+The panel is organized as an accordion — click a section to expand it; opening one collapses the others, so it stays compact on both mobile and desktop:
 
 - **Trigger** — topbar on/off, trigger style, trigger icon, render hook
 - **Display** — dropdown / modal mode, modal width, columns, slide-over
 - **Appearance** — circular, native labels, use flags, flags only
 - **Outside Panels** — enable toggle, placement, placement mode (`Pinned` / `Static` / `Relative`), and an explicit render hook override (defaults to auto, with user-menu docking targets as alternatives)
-
-A **Reset** button in the header clears every override and restores your configured defaults. No code changes needed — just click and test.
 
 ## Full Example
 
@@ -561,6 +593,7 @@ If you're coming from an earlier release of v5, a few APIs were consolidated:
 - `PlacementMode` has three cases with clear CSS-aligned semantics: `Pinned` (CSS `position: fixed`, always visible during scroll), `Static` (CSS `position: static`, in flow — **new default**), `Relative` (CSS `position: relative`, in flow but positioned for custom CSS offsets). The old `Fixed` / `Sticky` names have been removed — `Pinned` is the replacement for the "always visible" behavior, and `Static` is the new in-flow default.
 - The outside-panel anchor hook is now **mode-aware**: `Pinned` resolves to `BODY_START` / `BODY_END`, while `Static` and `Relative` resolve to `SIMPLE_LAYOUT_START` / `SIMPLE_LAYOUT_END` so in-flow elements share the viewport with the form card instead of extending body height. All derived from the placement's vertical axis. Explicit override via `outsidePanelsRenderHook()` still works.
 - New `<x-filament-language-switch::inline />` Blade component for inline embedding in custom pages, independent of the outside-panel system.
+- The old "debug panel" (previously auto-enabled in local + debug) is now the **Control Panel** — opt-in via `->controlPanel()` in your configuration. Its purpose is configuration/previewing, not debugging, hence the rename. The old session key (`language-switch-debug`) has been replaced with `language-switch-control`. The control panel now supports a live / manual toggle via `->controlPanel(live: false)` — changes accumulate in the session and apply on a single click of Apply. Section layout changed from a four-column grid to an accordion that stays compact on mobile and desktop.
 
 ## Changelog
 

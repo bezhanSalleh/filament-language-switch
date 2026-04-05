@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Blade;
 class LanguageSwitch extends Component
 {
     use Concerns\HasAppearance;
+    use Concerns\HasControlPanel;
     use Concerns\HasLocales;
     use Concerns\HasModal;
     use Concerns\HasOutsidePanel;

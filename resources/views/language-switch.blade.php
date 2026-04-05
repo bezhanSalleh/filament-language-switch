@@ -38,14 +38,8 @@
             'bottom-0 start-0' => $isPinned && $p === Placement::BottomStart,
             'bottom-0 left-1/2 -translate-x-1/2' => $isPinned && $p === Placement::BottomCenter,
             'bottom-0 end-0' => $isPinned && $p === Placement::BottomEnd,
-
-            // ── Static mode (default): content-sized pill in document flow at the anchor hook ──
             'fi-ls-static' => $isStatic,
-
-            // ── Relative mode: same visual as static, but position: relative so devs can offset via CSS ──
             'fi-ls-relative relative' => $isRelative,
-
-            // Horizontal alignment for in-flow modes — w-fit + margin auto keeps the wrapper content-sized
             'w-fit' => $isInFlow,
             'mx-auto' => $isInFlow && in_array($p, [Placement::TopCenter, Placement::BottomCenter], true),
             'ms-auto' => $isInFlow && in_array($p, [Placement::TopEnd, Placement::BottomEnd], true),

@@ -4,12 +4,19 @@ declare(strict_types=1);
 
 namespace BezhanSalleh\LanguageSwitch\Http\Livewire;
 
+use BezhanSalleh\LanguageSwitch\LanguageSwitch;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
-class LanguageSwitchDebugPanel extends Component
+class LanguageSwitchControlPanel extends Component
 {
+    protected const SESSION_KEY = 'language-switch-control';
+
     public bool $isOpen = false;
+
+    public bool $live = true;
+
+    public bool $isDirty = false;
 
     public bool $topbar = true;
 
@@ -48,8 +55,9 @@ class LanguageSwitchDebugPanel extends Component
         $panel = filament()->getCurrentOrDefaultPanel();
 
         $this->topbar = $panel->hasTopbar();
+        $this->live = LanguageSwitch::make()->isControlPanelLive();
 
-        $overrides = session('language-switch-debug', []);
+        $overrides = session(self::SESSION_KEY, []);
 
         foreach ($overrides as $key => $value) {
             if (property_exists($this, $key)) {
@@ -67,7 +75,7 @@ class LanguageSwitchDebugPanel extends Component
 
         if (! in_array($this->outsidePanelsRenderHook, $validOutsidePanelsRenderHooks, true)) {
             $this->outsidePanelsRenderHook = '';
-            session()->put('language-switch-debug', array_merge($overrides, [
+            session()->put(self::SESSION_KEY, array_merge($overrides, [
                 'outsidePanelsRenderHook' => '',
             ]));
         }
@@ -76,8 +84,8 @@ class LanguageSwitchDebugPanel extends Component
 
         if (! in_array($this->outsidePanelPlacementMode, $validPlacementModes, true)) {
             $this->outsidePanelPlacementMode = 'static';
-            session()->put('language-switch-debug', array_merge(
-                session('language-switch-debug', []),
+            session()->put(self::SESSION_KEY, array_merge(
+                session(self::SESSION_KEY, []),
                 ['outsidePanelPlacementMode' => 'static'],
             ));
         }
@@ -85,7 +93,7 @@ class LanguageSwitchDebugPanel extends Component
 
     public function updated(string $property): void
     {
-        if ($property === 'isOpen') {
+        if (in_array($property, ['isOpen', 'live', 'isDirty'], true)) {
             return;
         }
 
@@ -101,7 +109,7 @@ class LanguageSwitchDebugPanel extends Component
             }
         }
 
-        session()->put('language-switch-debug', [
+        session()->put(self::SESSION_KEY, [
             'topbar' => $this->topbar,
             'displayMode' => $this->displayMode,
             'circular' => $this->circular,
@@ -120,7 +128,13 @@ class LanguageSwitchDebugPanel extends Component
             'outsidePanelsRenderHook' => $this->outsidePanelsRenderHook,
         ]);
 
-        $this->redirect(request()->header('Referer', url()->current()));
+        if ($this->live) {
+            $this->redirect(request()->header('Referer', url()->current()));
+
+            return;
+        }
+
+        $this->isDirty = true;
     }
 
     public function applyIcon(): void
@@ -128,16 +142,23 @@ class LanguageSwitchDebugPanel extends Component
         $this->updated('triggerIcon');
     }
 
-    public function resetDebug(): void
+    public function apply(): void
     {
-        session()->forget('language-switch-debug');
+        $this->isDirty = false;
+
+        $this->redirect(request()->header('Referer', url()->current()));
+    }
+
+    public function resetOverrides(): void
+    {
+        session()->forget(self::SESSION_KEY);
 
         $this->redirect(request()->header('Referer', url()->current()));
     }
 
     public function render(): View
     {
-        return view('language-switch::debug-panel', [
+        return view('language-switch::control-panel', [
             'hasTopbar' => $this->topbar,
         ]);
     }

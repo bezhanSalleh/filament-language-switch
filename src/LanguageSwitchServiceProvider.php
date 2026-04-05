@@ -9,7 +9,7 @@ use BezhanSalleh\LanguageSwitch\Enums\Placement;
 use BezhanSalleh\LanguageSwitch\Enums\PlacementMode;
 use BezhanSalleh\LanguageSwitch\Enums\TriggerStyle;
 use BezhanSalleh\LanguageSwitch\Http\Livewire\LanguageSwitchComponent;
-use BezhanSalleh\LanguageSwitch\Http\Livewire\LanguageSwitchDebugPanel;
+use BezhanSalleh\LanguageSwitch\Http\Livewire\LanguageSwitchControlPanel;
 use BezhanSalleh\LanguageSwitch\Http\Middleware\SwitchLanguageLocale;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -38,14 +38,13 @@ class LanguageSwitchServiceProvider extends PackageServiceProvider
         $this->registerPluginMiddleware();
 
         Livewire::component('language-switch-component', LanguageSwitchComponent::class);
+        Livewire::component('language-switch-control-panel', LanguageSwitchControlPanel::class);
 
         Filament::serving(function (): void {
             LanguageSwitch::boot();
         });
 
-        if (app()->isLocal() && config('app.debug')) {
-            $this->bootDebugPanel();
-        }
+        $this->bootControlPanel();
     }
 
     public function registerPluginMiddleware(): void
@@ -70,10 +69,14 @@ class LanguageSwitchServiceProvider extends PackageServiceProvider
         invade($panel)->middleware = $middlewareStack;
     }
 
-    protected function bootDebugPanel(): void
+    protected function bootControlPanel(): void
     {
         LanguageSwitch::configureUsing(function (LanguageSwitch $languageSwitch): void {
-            $overrides = session('language-switch-debug', []);
+            if (! $languageSwitch->isControlPanelEnabled()) {
+                return;
+            }
+
+            $overrides = session('language-switch-control', []);
             $panel = filament()->getCurrentOrDefaultPanel();
             if (empty($overrides)) {
                 return;
@@ -152,12 +155,21 @@ class LanguageSwitchServiceProvider extends PackageServiceProvider
             }
         }, isImportant: true);
 
-        Livewire::component('language-switch-debug-panel', LanguageSwitchDebugPanel::class);
-
         Filament::serving(function (): void {
+            $languageSwitch = LanguageSwitch::make();
+
+            if (! $languageSwitch->isControlPanelEnabled()) {
+                return;
+            }
+
+            // Safety guardrail — never expose the dev configurator in production.
+            if (! app()->isLocal() || ! config('app.debug')) {
+                return;
+            }
+
             FilamentView::registerRenderHook(
                 name: PanelsRenderHook::BODY_END,
-                hook: fn (): string => Blade::render('<livewire:language-switch-debug-panel />'),
+                hook: fn (): string => Blade::render('<livewire:language-switch-control-panel />'),
             );
         });
     }
