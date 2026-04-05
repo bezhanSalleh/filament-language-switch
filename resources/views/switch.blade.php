@@ -1,5 +1,11 @@
+@php
+    $resolvedRenderHook = $languageSwitch->getRenderHook();
+    $shouldTeleport = ! str_contains($resolvedRenderHook, '::sidebar.')
+        && ! str_contains($resolvedRenderHook, 'user-menu.');
+@endphp
+
 <x-filament::dropdown
-    teleport
+    :teleport="$shouldTeleport"
     :placement="$placement"
     :width="$isFlagsOnly ? 'w-fit fls-flag-only-width' : 'w-fit fls-dropdown-width'"
     :max-height="$maxHeight"
