@@ -29,8 +29,7 @@ class LanguageSwitchServiceProvider extends PackageServiceProvider
     {
         $package
             ->name(static::$name)
-            ->hasViews()
-            ->hasTranslations();
+            ->hasViews();
     }
 
     public function packageBooted(): void

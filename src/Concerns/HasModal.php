@@ -55,7 +55,7 @@ trait HasModal
 
     public function getModalHeading(): ?string
     {
-        return $this->evaluate($this->modalHeading) ?? __('language-switch::translations.modal_heading');
+        return $this->evaluate($this->modalHeading) ?? 'Languages';
     }
 
     public function getModalWidth(): ?string

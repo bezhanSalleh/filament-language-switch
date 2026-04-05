@@ -346,6 +346,12 @@ $switch
     ->outsidePanelPlacement(Placement::TopEnd);
 ```
 
+`visible()` takes two independent toggles — `insidePanels` (default `true`) and `outsidePanels` (default `false`) — so you can enable either context on its own, both, or neither. For example, to render **only** on the simple-layout pages and hide the switcher once the user is inside the panel:
+
+```php
+$switch->visible(insidePanels: false, outsidePanels: true);
+```
+
 By default the switcher renders as a content-sized pill anchored to the chosen `Placement`. All six placements are RTL-aware — `start`/`end` auto-flip for right-to-left locales:
 
 | Placement | Position |
@@ -529,13 +535,14 @@ $switch->controlPanel(false);
 
 ### Live vs manual mode
 
-By default every change (toggle, select) is applied immediately via a Livewire round-trip. If you'd rather stage multiple changes and commit them together, pass `live: false`:
+`controlPanel()` takes two arguments: `controlPanel(bool $enabled = true, bool $live = true)`. By default every change (toggle, select) is applied immediately via a Livewire round-trip. If you'd rather stage multiple changes and commit them together, pass `live: false`:
 
 ```php
-$switch->controlPanel(live: false);
+$switch->controlPanel(live: false);          // enabled + staged (Apply button)
+$switch->controlPanel(true, live: false);    // same thing, explicit
 ```
 
-In manual mode, changes are accumulated in the session and the panel header shows an **Apply** button (only enabled when you have pending changes). Click it to commit everything in one reload. **Reset** still works the same way — it wipes every accumulated override and restores your configured defaults.
+In manual mode, changes are accumulated in the session and the panel footer shows an **Apply** button (only enabled when you have pending changes). Click it to commit everything in one reload. **Reset** still works the same way — it wipes every accumulated override and restores your configured defaults.
 
 ### Sections
 
