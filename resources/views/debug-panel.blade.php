@@ -1,6 +1,6 @@
 @php
-    $labelClass = 'text-xs text-[#F0C8A0]/60';
-    $sectionClass = 'text-[10px] font-semibold uppercase tracking-widest text-[#9B7BD4]';
+    $labelClass = 'text-xs text-gray-400';
+    $sectionClass = 'text-[10px] font-semibold uppercase tracking-widest text-primary-400';
     $isModal = $displayMode === 'modal';
     $wrapperClass = '[&_.fi-input-wrp]:h-8! [&_.fi-input-wrp]:min-h-0!';
     $selectClass = 'text-xs! py-1!';
@@ -16,7 +16,7 @@
         type="button"
         x-on:click="open = ! open"
         x-tooltip="{ content: 'Language Switch Debug', theme: $store.theme }"
-        class="flex size-10 items-center justify-center rounded-full bg-[#2D1B69] text-[#F0C8A0] shadow ring-1 ring-[#9B7BD4]/30 transition hover:text-white hover:ring-[#9B7BD4]/60"
+        class="flex size-10 items-center justify-center rounded-full bg-primary-950 text-gray-300 shadow ring-1 ring-primary-500/30 transition hover:text-white hover:ring-primary-500/60"
     >
         {{
             \Filament\Support\generate_icon_html(\Filament\Support\Icons\Heroicon::Language, attributes: new \Illuminate\View\ComponentAttributeBag([
@@ -40,9 +40,9 @@
     >
         {{-- Header --}}
         <div class="flex items-center justify-between px-4 py-2.5">
-            <span class="text-xs font-semibold text-[#fe984a]">Language Switch</span>
+            <span class="text-xs font-semibold text-warning-400">Language Switch</span>
             <div class="flex items-center gap-2">
-                <span class="rounded-full bg-amber-400/10 px-1.5 py-px text-[9px] font-bold tracking-wide text-amber-400">DEBUG</span>
+                <span class="rounded-full bg-warning-400/10 px-1.5 py-px text-[9px] font-bold tracking-wide text-warning-400">DEBUG</span>
                 <button type="button" wire:click="resetDebug" class="rounded px-1.5 py-0.5 text-[10px] font-medium text-gray-500 transition hover:bg-white/6 hover:text-gray-300">Reset</button>
             </div>
         </div>
