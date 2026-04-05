@@ -4,8 +4,11 @@
 
 </a>
 <p align="center">
-    <a href="https://filamentphp.com/docs/5.x/panels/installation">
+    <a href="https://filamentphp.com/docs/5.x/introduction/installation">
         <img alt="FILAMENT 5.x" src="https://img.shields.io/badge/FILAMENT-5.x-EBB304?style=for-the-badge">
+    </a>
+    <a href="https://filamentphp.com/docs/4.x/introduction/installation">
+        <img alt="FILAMENT 5.x" src="https://img.shields.io/badge/FILAMENT-4.x-EBB304?style=for-the-badge">
     </a>
     <a href="https://packagist.org/packages/bezhansalleh/filament-language-switch">
         <img alt="Packagist" src="https://img.shields.io/packagist/v/bezhansalleh/filament-language-switch.svg?style=for-the-badge&logo=packagist">
@@ -42,11 +45,11 @@ Zero-config language switching for Filament Panels. Drop it in, provide your loc
 
 ## Compatibility
 
-| Package | Filament |
-|---------|----------|
+| Package Version | Filament Version | 
+|----------------|---------------------|
+| [v1](https://github.com/bezhanSalleh/filament-language-switch/tree/1.x) | [v2](https://filamentphp.com/docs/2.x/admin/installation) |
 | [v3](https://github.com/bezhanSalleh/filament-language-switch/tree/3.x) | [v3](https://filamentphp.com/docs/3.x/panels/installation) |
-| v4 | v4 & v5 |
-| v5 | v5 |
+| v4 | [v4](https://filamentphp.com/docs/4.x/introduction/installation) & [v5](https://filamentphp.com/docs/5.x/introduction/installation) |
 
 ## Installation
 
@@ -54,11 +57,15 @@ Zero-config language switching for Filament Panels. Drop it in, provide your loc
 composer require bezhansalleh/filament-language-switch
 ```
 
-Add the plugin's views to your custom theme so Tailwind picks up the classes:
+> [!IMPORTANT]
+> The plugin follows Filament's theming rules. So, to use the plugin create a custom theme if you haven't already, and add the following line to your `theme.css` file:
 
-```css
-/* resources/css/filament/admin/theme.css */
-@source '../../../../vendor/bezhansalleh/filament-language-switch/resources/views/**/*.blade.php';
+```php
+@source '../../../../vendor/bezhansalleh/filament-language-switch/**';
+```
+Now build your theme using: 
+```bash
+npm run build
 ```
 
 Build your theme:
