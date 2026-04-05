@@ -48,6 +48,16 @@ class LanguageSwitchControlPanel extends Component
 
     public string $outsidePanelsRenderHook = '';
 
+    /**
+     * Committed preview state used by the view to compute the panel's screen
+     * position. Only updated on mount() / after applyOverrides() reloads — so
+     * in non-live mode the panel doesn't jump around while the user is still
+     * editing dirty values.
+     */
+    public string $appliedDisplayMode = 'dropdown';
+
+    public bool $appliedModalSlideOver = false;
+
     public function mount(): void
     {
         $panel = filament()->getCurrentOrDefaultPanel();
@@ -62,6 +72,9 @@ class LanguageSwitchControlPanel extends Component
                 $this->{$key} = $value;
             }
         }
+
+        $this->appliedDisplayMode = $this->displayMode;
+        $this->appliedModalSlideOver = $this->modalSlideOver;
 
         $validOutsidePanelsRenderHooks = [
             '',

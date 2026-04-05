@@ -32,9 +32,14 @@ trait HasVisibility
 
     public function isVisible(): bool
     {
-        return $this->evaluate($this->visibleInsidePanels)
+        return $this->isVisibleInsidePanels()
             && count($this->getLocales()) > 1
             && $this->isCurrentPanelIncluded();
+    }
+
+    public function isVisibleInsidePanels(): bool
+    {
+        return (bool) $this->evaluate($this->visibleInsidePanels);
     }
 
     public function getExcludes(): array

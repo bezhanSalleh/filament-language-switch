@@ -21,13 +21,6 @@ trait HasOutsidePanel
 
     protected string | Closure | null $outsidePanelsRenderHook = null;
 
-    public function visibleOutsidePanels(bool | Closure $condition = true): static
-    {
-        $this->visibleOutsidePanels = $condition;
-
-        return $this;
-    }
-
     public function outsidePanelRoutes(array | Closure | null $routes = null): static
     {
         $this->outsidePanelRoutes = $routes ?? [

@@ -342,7 +342,7 @@ Filament's unauthenticated pages (login, register, password reset, email verific
 use BezhanSalleh\LanguageSwitch\Enums\Placement;
 
 $switch
-    ->visibleOutsidePanels()
+    ->visible(outsidePanels: true)
     ->outsidePanelPlacement(Placement::TopEnd);
 ```
 
@@ -580,46 +580,44 @@ LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
 
 ## Upgrading from v4 to v5
 
-> **Branches:** v4 lives on [`main`](https://github.com/bezhansalleh/filament-language-switch/tree/main), v5 lives on the `5.x` branch (currently the `enhancement` branch pre-release). The list below compares the two so you can see exactly what changed.
+> **Branches:** v4 lives on [`main`](https://github.com/bezhansalleh/filament-language-switch/tree/main), v5 lives on the `5.x` branch.
 
-v5 is backwards-compatible for the common case — if all you do is `->locales([...])` and optionally `->flags([...])`, your existing v4 configuration still works. Everything below is either an additive change or a small rename/signature tweak. No v4 setter was silently deleted; everything v4 could do, v5 can still do.
+If all you do is `->locales([...])` and optionally `->flags([...])`, your v4 configuration already works on v5. The rest of the existing v4 public API — `visible()`, `renderHook()`, `outsidePanelPlacement()`, `excludes()`, etc. — is preserved with the same signatures. Only the items below require action.
 
-### Signature changes (migrate these)
+### Breaking changes
+
+#### Placement enum rename (RTL-aware)
+
+The `Placement` enum cases were renamed so they auto-flip in right-to-left locales:
 
 | v4 | v5 |
 |---|---|
-| `->visible(insidePanels: true, outsidePanels: true)` | `->visible()` + `->visibleOutsidePanels()` |
-| `Placement::TopLeft` / `TopRight` | `Placement::TopStart` / `TopEnd` |
-| `Placement::BottomLeft` / `BottomRight` | `Placement::BottomStart` / `BottomEnd` |
-| `->outsidePanelPlacement(Placement::TopRight)` | `->outsidePanelPlacement(Placement::TopEnd)` — same enum, new case name, plus an optional second `PlacementMode` argument |
+| `Placement::TopLeft` | `Placement::TopStart` |
+| `Placement::TopRight` | `Placement::TopEnd` |
+| `Placement::BottomLeft` | `Placement::BottomStart` |
+| `Placement::BottomRight` | `Placement::BottomEnd` |
 
-`Placement::TopCenter` and `BottomCenter` keep their names. The `start`/`end` rename is for RTL awareness — the values auto-flip in right-to-left locales via CSS logical properties.
+`TopCenter` and `BottomCenter` keep their names. Update any `->outsidePanelPlacement(...)` call that references the old cases.
 
-### Default value changes
+#### Default value changes
 
-| Setting | v4 default | v5 default | Why |
+| Setting | v4 default | v5 default | Restore v4 behavior |
 |---|---|---|---|
-| `maxHeight` | `'max-content'` (no scroll) | `'18rem'` (scrollable) | Dropdowns with many locales stay usable; pass `->maxHeight('max-content')` to restore the v4 behavior |
-| `renderHook` | `'panels::global-search.after'` (always) | Context-aware: `GLOBAL_SEARCH_AFTER` when the panel has a topbar, `SIDEBAR_LOGO_AFTER` when it doesn't | Ships in the right place for both topbar and sidebar-only panels without manual config |
-| `outsidePanelsRenderHook` | `'panels::body.start'` (always) | Derived from placement + mode (see [Outside Panels](#outside-panels)) | In-flow modes live inside `.fi-simple-layout` so they don't extend body height |
-| `outsidePanelPlacement` | `Placement::TopRight` | `Placement::TopEnd` | Same position, RTL-aware name |
+| `maxHeight` | `'max-content'` (no scroll) | `'18rem'` (scrollable) | `->maxHeight('max-content')` |
+| `renderHook` | `'panels::global-search.after'` (always) | `GLOBAL_SEARCH_AFTER` with topbar, `SIDEBAR_LOGO_AFTER` without | `->renderHook(PanelsRenderHook::GLOBAL_SEARCH_AFTER)` |
+| `outsidePanelsRenderHook` | `'panels::body.start'` (always) | Derived from placement + `PlacementMode` (see [Outside Panels](#outside-panels)) | `->outsidePanelsRenderHook(PanelsRenderHook::BODY_START)` |
+| `outsidePanelPlacement` | `Placement::TopRight` | `Placement::TopEnd` | Same position — only the name changed |
 
-### New capabilities in v5
+### New features
 
-These are purely additive — v4 had none of them, and if you don't call the new methods, nothing changes.
-
-- **Trigger customization.** New `->trigger(style: TriggerStyle::..., icon: ...)` method backed by the `TriggerStyle` enum (`Icon`, `IconLabel`, `Avatar`, `AvatarLabel`, `Flag`, `FlagLabel`, `Label`). v4 had no equivalent — the trigger was always a language icon. See [Trigger](#trigger).
-- **Modal display mode.** New `->displayMode(DisplayMode::Modal)` plus `->modalHeading()`, `->modalWidth()`, `->modalSlideOver()`, `->modalIcon()`, `->modalIconColor()`, `->columns()`, `->flagHeight()`, `->avatarHeight()`. v4 only supported the dropdown. See [Display Modes](#display-modes).
-- **`PlacementMode` for outside panels.** The `outsidePanelPlacement()` setter now accepts an optional second argument — `PlacementMode::Static` (default, in document flow), `PlacementMode::Pinned` (CSS `position: fixed`, always visible during scroll), or `PlacementMode::Relative` (in flow but positioned for custom CSS offsets). v4's outside-panel rendering always pinned as a fixed overlay with no control over flow behavior.
-- **Auto-docking into the user menu.** When `Pinned` would collide with `.fi-simple-layout-header` (authed user on a simple profile page), v5 automatically routes to `USER_MENU_BEFORE` instead of fighting the header's `top-0 end-0` anchor. v4 had no awareness of this collision.
-- **Smart hook classification.** Every supported render hook is classified into a render context (`topbar`, `sidebar`, `user-menu`, `outside-panel`) that drives a matching trigger design — sidebar nav item style at `SIDEBAR_NAV_*`, dropdown list item style at `USER_MENU_PROFILE_*`, etc. v4 used the same single dropdown-trigger design at every hook.
-- **`->dropdownPlacement()`.** New method to control which direction the dropdown panel opens from the trigger (`bottom-end`, `top-start`, etc.). v4 had no equivalent.
-- **`<x-language-switch::inline />` Blade component.** Drop the switcher into any arbitrary location in your own views — a form section, a custom page, a sidebar widget. v4 had no way to manually embed the switcher; it could only appear at a render hook.
-- **Developer Control Panel.** Opt-in via `->controlPanel()` — a floating configurator that lets you hot-swap every setting live in the browser without editing your service provider. Supports a `live: false` mode for batched Apply. v4 had no equivalent.
-
-### Architectural refactor (internal — no user-facing impact)
-
-v4's `LanguageSwitch` class was monolithic (~40 methods in one file). v5 splits it into concerns: `HasLocales`, `HasAppearance`, `HasModal`, `HasVisibility`, `HasOutsidePanel`, `HasTriggerLayout`, `HasControlPanel`. The public API is preserved — this only matters if you were extending the class or reading the source.
+- **Trigger customization.** `->trigger(style: TriggerStyle::..., icon: ...)` backed by the `TriggerStyle` enum (`Icon`, `IconLabel`, `Avatar`, `AvatarLabel`, `Flag`, `FlagLabel`, `Label`). See [Trigger](#trigger).
+- **Modal display mode.** `->displayMode(DisplayMode::Modal)` plus `->modalHeading()`, `->modalWidth()`, `->modalSlideOver()`, `->modalIcon()`, `->modalIconColor()`, `->columns()`, `->flagHeight()`, `->avatarHeight()`. See [Display Modes](#display-modes).
+- **`PlacementMode` for outside panels.** `->outsidePanelPlacement()` now accepts an optional second argument — `PlacementMode::Static` (default, in document flow), `PlacementMode::Pinned` (`position: fixed`, always visible during scroll), or `PlacementMode::Relative` (in flow, positioned for custom CSS offsets).
+- **Auto-docking into the user menu.** When `Pinned` would collide with `.fi-simple-layout-header` (authed user on a simple profile page), the switcher routes to `USER_MENU_BEFORE` automatically.
+- **Smart hook classification.** Every supported render hook is classified into a render context (`topbar`, `sidebar`, `user-menu`, `outside-panel`) that picks a matching trigger design — sidebar nav item at `SIDEBAR_NAV_*`, dropdown list item at `USER_MENU_PROFILE_*`, etc.
+- **`->dropdownPlacement()`.** Control which direction the dropdown panel opens from the trigger (`bottom-end`, `top-start`, etc.).
+- **`<x-language-switch::inline />` Blade component.** Drop the switcher into any view — a form section, a custom page, a sidebar widget — without going through a render hook.
+- **Developer Control Panel.** Opt-in via `->controlPanel()`. A floating configurator that hot-swaps every setting live in the browser without editing your service provider. Supports `live: false` for batched Apply.
 
 ## Changelog
 

@@ -34,9 +34,12 @@ class LanguageSwitch extends Component
         return $static;
     }
 
-    public function visible(bool | Closure $condition = true): static
-    {
-        $this->visibleInsidePanels = $condition;
+    public function visible(
+        bool | Closure $insidePanels = true,
+        bool | Closure $outsidePanels = false,
+    ): static {
+        $this->visibleInsidePanels = $insidePanels;
+        $this->visibleOutsidePanels = $outsidePanels;
 
         return $this;
     }

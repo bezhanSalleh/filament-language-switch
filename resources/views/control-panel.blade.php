@@ -11,14 +11,32 @@
     // dir=ltr override inside an RTL app. Filament's own rtl: base rules have no !important
     // so our LTR overrides win in all directions.
     $toggleClass = 'items-center h-5 w-9 [&>:first-child]:size-3.5! [&.fi-toggle-on>:first-child]:translate-x-4! [&.fi-toggle-off>:first-child]:translate-x-0.5!';
+
+    // Position the panel out of the way of previews:
+    //   - slide-over on → center horizontally (slide-over comes from the document end edge)
+    //   - LTR document  → dock right
+    //   - RTL document  → dock left
+    // Raw left/right (not logical start/end) because the panel forces dir="ltr" on itself,
+    // so end-4 would always resolve to "right" regardless of the document direction.
+    //
+    // Uses the *applied* slide-over state (committed on mount/apply) rather than the
+    // live form values so the panel doesn't reposition while the user is still editing
+    // dirty values in non-live mode — it only moves once the preview actually changes.
+    $isRtl = __('filament-panels::layout.direction') === 'rtl';
+    $isSlideOverPreview = $appliedDisplayMode === 'modal' && $appliedModalSlideOver;
+    $positionClass = match (true) {
+        $isSlideOverPreview => 'inset-x-0 mx-auto',
+        $isRtl              => 'left-4',
+        default             => 'right-4',
+    };
 @endphp
 
-<div 
-    x-data="{ 
-        section: $persist('trigger').as('fls-cp-section') 
-    }" 
-    dir="ltr" 
-    class="fls-control-panel fixed bottom-4 end-4 z-50 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl bg-black shadow-2xl ring-1 ring-white/5"
+<div
+    x-data="{
+        section: $persist('trigger').as('fls-cp-section')
+    }"
+    dir="ltr"
+    class="fls-control-panel dark fixed bottom-4 {{ $positionClass }} z-50 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl bg-black shadow-2xl ring-1 ring-white/5"
 >
     <style>
         @keyframes fls-control-panel-enter {

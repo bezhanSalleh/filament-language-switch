@@ -138,7 +138,10 @@ class LanguageSwitchServiceProvider extends PackageServiceProvider
             }
 
             if (isset($overrides['outsidePanels'])) {
-                $languageSwitch->visibleOutsidePanels((bool) $overrides['outsidePanels']);
+                $languageSwitch->visible(
+                    insidePanels: $languageSwitch->isVisibleInsidePanels(),
+                    outsidePanels: (bool) $overrides['outsidePanels'],
+                );
             }
 
             if (! empty($overrides['outsidePanelPlacement']) || ! empty($overrides['outsidePanelPlacementMode'])) {
