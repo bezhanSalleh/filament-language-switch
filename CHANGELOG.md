@@ -2,6 +2,15 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## 4.3.0 - 2026-04-05
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 2.5.0 to 3.0.0 by @dependabot[bot] in https://github.com/bezhanSalleh/filament-language-switch/pull/155
+* fixes stringle and outside panels route condition by @bezhanSalleh in https://github.com/bezhanSalleh/filament-language-switch/pull/158
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/4.2.0...4.3.0
+
 ## 4.2.0 - 2026-03-29
 
 ### What's Changed
