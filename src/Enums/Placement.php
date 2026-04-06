@@ -6,15 +6,20 @@ namespace BezhanSalleh\LanguageSwitch\Enums;
 
 enum Placement: string
 {
-    case TopLeft = 'top-left';
+    case TopStart = 'top-start';
 
     case TopCenter = 'top-center';
 
-    case TopRight = 'top-right';
+    case TopEnd = 'top-end';
 
-    case BottomLeft = 'bottom-left';
+    case BottomStart = 'bottom-start';
 
     case BottomCenter = 'bottom-center';
 
-    case BottomRight = 'bottom-right';
+    case BottomEnd = 'bottom-end';
+
+    public function isTop(): bool
+    {
+        return in_array($this, [self::TopStart, self::TopCenter, self::TopEnd], true);
+    }
 }

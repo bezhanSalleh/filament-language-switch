@@ -1,12 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BezhanSalleh\LanguageSwitch;
 
+use BezhanSalleh\LanguageSwitch\Enums\DisplayMode;
+use BezhanSalleh\LanguageSwitch\Enums\ItemStyle;
+use BezhanSalleh\LanguageSwitch\Enums\Placement;
+use BezhanSalleh\LanguageSwitch\Enums\PlacementMode;
+use BezhanSalleh\LanguageSwitch\Enums\TriggerStyle;
 use BezhanSalleh\LanguageSwitch\Http\Livewire\LanguageSwitchComponent;
+use BezhanSalleh\LanguageSwitch\Http\Livewire\LanguageSwitchControlPanel;
 use BezhanSalleh\LanguageSwitch\Http\Middleware\SwitchLanguageLocale;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Panel;
+use Filament\Support\Facades\FilamentView;
+use Filament\View\PanelsRenderHook;
+use Illuminate\Support\Facades\Blade;
 use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -27,10 +38,13 @@ class LanguageSwitchServiceProvider extends PackageServiceProvider
         $this->registerPluginMiddleware();
 
         Livewire::component('language-switch-component', LanguageSwitchComponent::class);
+        Livewire::component('language-switch-control-panel', LanguageSwitchControlPanel::class);
 
         Filament::serving(function (): void {
             LanguageSwitch::boot();
         });
+
+        $this->bootControlPanel();
     }
 
     public function registerPluginMiddleware(): void
@@ -41,24 +55,125 @@ class LanguageSwitchServiceProvider extends PackageServiceProvider
 
     protected function reorderCurrentPanelMiddlewareStack(Panel $panel): void
     {
-        $middlewareStack = invade($panel)->getMiddleware();
+        $middlewareStack = invade($panel)->middleware;
 
-        $middleware = SwitchLanguageLocale::class;
-        $order = 'before';
-        $referenceMiddleware = DispatchServingFilamentEvent::class;
+        if (in_array(SwitchLanguageLocale::class, $middlewareStack, true)) {
+            return;
+        }
 
-        $middleware = is_array($middleware) ? collect($middleware) : collect([$middleware]);
+        $position = array_search(DispatchServingFilamentEvent::class, $middlewareStack, true);
+        $position = $position !== false ? $position : 0;
 
-        $middlewareCollection = collect($middlewareStack);
+        array_splice($middlewareStack, $position, 0, [SwitchLanguageLocale::class]);
 
-        $referenceIndex = $middlewareCollection->search($referenceMiddleware);
-        $position = $order === 'before' ? $referenceIndex : $referenceIndex + 1;
-        $position = $referenceMiddleware === null || $referenceIndex === false ? ($order === 'after' ? $middlewareCollection->count() : 0) : $position;
+        invade($panel)->middleware = $middlewareStack;
+    }
 
-        invade($panel)->middleware = $middlewareCollection
-            ->slice(0, $position)
-            ->concat($middleware)
-            ->concat($middlewareCollection->slice($position))
-            ->toArray();
+    protected function bootControlPanel(): void
+    {
+        LanguageSwitch::configureUsing(function (LanguageSwitch $languageSwitch): void {
+            if (! $languageSwitch->isControlPanelEnabled()) {
+                return;
+            }
+
+            $overrides = session('language-switch-control', []);
+            $panel = filament()->getCurrentOrDefaultPanel();
+            if (empty($overrides)) {
+                return;
+            }
+
+            if (isset($overrides['topbar'])) {
+                $panel->topbar((bool) $overrides['topbar']);
+            }
+
+            if (isset($overrides['displayMode'])) {
+                $languageSwitch->displayMode(DisplayMode::from($overrides['displayMode']));
+            }
+
+            if (isset($overrides['circular'])) {
+                $languageSwitch->circular((bool) $overrides['circular']);
+            }
+
+            if (isset($overrides['columns'])) {
+                $languageSwitch->columns((int) $overrides['columns']);
+            }
+
+            if (isset($overrides['nativeLabel'])) {
+                $languageSwitch->nativeLabel((bool) $overrides['nativeLabel']);
+            }
+
+            if (! empty($overrides['itemStyle'])) {
+                $languageSwitch->itemStyle(ItemStyle::from($overrides['itemStyle']));
+            }
+
+            if (isset($overrides['useFlags']) && ! $overrides['useFlags']) {
+                $languageSwitch->flags([]);
+            }
+
+            if (isset($overrides['modalWidth'])) {
+                $languageSwitch->modalWidth((string) $overrides['modalWidth']);
+            }
+
+            if (isset($overrides['modalSlideOver'])) {
+                $languageSwitch->modalSlideOver((bool) $overrides['modalSlideOver']);
+            }
+
+            if (isset($overrides['flagHeight'])) {
+                $languageSwitch->flagHeight((string) $overrides['flagHeight']);
+            }
+
+            if (isset($overrides['avatarHeight'])) {
+                $languageSwitch->avatarHeight((string) $overrides['avatarHeight']);
+            }
+
+            if (! empty($overrides['renderHook'])) {
+                $languageSwitch->renderHook((string) $overrides['renderHook']);
+            }
+
+            if (! empty($overrides['triggerStyle']) || ! empty($overrides['triggerIcon'])) {
+                $languageSwitch->trigger(
+                    style: empty($overrides['triggerStyle']) ? null : TriggerStyle::from($overrides['triggerStyle']),
+                    icon: empty($overrides['triggerIcon']) ? null : (string) $overrides['triggerIcon'],
+                );
+            }
+
+            if (isset($overrides['outsidePanels'])) {
+                $languageSwitch->visible(
+                    insidePanels: $languageSwitch->isVisibleInsidePanels(),
+                    outsidePanels: (bool) $overrides['outsidePanels'],
+                );
+            }
+
+            if (! empty($overrides['outsidePanelPlacement']) || ! empty($overrides['outsidePanelPlacementMode'])) {
+                $languageSwitch->outsidePanelPlacement(
+                    placement: Placement::from((string) ($overrides['outsidePanelPlacement'] ?? 'top-end')),
+                    mode: empty($overrides['outsidePanelPlacementMode'])
+                        ? null
+                        : PlacementMode::from((string) $overrides['outsidePanelPlacementMode']),
+                );
+            }
+
+            if (! empty($overrides['outsidePanelsRenderHook'])) {
+                $languageSwitch->outsidePanelsRenderHook((string) $overrides['outsidePanelsRenderHook']);
+            }
+        }, isImportant: true);
+
+        Filament::serving(function (): void {
+            $languageSwitch = LanguageSwitch::make();
+
+            if (! $languageSwitch->isControlPanelEnabled()) {
+                return;
+            }
+
+            // Safety guardrail — never expose the dev configurator in production.
+            if (! app()->isLocal() || ! config('app.debug')) {
+                return;
+            }
+
+            FilamentView::registerRenderHook(
+                name: PanelsRenderHook::BODY_END,
+                hook: fn (): string => Blade::render('<livewire:language-switch-control-panel />'),
+            );
+        });
     }
 }

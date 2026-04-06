@@ -4,401 +4,609 @@
 
 </a>
 <p align="center">
-    <a href="https://filamentphp.com/docs/4.x/panels/installation">
-        <img alt="FILAMENT 4.x" src="https://img.shields.io/badge/FILAMENT-4.x-EBB304?style=for-the-badge">
-    </a>
-    <a href="https://filamentphp.com/docs/5.x/panels/installation">
+    <a href="https://filamentphp.com/docs/5.x/introduction/installation">
         <img alt="FILAMENT 5.x" src="https://img.shields.io/badge/FILAMENT-5.x-EBB304?style=for-the-badge">
+    </a>
+    <a href="https://filamentphp.com/docs/4.x/introduction/installation">
+        <img alt="FILAMENT 5.x" src="https://img.shields.io/badge/FILAMENT-4.x-EBB304?style=for-the-badge">
     </a>
     <a href="https://packagist.org/packages/bezhansalleh/filament-language-switch">
         <img alt="Packagist" src="https://img.shields.io/packagist/v/bezhansalleh/filament-language-switch.svg?style=for-the-badge&logo=packagist">
-    </a>
-    <a href="https://github.com/bezhansalleh/filament-language-switch/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain" class="filament-hidden">
-        <img alt="Code Style Passing" src="https://img.shields.io/github/actions/workflow/status/bezhansalleh/filament-language-switch/run-laravel-pint.yml?style=for-the-badge&logo=github&label=code%20style">
     </a>
     <a href="https://packagist.org/packages/bezhansalleh/filament-language-switch">
         <img alt="Downloads" src="https://img.shields.io/packagist/dt/bezhansalleh/filament-language-switch.svg?style=for-the-badge">
     </a>
 </p>
 
-
 # Language Switch
-The **Language Switch** plugin is a versatile and user-friendly tool designed for Filament Panels. It offers a seamless way to integrate language switching capabilities into your Filament Panels. With a range of customizable options and a fluent API, the plugin allows you to easily configure language selection for your users. It supports displaying language options both within and outside of Filament panels, and it provides the flexibility to specify which panels or routes should include the language switch and much more.
 
-#### Compatibility
+Zero-config language switching for Filament Panels. Drop it in, provide your locales, and you're done. The plugin auto-detects your panel layout and renders in the right place with the right design — topbar icon button, sidebar nav item, user menu item — without any manual wiring.
 
-| Package Version | Filament Version | 
-|----------------|---------------------|
-| [v1](https://github.com/bezhanSalleh/filament-language-switch/tree/1.x) | [v2](https://filamentphp.com/docs/2.x/admin/installation) |
-| [v3](https://github.com/bezhanSalleh/filament-language-switch/tree/3.x) | [v3](https://filamentphp.com/docs/3.x/panels/installation) |
-| v4 | [v4](https://filamentphp.com/docs/4.x/introduction/overview) & [v5](https://filamentphp.com/docs/5.x/introduction/overview) |
+## Table of Contents
 
-### Upgrading from v3 to v4
-
-If you are upgrading from version 3 to version 4, you will need to update the namespace anywhere you are using the plugin from `BezhanSalleh\FilamentLanguageSwitch` to `BezhanSalleh\LanguageSwitch`.
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Display Modes](#display-modes)
+- [Trigger](#trigger)
+- [Flags](#flags)
+- [Labels](#labels)
+- [Appearance](#appearance)
+- [Placement](#placement)
+- [Outside Panels](#outside-panels)
+- [Inline Embedding](#inline-embedding-in-custom-pages)
+- [Panel Exclusion](#panel-exclusion)
+- [User Preferred Locale](#user-preferred-locale)
+- [Customization](#customization)
+- [Event](#event)
+- [Control Panel](#control-panel)
+- [Full Example](#full-example)
+- [Version Support](#version-support)
 
 ## Installation
-
-Install the package via composer:
 
 ```bash
 composer require bezhansalleh/filament-language-switch
 ```
+
 > [!IMPORTANT]
 > The plugin follows Filament's theming rules. So, to use the plugin create a custom theme if you haven't already, and add the following line to your `theme.css` file:
 
 ```php
-@source '../../../../vendor/bezhansalleh/filament-language-switch/resources/views/**/*.blade.php';
+@source '../../../../vendor/bezhansalleh/filament-language-switch/**';
 ```
 Now build your theme using: 
 ```bash
 npm run build
 ```
---- 
 
-## Usage
+Build your theme:
 
-The plugin boots after installation automatically. For the plugin to work, provide an array of locales that your Panel(s) support to switch between them inside a service provider's `boot()` method. You can either create a new service provider or use the default `AppServiceProvider` as follow:
+```bash
+npm run build
+```
+
+## Quick Start
+
+Add this to any service provider's `boot()` method:
 
 ```php
-
-...
 use BezhanSalleh\LanguageSwitch\LanguageSwitch;
 
-class AppServiceProvider extends ServiceProvider
+public function boot(): void
 {
-    ...
-    
-    public function boot()
-    {
-        ...
-        
-        LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
-            $switch
-                ->locales(['ar','en','fr']); // also accepts a closure
-        });
-        
-        ...
-    }
+    LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+        $switch->locales(['en', 'fr', 'ar']);
+    });
 }
 ```
 
-Though this is all you would need, but the plugin is designed to be very customizable. Checkout the [Laravel localization documentation](https://laravel.com/docs/11.x/localization#introduction) to get started with localization. Delve into the **Configuration** section below for detailed customization options.
+That's it. The switch appears in your topbar automatically. When the panel has no topbar, it moves to the sidebar.
 
-## Configuration
+## Display Modes
 
-The plugin comes with following options that you can customize and configure as per your requirements. The plugin has a fluent API so you can chain the methods and easily configure it all in one place.
+### Dropdown (default)
 
-### Event
-Whenever the locale is changed, the plugin dispatches a `LocaleChanged` event. You can listen to this event in your application to perform any additional actions or logic when the language is switched.
+The trigger opens a dropdown with your locales. The list is scrollable by default (`max-height: 18rem`), so it stays usable with many locales:
+
+```php
+$switch->locales(['en', 'fr', 'ar']);
+```
+
+### Modal
+
+Opens a modal dialog instead. Better for many languages:
+
+```php
+use BezhanSalleh\LanguageSwitch\Enums\DisplayMode;
+
+$switch
+    ->locales(['en', 'fr', 'ar', 'de', 'es', 'pt', 'ja', 'ko', 'zh'])
+    ->displayMode(DisplayMode::Modal)
+    ->modalWidth('lg');
+```
+
+### Modal with Grid
+
+Arrange locales in columns:
+
+```php
+$switch
+    ->displayMode(DisplayMode::Modal)
+    ->columns(2)
+    ->modalWidth('lg');
+```
+
+### Slide-over
+
+```php
+$switch
+    ->displayMode(DisplayMode::Modal)
+    ->modalSlideOver();
+```
+
+### Modal Heading & Icon
+
+```php
+$switch
+    ->displayMode(DisplayMode::Modal)
+    ->modalHeading('Choose Language')
+    ->modalIcon('heroicon-o-language')
+    ->modalIconColor('primary');
+```
+
+## Trigger
+
+The trigger is configured through a single unified `trigger()` method that takes a style and/or an icon. Both are optional — pass whichever you want to override.
+
+### Trigger Style
+
+Use the `TriggerStyle` enum to control what the trigger shows. The default adapts to the render context automatically (e.g. flag if you've set flags, otherwise icon in topbar; icon+label in sidebar/user menu), so you only need to call this when you want to override it:
+
+```php
+use BezhanSalleh\LanguageSwitch\Enums\TriggerStyle;
+
+// Visual only
+$switch->trigger(style: TriggerStyle::Icon);    // language icon
+$switch->trigger(style: TriggerStyle::Flag);    // flag image (requires ->flags())
+$switch->trigger(style: TriggerStyle::Avatar);  // locale abbreviation (EN, FR, AR)
+
+// Visual with label
+$switch->trigger(style: TriggerStyle::IconLabel);    // icon + locale name
+$switch->trigger(style: TriggerStyle::FlagLabel);    // flag + locale name
+$switch->trigger(style: TriggerStyle::AvatarLabel);  // abbreviation + locale name
+
+// Label only — no visual
+$switch->trigger(style: TriggerStyle::Label);
+```
+
+### Trigger Icon
+
+The trigger uses the language icon by default. Pass any icon from your installed [Blade Icons](https://blade-ui-kit.com/blade-icons) packages, or a `Heroicon` enum case:
+
+```php
+use Filament\Support\Icons\Heroicon;
+
+// Just change the icon (style stays as default)
+$switch->trigger(icon: Heroicon::GlobeAlt);
+
+// Any Blade Icons string works too
+$switch->trigger(icon: 'heroicon-o-globe-alt');
+$switch->trigger(icon: 'phosphor-translate');
+
+// Or change both in one call
+$switch->trigger(
+    style: TriggerStyle::IconLabel,
+    icon: Heroicon::GlobeAlt,
+);
+```
+
+You can also override the icon globally via Filament's icon alias system:
+
+```php
+use Filament\Support\Facades\FilamentIcon;
+
+FilamentIcon::register([
+    'language-switch::trigger' => 'heroicon-o-globe-alt',
+]);
+```
+
+## Flags
+
+Associate each locale with a flag image:
+
+```php
+$switch->flags([
+    'en' => asset('flags/us.svg'),
+    'fr' => asset('flags/fr.svg'),
+    'ar' => asset('flags/sa.svg'),
+]);
+```
+
+### Item Style
+
+Control what each locale item shows in the dropdown or modal. The default auto-detects: `FlagWithLabel` when flags are configured, `AvatarWithLabel` otherwise.
+
+```php
+use BezhanSalleh\LanguageSwitch\Enums\ItemStyle;
+
+$switch->itemStyle(ItemStyle::FlagOnly);        // flag images only, tooltips on hover
+$switch->itemStyle(ItemStyle::AvatarOnly);      // abbreviations only (EN, FR), tooltips on hover
+$switch->itemStyle(ItemStyle::LabelOnly);       // text labels only, no visual
+$switch->itemStyle(ItemStyle::FlagWithLabel);    // flag + locale name (default with flags)
+$switch->itemStyle(ItemStyle::AvatarWithLabel);  // abbreviation + locale name (default without flags)
+```
+
+Compact styles (`FlagOnly`, `AvatarOnly`) use the same tight cell layout with tooltips. In modal mode, `FlagOnly` renders as a showcase grid with radio-card selection; `AvatarOnly` falls back to label-only cards since the abbreviation is too small for a showcase.
+
+```php
+$switch
+    ->flags([...])
+    ->itemStyle(ItemStyle::FlagOnly)
+    ->displayMode(DisplayMode::Modal)
+    ->columns(3)
+    ->modalWidth('lg');
+```
+
+## Labels
+
+### Custom Labels
+
+Override the auto-generated locale names:
+
+```php
+$switch->labels([
+    'pt_BR' => 'Brasileiro',
+    'pt_PT' => 'Europeu',
+]);
+```
+
+### Native Labels
+
+Show each locale name in its own language (e.g., "Fran&ccedil;ais" instead of "French"):
+
+```php
+$switch->nativeLabel();
+```
+
+### Display Locale
+
+Change the language used for auto-generated labels:
+
+```php
+// Labels generated in French (e.g., "Anglais" for English)
+$switch->displayLocale('fr');
+```
+
+## Appearance
+
+### Circular
+
+Make flags and avatars fully rounded:
+
+```php
+$switch->circular();
+```
+
+### Flag & Avatar Sizing (Modal)
+
+Control sizes in modal radio cards:
+
+```php
+$switch
+    ->displayMode(DisplayMode::Modal)
+    ->flagHeight('h-20')     // Default: 'h-16'
+    ->avatarHeight('size-10'); // Default: 'size-8'
+```
+
+## Placement
+
+### Render Hook
+
+Place the switch at any [Filament render hook](https://filamentphp.com/docs/5.x/support/render-hooks):
+
+```php
+use Filament\View\PanelsRenderHook;
+
+$switch->renderHook(PanelsRenderHook::SIDEBAR_NAV_END);
+```
+
+The trigger automatically adapts its design to match the surrounding UI:
+
+| Hook Location | Trigger Design |
+|---|---|
+| `GLOBAL_SEARCH_*`, `TOPBAR_*` | Icon button (matches topbar icons) |
+| `SIDEBAR_LOGO_*` | Icon button (compact, hides when sidebar collapses) |
+| `SIDEBAR_START`, `SIDEBAR_NAV_*`, `SIDEBAR_FOOTER` | Sidebar nav item (matches Dashboard, Welcome, etc.) |
+| `USER_MENU_BEFORE/AFTER` (topbar on) | Icon button inside user menu area |
+| `USER_MENU_BEFORE/AFTER` (topbar off) | Sidebar footer button (matches notifications) |
+| `USER_MENU_PROFILE_*` | Dropdown list item (matches user menu items) |
+| `SIMPLE_LAYOUT_START/END` | Floating button (see [Outside Panels](#outside-panels)) |
+
+> **Any other hook works too.** If you pass a hook the plugin doesn't explicitly classify, it still registers and renders a default icon button — but the visual fit is on you. Use the stable CSS hooks (`fi-ls`, `fi-ls-trigger`, etc.) from your own stylesheet, or publish the views for structural changes.
+
+### Smart Defaults
+
+When you don't set a render hook, the plugin picks the best one based on your panel:
+
+| Panel Config | Default Hook | Where it appears |
+|---|---|---|
+| Topbar enabled | `GLOBAL_SEARCH_AFTER` | Topbar, after search bar |
+| Topbar disabled | `SIDEBAR_LOGO_AFTER` | Sidebar header, next to the logo |
+
+To render inside the user menu as a menu item, set the render hook explicitly:
+
+```php
+$switch->renderHook(PanelsRenderHook::USER_MENU_PROFILE_AFTER);
+```
+
+### Dropdown Placement
+
+Control which direction the dropdown opens:
+
+```php
+$switch->dropdownPlacement('top-end');
+```
+
+### Max Height
+
+The dropdown is scrollable by default (`18rem`). Override it for a different limit, or pass `'max-content'` to disable scrolling:
+
+```php
+$switch->maxHeight('30rem');
+$switch->maxHeight('max-content'); // no scroll, grows to fit content
+```
+
+## Outside Panels
+
+Filament's unauthenticated pages (login, register, password reset, email verification) render in a **simple layout** — no sidebar, no topbar, just the centered form card. You can show the language switcher on these pages so visitors can translate the UI before they sign in.
+
+```php
+use BezhanSalleh\LanguageSwitch\Enums\Placement;
+
+$switch
+    ->visible(outsidePanels: true)
+    ->outsidePanelPlacement(Placement::TopEnd);
+```
+
+`visible()` takes two independent toggles — `insidePanels` (default `true`) and `outsidePanels` (default `false`) — so you can enable either context on its own, both, or neither. For example, to render **only** on the simple-layout pages and hide the switcher once the user is inside the panel:
+
+```php
+$switch->visible(insidePanels: false, outsidePanels: true);
+```
+
+By default the switcher renders as a content-sized pill anchored to the chosen `Placement`. All six placements are RTL-aware — `start`/`end` auto-flip for right-to-left locales:
+
+| Placement | Position |
+|---|---|
+| `Placement::TopStart` | Top-left (LTR) / top-right (RTL) |
+| `Placement::TopCenter` | Top-center |
+| `Placement::TopEnd` | Top-right (LTR) / top-left (RTL) |
+| `Placement::BottomStart` | Bottom-left (LTR) / bottom-right (RTL) |
+| `Placement::BottomCenter` | Bottom-center |
+| `Placement::BottomEnd` | Bottom-right (LTR) / bottom-left (RTL) |
+
+### Placement mode
+
+`outsidePanelPlacement()` accepts an optional second argument that controls **how** the switcher is attached to the page. Three modes, each with predictable CSS semantics — the names are chosen so they match what you'd read in the published view:
+
+```php
+use BezhanSalleh\LanguageSwitch\Enums\Placement;
+use BezhanSalleh\LanguageSwitch\Enums\PlacementMode;
+
+$switch->outsidePanelPlacement(Placement::TopCenter, PlacementMode::Pinned);
+```
+
+| Mode | CSS | Behavior |
+|---|---|---|
+| **`PlacementMode::Static`** *(default)* | `position: static` | Renders **in the document flow** inside `.fi-simple-layout`, above the form card for `Top*` placements or below it for `Bottom*`. Scrolls with the page. Content-sized pill aligned horizontally via `w-fit` + `mx-auto` / `ms-auto`. |
+| **`PlacementMode::Pinned`** | `position: fixed` | **Stays visible while scrolling** — pinned to the viewport at the chosen corner/edge as a content-sized pill. Use this when the switcher should always be reachable (e.g. long registration forms). |
+| **`PlacementMode::Relative`** | `position: relative` | Same visual as `Static` out of the box, but the element is **positioned**, so you can offset it via custom CSS (`top: 1rem`, `inset-inline-start: 2rem`, etc.) in your theme file without publishing the view. |
+
+> **Naming note:** we use `Pinned` instead of `Fixed` on purpose. In CSS, `position: fixed` means "always visible, stays on screen during scroll" — which in the dev brain is usually called "sticky". To avoid that collision every time someone opens the blade file, the mode is named after the *intent* (`Pinned` = pinned to viewport), while `Static` and `Relative` use the literal CSS names because those map 1:1 to their CSS behavior.
+
+### Which routes it shows on
+
+By default the switcher appears on Filament's standard auth routes. Override the list if your panel uses different route names:
+
+```php
+$switch->outsidePanelRoutes([
+    'auth.login',
+    'auth.register',
+    'auth.password-reset.request',
+    'auth.password-reset.reset',
+]);
+```
+
+The default list is `['auth.login', 'auth.profile', 'auth.register']`. The profile route is automatically excluded from the match unless the current panel uses a simple profile page (`->profile(isSimple: true)`), since a full-layout profile page already has a topbar/sidebar where the switcher lives.
+
+### Render hook anchor (auto-derived)
+
+The anchor hook is derived from **both** the placement and the mode — you don't pick it manually:
+
+| Mode | Top placement | Bottom placement | Why |
+|---|---|---|---|
+| `Pinned` | `BODY_START` | `BODY_END` | Pinned uses `position: fixed`, so the element needs a parent that gives reliable viewport-relative positioning. Direct body child is ideal — no flex-parent or transform containing block in the ancestor chain. |
+| `Static` / `Relative` | `SIMPLE_LAYOUT_START` | `SIMPLE_LAYOUT_END` | In-flow elements are anchored **inside `.fi-simple-layout`** (which is `min-h-dvh flex-col`). This way the element shares the viewport with the centered form card instead of extending the body height and adding an unwanted page scroll. |
+
+You can still override explicitly — pass any hook name to `outsidePanelsRenderHook()`:
+
+```php
+use Filament\View\PanelsRenderHook;
+
+// Dock as a profile item inside the user menu dropdown
+$switch->outsidePanelsRenderHook(PanelsRenderHook::USER_MENU_PROFILE_AFTER);
+
+// Or force body-level anchoring for an in-flow mode
+$switch
+    ->outsidePanelPlacement(Placement::BottomCenter, PlacementMode::Static)
+    ->outsidePanelsRenderHook(PanelsRenderHook::BODY_END);
+```
+
+### Auto-docking into the user menu
+
+When **all** of these are true, `TopEnd` **automatically docks into the user menu** via `USER_MENU_BEFORE` instead of anchoring as a pinned overlay:
+
+- `PlacementMode::Pinned`
+- The current route is in the outside-panel list (e.g. a simple profile page)
+- The user is authenticated
+- The panel has a user menu
+
+This avoids the collision between the pinned pill and Filament's own `.fi-simple-layout-header` (also anchored at `top-0 end-0`). `Static` and `Relative` modes don't trigger auto-docking because they're in flow and can't collide with the header.
+
+To force a pinned overlay regardless, pin a different hook explicitly:
+
+```php
+use Filament\View\PanelsRenderHook;
+
+// Force a body-start overlay even when a user menu is present
+$switch
+    ->outsidePanelPlacement(Placement::TopEnd, PlacementMode::Pinned)
+    ->outsidePanelsRenderHook(PanelsRenderHook::BODY_START);
+```
+
+## Inline embedding in custom pages
+
+The render-hook system handles the common cases automatically — topbar, sidebar, user menu, simple layout. If you need to drop the switcher into a custom page section or arbitrary location in your own views, use the Blade component:
+
+```blade
+<x-language-switch::inline />
+```
+
+It mounts the same `<livewire:language-switch-component>` directly at the tag's position — no render hook required. The trigger uses whatever styling your current configuration resolves to (for example, if your effective render hook is in the topbar, you'll get a topbar-style icon button inline in your view). If you need a different visual in your custom location, override with `->renderHook(...)` in a dedicated configureUsing callback or publish the views for full control.
+
+Passing an explicit key is recommended when embedding in a parent component that re-renders, or when placing multiple instances on the same page:
+
+```blade
+<x-language-switch::inline key="switch-header" />
+...
+<x-language-switch::inline key="switch-footer" />
+```
+
+If omitted, a unique key is auto-generated via `uniqid()` on every render, which is fine for static pages but can cause the component to re-mount unnecessarily on dynamic parent updates.
+
+## Panel Exclusion
+
+Hide the switch from specific panels:
+
+```php
+$switch->excludes(['admin']);
+```
+
+## User Preferred Locale
+
+Resolve the user's preferred locale from their profile or any source:
+
+```php
+$switch->userPreferredLocale(fn () => auth()->user()?->locale);
+```
+
+The locale resolution order is:
+1. Session
+2. Query parameter (`?locale=`)
+3. User preferred locale (this setting)
+4. Browser `Accept-Language` header
+5. Cookie
+6. `app.locale` config
+
+## Customization
+
+For deep customization, publish the plugin's views and edit them in your app:
+
+```bash
+php artisan vendor:publish --tag="language-switch-views"
+```
+
+Published views live in `resources/views/vendor/language-switch/` and override the package versions automatically. For small tweaks, prefer targeting the plugin's stable CSS hooks (`fi-ls`, `fi-ls-trigger`, `fi-ls-item`, etc.) from your own stylesheet rather than publishing views.
+
+## Event
+
+A `LocaleChanged` event fires whenever the locale switches:
 
 ```php
 use BezhanSalleh\LanguageSwitch\Events\LocaleChanged;
 use Illuminate\Support\Facades\Event;
- 
-/**
- * Bootstrap any application services.
- */
-public function boot(): void
-{
-    Event::listen(function (LocaleChanged $event) {
-        // persist the new locale in the user's profile, or perform any other action
-        // auth()->user()->setLocale($event->locale);
-    });
-}
+
+Event::listen(function (LocaleChanged $event) {
+    auth()->user()?->update(['locale' => $event->locale]);
+});
 ```
 
-### Visibility Control
+## Control Panel
 
-The `visible()` method configures the visibility of the **Language Switch** within the application's UI. It has two parameters:
+A floating developer configurator that lets you hot-swap every configuration option live in the browser — handy for previewing trigger styles, testing render-hook placements, and checking the outside-panel modes without editing your service provider.
 
-- **insidePanels**: 
-Determines if the language switcher is visible inside Filament panels, which is `true` by default. The language switcher will be visible inside panels only if the `insidePanels` condition is true, more than one locale is available, and the current panel is included (not excluded).
+### Enabling it
 
-- **outsidePanels**: Controls visibility outside of the panels, with a default of false. The language switcher will be visible outside of panels only if the `outsidePanels` condition is true, the current route is included in the `outsidePanelRoutes()`, and the current panel is included (not excluded).
-
-Both arguments can be provided as a `boolean` or a `Closure` that returns a boolean value. The Closure enables dynamic determination of visibility, allowing you to incorporate complex logic based on the application state, user permissions, or other criteria.
+Opt in explicitly via `controlPanel()`:
 
 ```php
-//AppServiceProvider.php
-    ...
-    LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
-        $switch
-            ...
-            ->visible(outsidePanels: true)
-            ...;
-    });
-    ...
-```
-### Outside Panel Routes
-
-The `outsidePanelRoutes()` method is used to define the routes where the **Language Switch** should be visible outside of the Filament panels. This method accepts either an `array` of route names or a `Closure` that returns an array of route names. By default, it includes common authentication routes such as `auth.login`, `auth.profile`, and `auth.register`.
-
-To specify custom routes for displaying the language switcher, pass an array of route names to the method:
-
-```php
-// AppServiceProvider.php
-...
 LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
     $switch
-        ...
-        ->outsidePanelRoutes([
-            'profile',
-            'home',
-            // Additional custom routes where the switcher should be visible outside panels
+        ->locales(['en', 'fr', 'ar'])
+        ->controlPanel();
+});
+```
+
+Disabled by default. When you call `controlPanel()` (or `controlPanel(true)`) **and** the app is running with `APP_ENV=local` + `APP_DEBUG=true`, a small language-icon button appears at the bottom-end of every panel page. The local + debug requirement is a safety guardrail — even if you leave `controlPanel(true)` committed, it won't render in production.
+
+To disable it explicitly (e.g. in a shared configuration):
+
+```php
+$switch->controlPanel(false);
+```
+
+### Live vs manual mode
+
+`controlPanel()` takes two arguments: `controlPanel(bool $enabled = true, bool $live = true)`. By default every change (toggle, select) is applied immediately via a Livewire round-trip. If you'd rather stage multiple changes and commit them together, pass `live: false`:
+
+```php
+$switch->controlPanel(live: false);          // enabled + staged (Apply button)
+$switch->controlPanel(true, live: false);    // same thing, explicit
+```
+
+In manual mode, changes are accumulated in the session and the panel footer shows an **Apply** button (only enabled when you have pending changes). Click it to commit everything in one reload. **Reset** still works the same way — it wipes every accumulated override and restores your configured defaults.
+
+### Sections
+
+The panel is organized as an accordion — click a section to expand it; opening one collapses the others, so it stays compact on both mobile and desktop:
+
+- **Trigger** — topbar on/off, trigger style, trigger icon, render hook
+- **Display** — dropdown / modal mode, modal width, columns, slide-over
+- **Appearance** — circular, native labels, use flags, item style
+- **Outside Panels** — enable toggle, placement, placement mode (`Pinned` / `Static` / `Relative`), and an explicit render hook override (defaults to auto, with user-menu docking targets as alternatives)
+
+## Full Example
+
+```php
+use BezhanSalleh\LanguageSwitch\Enums\DisplayMode;
+use BezhanSalleh\LanguageSwitch\Enums\TriggerStyle;
+use BezhanSalleh\LanguageSwitch\LanguageSwitch;
+use Filament\Support\Icons\Heroicon;
+
+LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+    $switch
+        ->locales(['en', 'fr', 'ar', 'de', 'es'])
+        ->flags([
+            'en' => asset('flags/us.svg'),
+            'fr' => asset('flags/fr.svg'),
+            'ar' => asset('flags/sa.svg'),
+            'de' => asset('flags/de.svg'),
+            'es' => asset('flags/es.svg'),
         ])
-        ...;
+        ->displayMode(DisplayMode::Modal)
+        ->columns(2)
+        ->modalWidth('lg')
+        ->circular()
+        ->nativeLabel()
+        ->trigger(
+            style: TriggerStyle::FlagLabel,
+            icon: Heroicon::GlobeAlt,
+        )
+        ->excludes(['admin'])
+        ->userPreferredLocale(fn () => auth()->user()?->locale);
 });
-...
 ```
 
-If you want to dynamically determine the routes, use a Closure:
+## Version Support
+Only the latest major plugin line receives active development. Older lines stay installable for legacy projects but get no new features; they only receive security fixes while their Filament target is still supported upstream.
 
-```php
-// AppServiceProvider.php
-...
-LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
-    $switch
-        ...
-        ->outsidePanelRoutes(fn() => someCondition() ? ['dynamic.route'] : ['default.route'])
-        ...;
-});
-...
-```
+| Plugin | Filament | Status |
+|---|---|---|
+| **[`5.x`](https://github.com/bezhansalleh/filament-language-switch/tree/main)** | [v5](https://filamentphp.com/docs/5.x/introduction/installation) | **Active** — new features + bug fixes (lives on `main`) |
+| [`4.x`](https://github.com/bezhansalleh/filament-language-switch/tree/4.x) | [v4](https://filamentphp.com/docs/4.x/introduction/installation) & [v5](https://filamentphp.com/docs/5.x/introduction/installation) | Security fixes only |
+| [`3.x`](https://github.com/bezhansalleh/filament-language-switch/tree/3.x) | [v3](https://filamentphp.com/docs/3.x/panels/installation) | End of life — follows Filament v3 EOL |
+| [`1.x`](https://github.com/bezhansalleh/filament-language-switch/tree/1.x) | [v2](https://filamentphp.com/docs/2.x/admin/installation) | End of life |
 
-### Outside Panel Placement
-The `outsidePanelPlacement()` method specifies the placement of the **Language Switch** when it is rendered outside of Filament panels. This method accepts an `Placement` enum value that determines the switch's position on the screen.
-
-You can choose from the following placements defined in the `Placement` enum:
-
-* `TopLeft` default
-* `TopCenter`
-* `TopRight`
-* `BottomLeft`
-* `BottomCenter`
-* `BottomRight`
-  
-Set the desired placement for the **language switch** outside Filament Panels like this:
-
-```php
-// AppServiceProvider.php
-...
-use BezhanSalleh\LanguageSwitch\Enums\Placement;
-
-LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
-    $switch
-        ...
-        ->outsidePanelPlacement(Placement::BottomRight)
-        // Sets the language switch to appear at the bottom right outside of panels
-        ...;
-});
-...
-```
-
-### Outside Panels Render Hook
-
-By default, the **Language Switch** is rendered outside of Filament panels using the `panels::body.start` render hook. You can customize this by using the `outsidePanelsRenderHook()` method to specify any of the available [Filament render hooks](https://filamentphp.com/docs/3.x/support/render-hooks). This method accepts a `string` or a `Closure` that returns a render hook name.
-
-```php
-// AppServiceProvider.php
-...
-LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
-    $switch
-        ...
-        ->outsidePanelsRenderHook('panels::body.end')
-        ...;
-});
-...
-```
-
-### Localized Labels
-The `displayLocale()` method is used to set the locale that influences how labels for given locales are generated by PHP's native function `locale_get_display_name()`. This method specifies the language in which the labels for given locales are displayed when custom labels are not set using the `labels()` method.
-
-By default, if `displayLocale()` is not explicitly set, the locale labels are generated based on the application's current locale. This affects the automatic label generation for locales without custom labels.
-
-For example, if your application's current locale is `English ('en')`, and you have not set a specific display locale, then the labels for locales like `pt_BR` and `pt_PT` would automatically be generated as `Portuguese (Brazil)` and `Portuguese (Portugal)` respectively, in English.
-
-To specify a different language for the automatic label generation, use `displayLocale()`:
-```php
-// AppServiceProvider.php
-...
-LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
-    $switch
-        ...
-        ->displayLocale('fr') // Sets French as the language for label localization
-        ...;
-});
-...
-```
-
-### Custom Labels
-
-The `labels()` method in the **Language Switch** allows you to define custom text labels for each locale that your application supports. This customization is particularly useful when the default labels generated by PHP's native function `locale_get_display_name()` are not suitable for your application's needs.
-
-By default, if no custom labels are provided, the **Language switch** will generate labels for each locale using the native PHP function `locale_get_display_name()`, which creates a label based on the current application's locale. For example, the locales `pt_BR` and `pt_PT` will be labeled as **Portuguese (Brazil)** and **Portuguese (Portugal)** respectively, when the application's locale is set to `en`.
-
-However, you might prefer to display labels that are shorter or differently formatted. This is where the `labels()` method is beneficial. You can specify exactly how each language should be labeled, overriding the default behavior.
-
-Here's how to set custom labels:
-
-```php
-// AppServiceProvider.php
-...
-LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
-    $switch
-        ...
-        ->locales(['en','fr','pt_BR','pt_PT'])
-        ->labels([
-            'pt_BR' => 'Português (BR)',
-            'pt_PT' => 'Português (PT)',
-            // Other custom labels as needed
-        ])
-        ...;
-});
-...
-```
-
-### Panel Exclusion
-
-By default the **Language Switch** will be available inside all existing Panels. But you can choose which panels will have the switch by providing an array of valid panel ids using the `exclude()` method. The method also accepts a `Closure` so you have more control over how to exclude certain panels.
-
-```php
-//AppServiceProvider.php
-    ...
-    LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
-        $switch
-            ...
-            ->excludes([
-                'app'
-            ])
-            ...;
-    });
-    ...
-```
-
-### Render Hook
-
-By default the `panels::global-search.after` hook is used to render the **Language Switch**. But you can use any of the [Render Hooks](https://filamentphp.com/docs/3.x/support/render-hooks) available in Filament using the `renderHook()` method as:
-
-```php
-//AppServiceProvider.php
-    ...
-    LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
-        $switch
-            ...
-            ->renderHook('panels::global-search.before')
-            ...;
-    });
-    ...
-```
-
-### Flags
-
-By default the **Language Switch** uses the locales as `Language Badges` to serve as placeholders for the flags. But you may associate each locale with its corresponding flag image by passing an array to the `flags()` method. Each key in the array represents the locale code, and its value should be the asset path to the flag image for that locale. For example, to set flag images for Arabic, French, and English (US), you would provide an array like this:
-
-```php
-//AppServiceProvider.php
-    ...
-    LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
-        $switch
-            ...
-            ->flags([
-                'ar' => asset('flags/saudi-arabia.svg'),
-                'fr' => asset('flags/france.svg'),      
-                'en' => asset('flags/usa.svg'),
-            ])
-            ...;
-    });
-    ...
-```
-
-Make sure that the provided paths in the `asset()` helper point to the correct location of the flag images in your Laravel project's public directory.
-
-### Flags Only
-
-The `flagsOnly()` method controls whether the **Language Switch** displays only flag images, without accompanying text labels. This method can enhance the UI by providing a cleaner look when space is limited or when you prefer a more visual representation of language options.
-
-To display only the flags for each language, invoke the method and make sure you have provided the flags for locales just like shown above using the `flags()` method:
-
-```php
-//AppServiceProvider.php
-    ...
-    LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
-        $switch
-            ...
-            ->flags([
-                'ar' => asset('flags/saudi-arabia.svg'),
-                'fr' => asset('flags/france.svg'),      
-                'en' => asset('flags/usa.svg'),
-            ])
-            ->flagsOnly()
-            ...;
-    });
-    ...
-```
-
-### Circular
-
-By default the **Language Switch** `Flags` or `Language Badges` are slightly rounded like the most other Filament components. But you may make it fully rounded using the `circular()` method.
-
-```php
-//AppServiceProvider.php
-    ...
-    LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
-        $switch
-            ...
-            ->circular()
-            ...;
-    });
-    ...
-```
-
-## Views
-In case you want to tweak the design, you can publish the views using the following command and adjust it however you like:
-
-```bash
-php artisan vendor:publish --tag="filament-language-switch-views"
-```
+See [CHANGELOG](CHANGELOG.md) for migration notes between majors.
 
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
-## Contributing
-
-If you want to contribute to this package, you may want to test it in a real Filament project:
-
--   Fork this repository to your GitHub account.
--   Create a Filament app locally.
--   Clone your fork in your Filament app's root directory.
--   In the `/filament-language-switch` directory, create a branch for your fix, e.g. `fix/error-message`.
-
-Install the packages in your app's `composer.json`:
-
-```json
-"require": {
-    "bezhansalleh/filament-language-switch": "dev-fix/error-message as main-dev",
-},
-"repositories": [
-    {
-        "type": "path",
-        "url": "filament-language-switch"
-    }
-]
-```
-
-Now, run `composer update`.
-
-Please see [CONTRIBUTING](https://github.com/spatie/.github/blob/main/CONTRIBUTING.md) for details.
-
-## Security Vulnerabilities
-
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
-
 ## Credits
 
--   [Bezhan Salleh](https://github.com/bezhanSalleh)
--   [All Contributors](../../contributors)
+- [Bezhan Salleh](https://github.com/bezhanSalleh)
+- [All Contributors](../../contributors)
 
 ## License
 

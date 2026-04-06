@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BezhanSalleh\LanguageSwitch\Http\Livewire;
 
 use BezhanSalleh\LanguageSwitch\LanguageSwitch;
@@ -12,7 +14,9 @@ class LanguageSwitchComponent extends Component
     #[On('language-switched')]
     public function changeLocale(string $locale): void
     {
-        LanguageSwitch::trigger(locale: $locale);
+        LanguageSwitch::switchLocale(locale: $locale);
+
+        $this->redirect(request()->header('Referer', url()->current()));
     }
 
     public function render(): View
