@@ -625,6 +625,18 @@ The `Placement` enum cases were renamed so they auto-flip in right-to-left local
 - **`<x-language-switch::inline />` Blade component.** Drop the switcher into any view — a form section, a custom page, a sidebar widget — without going through a render hook.
 - **Developer Control Panel.** Opt-in via `->controlPanel()`. A floating configurator that hot-swaps every setting live in the browser without editing your service provider. Supports `live: false` for batched Apply.
 
+## Version Support
+Only the latest major plugin line receives active development. Older lines stay installable for legacy projects but get no new features; they only receive security fixes while their Filament target is still supported upstream.
+
+| Plugin | Filament | Status |
+|---|---|---|
+| **[`5.x`](https://github.com/bezhansalleh/filament-language-switch/tree/main)** | [v5](https://filamentphp.com/docs/5.x/introduction/installation) | **Active** — new features + bug fixes (lives on `main`) |
+| [`4.x`](https://github.com/bezhansalleh/filament-language-switch/tree/4.x) | [v4](https://filamentphp.com/docs/4.x/introduction/installation) & [v5](https://filamentphp.com/docs/5.x/introduction/installation) | Security fixes only |
+| [`3.x`](https://github.com/bezhansalleh/filament-language-switch/tree/3.x) | [v3](https://filamentphp.com/docs/3.x/panels/installation) | End of life — follows Filament v3 EOL |
+| [`1.x`](https://github.com/bezhansalleh/filament-language-switch/tree/1.x) | [v2](https://filamentphp.com/docs/2.x/admin/installation) | End of life |
+
+See [CHANGELOG](CHANGELOG.md) for migration notes between majors.
+
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
