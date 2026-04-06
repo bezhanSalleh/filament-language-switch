@@ -609,16 +609,6 @@ The `Placement` enum cases were renamed so they auto-flip in right-to-left local
 
 `TopCenter` and `BottomCenter` keep their names. Update any `->outsidePanelPlacement(...)` call that references the old cases.
 
-#### `flagsOnly()` replaced by `itemStyle()`
-
-`->flagsOnly()` has been replaced by the `ItemStyle` enum, which covers all visual+label combinations for locale items — not just flags:
-
-| v4 | v5 |
-|---|---|
-| `->flagsOnly()` | `->itemStyle(ItemStyle::FlagOnly)` |
-
-See [Item Style](#item-style) for the full enum.
-
 #### Default value changes
 
 | Setting | v4 default | v5 default | Restore v4 behavior |
