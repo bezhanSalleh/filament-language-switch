@@ -27,7 +27,7 @@ enum ItemStyle: string
 
     public function hasVisual(): bool
     {
-        return ! in_array($this, [self::LabelOnly], true);
+        return $this !== self::LabelOnly;
     }
 
     public function isCompact(): bool
