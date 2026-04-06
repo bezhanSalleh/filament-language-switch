@@ -18,8 +18,6 @@ trait HasLocales
 
     protected array | Closure $flags = [];
 
-    protected bool | Closure $isFlagsOnly = false;
-
     protected bool | Closure $nativeLabel = false;
 
     protected string | Closure | null $userPreferredLocale = null;
@@ -55,13 +53,6 @@ trait HasLocales
     public function flags(array | Closure $flags): static
     {
         $this->flags = $flags;
-
-        return $this;
-    }
-
-    public function flagsOnly(bool $condition = true): static
-    {
-        $this->isFlagsOnly = $condition;
 
         return $this;
     }
@@ -107,14 +98,6 @@ trait HasLocales
         }
 
         return $flagUrls;
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function isFlagsOnly(): bool
-    {
-        return (bool) $this->evaluate($this->isFlagsOnly) && filled($this->getFlags());
     }
 
     public function getUserPreferredLocale(): ?string

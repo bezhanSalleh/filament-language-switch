@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BezhanSalleh\LanguageSwitch\Concerns;
 
 use BezhanSalleh\LanguageSwitch\Enums\DisplayMode;
+use BezhanSalleh\LanguageSwitch\Enums\ItemStyle;
 use BezhanSalleh\LanguageSwitch\Enums\TriggerStyle;
 use Closure;
 use Filament\Support\Icons\Heroicon;
@@ -24,6 +25,8 @@ trait HasAppearance
     protected string | Closure $flagHeight = 'h-16';
 
     protected string | Closure $avatarHeight = 'size-8';
+
+    protected ItemStyle | Closure | null $itemStyle = null;
 
     protected TriggerStyle | Closure | null $triggerStyle = null;
 
@@ -111,6 +114,26 @@ trait HasAppearance
     public function getAvatarHeight(): string
     {
         return (string) $this->evaluate($this->avatarHeight);
+    }
+
+    public function itemStyle(ItemStyle | Closure $style): static
+    {
+        $this->itemStyle = $style;
+
+        return $this;
+    }
+
+    public function getItemStyle(): ItemStyle
+    {
+        $style = $this->evaluate($this->itemStyle);
+
+        if ($style instanceof ItemStyle) {
+            return $style;
+        }
+
+        return filled($this->getFlags())
+            ? ItemStyle::FlagWithLabel
+            : ItemStyle::AvatarWithLabel;
     }
 
     public function trigger(

@@ -203,22 +203,26 @@ $switch->flags([
 ]);
 ```
 
-### Flags Only
+### Item Style
 
-Show only the flag images without text labels. Items show tooltips on hover:
+Control what each locale item shows in the dropdown or modal. The default auto-detects: `FlagWithLabel` when flags are configured, `AvatarWithLabel` otherwise.
 
 ```php
-$switch
-    ->flags([...])
-    ->flagsOnly();
+use BezhanSalleh\LanguageSwitch\Enums\ItemStyle;
+
+$switch->itemStyle(ItemStyle::FlagOnly);        // flag images only, tooltips on hover
+$switch->itemStyle(ItemStyle::AvatarOnly);      // abbreviations only (EN, FR), tooltips on hover
+$switch->itemStyle(ItemStyle::LabelOnly);       // text labels only, no visual
+$switch->itemStyle(ItemStyle::FlagWithLabel);    // flag + locale name (default with flags)
+$switch->itemStyle(ItemStyle::AvatarWithLabel);  // abbreviation + locale name (default without flags)
 ```
 
-In modal mode, flags-only renders as a showcase grid with radio-card selection:
+Compact styles (`FlagOnly`, `AvatarOnly`) use the same tight cell layout with tooltips. In modal mode, `FlagOnly` renders as a showcase grid with radio-card selection; `AvatarOnly` falls back to label-only cards since the abbreviation is too small for a showcase.
 
 ```php
 $switch
     ->flags([...])
-    ->flagsOnly()
+    ->itemStyle(ItemStyle::FlagOnly)
     ->displayMode(DisplayMode::Modal)
     ->columns(3)
     ->modalWidth('lg');
@@ -549,7 +553,7 @@ The panel is organized as an accordion — click a section to expand it; opening
 
 - **Trigger** — topbar on/off, trigger style, trigger icon, render hook
 - **Display** — dropdown / modal mode, modal width, columns, slide-over
-- **Appearance** — circular, native labels, use flags, flags only
+- **Appearance** — circular, native labels, use flags, item style
 - **Outside Panels** — enable toggle, placement, placement mode (`Pinned` / `Static` / `Relative`), and an explicit render hook override (defaults to auto, with user-menu docking targets as alternatives)
 
 ## Full Example

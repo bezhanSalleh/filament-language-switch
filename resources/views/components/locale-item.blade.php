@@ -3,7 +3,7 @@
     'label',
     'flag' => null,
     'avatar' => null,
-    'isFlagsOnly' => false,
+    'isCompact' => false,
     'isCircular' => false,
     'isModal' => false,
     'flagHeight' => 'h-16',
@@ -14,8 +14,8 @@
     $isActive = app()->isLocale($locale);
 @endphp
 
-@if ($isModal && $isFlagsOnly && $flag)
-    {{-- Modal flagsOnly: Radio-Group Card --}}
+@if ($isModal && $isCompact && $flag)
+    {{-- Modal compact (FlagOnly): Radio-Group Card --}}
     <button
         type="button"
         @if (! $isActive)
@@ -57,8 +57,8 @@
         @endif
         @class([
             'fi-ls-item relative group flex items-center shadow-sm gap-3 rounded-lg p-3 transition duration-75 outline-none',
-            'ring-1 ring-primary-600 bg-primary-50 dark:ring-primary-500/20 dark:bg-primary-400/10 pointer-events-none' => $isActive,
-            'ring-1 ring-gray-950/8 bg-white hover:ring-primary-500/30 dark:ring-white/8 dark:bg-white/5 dark:hover:ring-primary-500/30 hover:ring-2' => ! $isActive,
+            'ring-1 ring-primary-500 bg-primary-50 dark:ring-primary-400/20 dark:bg-primary-400/10 pointer-events-none' => $isActive,
+            'ring-1 ring-gray-950/8 bg-white hover:ring-primary-500 dark:ring-white/8 dark:bg-white/5 dark:hover:ring-primary-400' => ! $isActive,
         ])
     >
         @if ($isActive)
@@ -103,7 +103,7 @@
         @if (! $isActive)
             wire:click="changeLocale('{{ $locale }}')"
         @endif
-        @if ($isFlagsOnly)
+        @if ($isCompact)
             x-tooltip="{
                 content: @js($label),
                 theme: $store.theme,
@@ -112,7 +112,7 @@
         @class([
             'fi-dropdown-list-item fi-ls-item whitespace-nowrap',
             'bg-primary-50 dark:bg-primary-400/10 pointer-events-none' => $isActive,
-            'justify-center p-1.5' => $isFlagsOnly,
+            'justify-center p-1.5' => $isCompact,
         ])
     >
         @if ($flag)
@@ -120,8 +120,8 @@
                 :src="$flag"
                 :alt="$label"
                 @class([
-                    $isFlagsOnly ? 'h-7 w-11 rounded-sm! object-cover' : 'fi-size-sm',
-                    'fi-circular' => $isCircular && ! $isFlagsOnly,
+                    $isCompact ? 'h-7 w-11 rounded-sm! object-cover' : 'fi-size-sm',
+                    'fi-circular' => $isCircular && ! $isCompact,
                 ])
             />
         @elseif ($avatar)
@@ -136,7 +136,7 @@
             </span>
         @endif
 
-        @unless ($isFlagsOnly)
+        @unless ($isCompact)
             <span @class([
                 'fi-dropdown-list-item-label',
                 'text-primary-600 dark:text-primary-400' => $isActive,

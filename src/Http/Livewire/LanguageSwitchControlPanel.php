@@ -26,7 +26,7 @@ class LanguageSwitchControlPanel extends Component
 
     public bool $nativeLabel = false;
 
-    public bool $flagsOnly = false;
+    public string $itemStyle = '';
 
     public bool $useFlags = false;
 
@@ -102,7 +102,7 @@ class LanguageSwitchControlPanel extends Component
         }
     }
 
-    public function updated($property, $value = null): void
+    public function updated(mixed $property, mixed $value = null): void
     {
         if (in_array($property, ['live', 'isDirty'], true)) {
             return;
@@ -113,7 +113,9 @@ class LanguageSwitchControlPanel extends Component
         }
 
         if ($property === 'useFlags' && ! $this->useFlags) {
-            $this->flagsOnly = false;
+            if (in_array($this->itemStyle, ['flag-with-label', 'flag-only'], true)) {
+                $this->itemStyle = '';
+            }
 
             if (in_array($this->triggerStyle, ['flag', 'flag-label'], true)) {
                 $this->triggerStyle = '';
@@ -126,7 +128,7 @@ class LanguageSwitchControlPanel extends Component
             'circular' => $this->circular,
             'columns' => $this->columns,
             'nativeLabel' => $this->nativeLabel,
-            'flagsOnly' => $this->flagsOnly,
+            'itemStyle' => $this->itemStyle,
             'useFlags' => $this->useFlags,
             'modalWidth' => $this->modalWidth,
             'modalSlideOver' => $this->modalSlideOver,

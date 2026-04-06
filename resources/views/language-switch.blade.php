@@ -8,7 +8,7 @@
 
     $locales = $ls->getLocales();
     $isCircular = $ls->isCircular();
-    $isFlagsOnly = $ls->isFlagsOnly();
+    $itemStyle = $ls->getItemStyle();
     $hasFlags = filled($ls->getFlags());
     $displayMode = $ls->getDisplayMode();
     $columns = $ls->getColumns();
@@ -27,7 +27,7 @@
     $isInFlow = $isStatic || $isRelative;
 @endphp
 
-<div @class(['fi-ls', 'fi-circular' => $isCircular, 'fi-flags-only' => $isFlagsOnly])>
+<div @class(['fi-ls', 'fi-circular' => $isCircular, 'fi-compact' => $itemStyle->isCompact()])>
     @if ($layout->renderContext === 'outside-panel')
         <div @class([
             'flex p-4',

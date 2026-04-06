@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BezhanSalleh\LanguageSwitch;
 
 use BezhanSalleh\LanguageSwitch\Enums\DisplayMode;
+use BezhanSalleh\LanguageSwitch\Enums\ItemStyle;
 use BezhanSalleh\LanguageSwitch\Enums\Placement;
 use BezhanSalleh\LanguageSwitch\Enums\PlacementMode;
 use BezhanSalleh\LanguageSwitch\Enums\TriggerStyle;
@@ -101,8 +102,8 @@ class LanguageSwitchServiceProvider extends PackageServiceProvider
                 $languageSwitch->nativeLabel((bool) $overrides['nativeLabel']);
             }
 
-            if (isset($overrides['flagsOnly'])) {
-                $languageSwitch->flagsOnly((bool) $overrides['flagsOnly']);
+            if (! empty($overrides['itemStyle'])) {
+                $languageSwitch->itemStyle(ItemStyle::from($overrides['itemStyle']));
             }
 
             if (isset($overrides['useFlags']) && ! $overrides['useFlags']) {

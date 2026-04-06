@@ -8,7 +8,7 @@
         '-me-2' => $layout->spacingKey === 'user-menu-before',
         '-ms-2' => $layout->spacingKey === 'user-menu-after',
         '[&_.fi-dropdown-panel]:overscroll-y-contain',
-        '[&_.fi-dropdown-panel]:w-fit' => $isFlagsOnly,
+        '[&_.fi-dropdown-panel]:w-fit' => $itemStyle->isCompact(),
     ])
 >
     <x-slot name="trigger">

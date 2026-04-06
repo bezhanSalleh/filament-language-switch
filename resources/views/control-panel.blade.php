@@ -255,9 +255,20 @@
                             <x-filament::toggle class="{{ $toggleClass }}" :state="$useFlags ? 'true' : 'false'" wire:click="$toggle('useFlags')" />
                         </div>
 
-                        <div @class(['flex items-center justify-between', 'opacity-40 pointer-events-none' => !$useFlags])>
-                            <span class="{{ $labelClass }}">Flags Only</span>
-                            <x-filament::toggle class="{{ $toggleClass }}" :state="$flagsOnly ? 'true' : 'false'" wire:click="$toggle('flagsOnly')" :disabled="!$useFlags" />
+                        <div class="{{ $wrapperClass }}">
+                            <x-filament::input.wrapper>
+                                <x-slot name="prefix">
+                                    <span class="{{ $labelClass }}">Items</span>
+                                </x-slot>
+                                <x-filament::input.select class="{{ $selectClass }}" wire:model.live="itemStyle">
+                                    <option value="">Auto</option>
+                                    <option value="flag-with-label" @disabled(!$useFlags)>Flag + Label</option>
+                                    <option value="flag-only" @disabled(!$useFlags)>Flag Only</option>
+                                    <option value="avatar-with-label">Avatar + Label</option>
+                                    <option value="avatar-only">Avatar Only</option>
+                                    <option value="label-only">Label Only</option>
+                                </x-filament::input.select>
+                            </x-filament::input.wrapper>
                         </div>
                     </div>
                 </div>
