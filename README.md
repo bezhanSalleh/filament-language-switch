@@ -609,6 +609,16 @@ The `Placement` enum cases were renamed so they auto-flip in right-to-left local
 
 `TopCenter` and `BottomCenter` keep their names. Update any `->outsidePanelPlacement(...)` call that references the old cases.
 
+#### `flagsOnly()` replaced by `itemStyle()`
+
+`->flagsOnly()` has been replaced by the `ItemStyle` enum, which covers all visual+label combinations for locale items — not just flags:
+
+| v4 | v5 |
+|---|---|
+| `->flagsOnly()` | `->itemStyle(ItemStyle::FlagOnly)` |
+
+See [Item Style](#item-style) for the full enum.
+
 #### Default value changes
 
 | Setting | v4 default | v5 default | Restore v4 behavior |
@@ -621,6 +631,7 @@ The `Placement` enum cases were renamed so they auto-flip in right-to-left local
 ### New features
 
 - **Trigger customization.** `->trigger(style: TriggerStyle::..., icon: ...)` backed by the `TriggerStyle` enum (`Icon`, `IconLabel`, `Avatar`, `AvatarLabel`, `Flag`, `FlagLabel`, `Label`). See [Trigger](#trigger).
+- **Item style.** `->itemStyle(ItemStyle::...)` controls what each locale item shows — `FlagWithLabel`, `FlagOnly`, `AvatarWithLabel`, `AvatarOnly`, `LabelOnly`. Replaces `flagsOnly()` with a unified enum. See [Item Style](#item-style).
 - **Modal display mode.** `->displayMode(DisplayMode::Modal)` plus `->modalHeading()`, `->modalWidth()`, `->modalSlideOver()`, `->modalIcon()`, `->modalIconColor()`, `->columns()`, `->flagHeight()`, `->avatarHeight()`. See [Display Modes](#display-modes).
 - **`PlacementMode` for outside panels.** `->outsidePanelPlacement()` now accepts an optional second argument — `PlacementMode::Static` (default, in document flow), `PlacementMode::Pinned` (`position: fixed`, always visible during scroll), or `PlacementMode::Relative` (in flow, positioned for custom CSS offsets).
 - **Auto-docking into the user menu.** When `Pinned` would collide with `.fi-simple-layout-header` (authed user on a simple profile page), the switcher routes to `USER_MENU_BEFORE` automatically.
