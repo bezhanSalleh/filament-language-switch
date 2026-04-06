@@ -40,7 +40,6 @@ Zero-config language switching for Filament Panels. Drop it in, provide your loc
 - [Event](#event)
 - [Control Panel](#control-panel)
 - [Full Example](#full-example)
-- [Upgrading](#upgrading)
 - [Version Support](#version-support)
 
 ## Installation
@@ -587,48 +586,6 @@ LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
         ->userPreferredLocale(fn () => auth()->user()?->locale);
 });
 ```
-
-## Upgrading from v4 to v5
-
-> **Branches:** v4 lives on [`main`](https://github.com/bezhansalleh/filament-language-switch/tree/main), v5 lives on the `5.x` branch.
-
-If all you do is `->locales([...])` and optionally `->flags([...])`, your v4 configuration already works on v5. The rest of the existing v4 public API — `visible()`, `renderHook()`, `outsidePanelPlacement()`, `excludes()`, etc. — is preserved with the same signatures. Only the items below require action.
-
-### Breaking changes
-
-#### Placement enum rename (RTL-aware)
-
-The `Placement` enum cases were renamed so they auto-flip in right-to-left locales:
-
-| v4 | v5 |
-|---|---|
-| `Placement::TopLeft` | `Placement::TopStart` |
-| `Placement::TopRight` | `Placement::TopEnd` |
-| `Placement::BottomLeft` | `Placement::BottomStart` |
-| `Placement::BottomRight` | `Placement::BottomEnd` |
-
-`TopCenter` and `BottomCenter` keep their names. Update any `->outsidePanelPlacement(...)` call that references the old cases.
-
-#### Default value changes
-
-| Setting | v4 default | v5 default | Restore v4 behavior |
-|---|---|---|---|
-| `maxHeight` | `'max-content'` (no scroll) | `'18rem'` (scrollable) | `->maxHeight('max-content')` |
-| `renderHook` | `'panels::global-search.after'` (always) | `GLOBAL_SEARCH_AFTER` with topbar, `SIDEBAR_LOGO_AFTER` without | `->renderHook(PanelsRenderHook::GLOBAL_SEARCH_AFTER)` |
-| `outsidePanelsRenderHook` | `'panels::body.start'` (always) | Derived from placement + `PlacementMode` (see [Outside Panels](#outside-panels)) | `->outsidePanelsRenderHook(PanelsRenderHook::BODY_START)` |
-| `outsidePanelPlacement` | `Placement::TopRight` | `Placement::TopEnd` | Same position — only the name changed |
-
-### New features
-
-- **Trigger customization.** `->trigger(style: TriggerStyle::..., icon: ...)` backed by the `TriggerStyle` enum (`Icon`, `IconLabel`, `Avatar`, `AvatarLabel`, `Flag`, `FlagLabel`, `Label`). See [Trigger](#trigger).
-- **Item style.** `->itemStyle(ItemStyle::...)` controls what each locale item shows — `FlagWithLabel`, `FlagOnly`, `AvatarWithLabel`, `AvatarOnly`, `LabelOnly`. Replaces `flagsOnly()` with a unified enum. See [Item Style](#item-style).
-- **Modal display mode.** `->displayMode(DisplayMode::Modal)` plus `->modalHeading()`, `->modalWidth()`, `->modalSlideOver()`, `->modalIcon()`, `->modalIconColor()`, `->columns()`, `->flagHeight()`, `->avatarHeight()`. See [Display Modes](#display-modes).
-- **`PlacementMode` for outside panels.** `->outsidePanelPlacement()` now accepts an optional second argument — `PlacementMode::Static` (default, in document flow), `PlacementMode::Pinned` (`position: fixed`, always visible during scroll), or `PlacementMode::Relative` (in flow, positioned for custom CSS offsets).
-- **Auto-docking into the user menu.** When `Pinned` would collide with `.fi-simple-layout-header` (authed user on a simple profile page), the switcher routes to `USER_MENU_BEFORE` automatically.
-- **Smart hook classification.** Every supported render hook is classified into a render context (`topbar`, `sidebar`, `user-menu`, `outside-panel`) that picks a matching trigger design — sidebar nav item at `SIDEBAR_NAV_*`, dropdown list item at `USER_MENU_PROFILE_*`, etc.
-- **`->dropdownPlacement()`.** Control which direction the dropdown panel opens from the trigger (`bottom-end`, `top-start`, etc.).
-- **`<x-language-switch::inline />` Blade component.** Drop the switcher into any view — a form section, a custom page, a sidebar widget — without going through a render hook.
-- **Developer Control Panel.** Opt-in via `->controlPanel()`. A floating configurator that hot-swaps every setting live in the browser without editing your service provider. Supports `live: false` for batched Apply.
 
 ## Version Support
 Only the latest major plugin line receives active development. Older lines stay installable for legacy projects but get no new features; they only receive security fixes while their Filament target is still supported upstream.
