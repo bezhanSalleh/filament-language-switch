@@ -57,8 +57,8 @@
         @endif
         @class([
             'fi-ls-item relative group flex items-center shadow-sm gap-3 rounded-lg p-3 transition duration-75 outline-none',
-            'ring-1 ring-primary-500 bg-primary-50 dark:ring-primary-400/20 dark:bg-primary-400/10 pointer-events-none' => $isActive,
-            'ring-1 ring-gray-950/8 bg-white hover:ring-primary-500 dark:ring-white/8 dark:bg-white/5 dark:hover:ring-primary-400' => ! $isActive,
+            'ring-1 ring-primary-500/20 bg-primary-50 dark:ring-primary-400/20 dark:bg-primary-400/10 pointer-events-none' => $isActive,
+            'ring-1 ring-gray-950/8 bg-white hover:ring-primary-500/30 hover:bg-primary-50 dark:ring-white/8 dark:bg-white/5 dark:hover:ring-primary-400/20 dark:hover:bg-primary-400/10' => ! $isActive,
         ])
     >
         @if ($isActive)
@@ -80,8 +80,8 @@
                 $avatarHeight,
                 'rounded-full' => $isCircular,
                 'rounded-md' => ! $isCircular,
-                'bg-primary-500/20 text-primary-600 dark:text-primary-400' => $isActive,
-                'bg-gray-100 text-gray-600 dark:bg-white/5 dark:text-gray-400' => ! $isActive,
+                'bg-gray-50 dark:bg-white/5 text-primary-600 dark:text-primary-400' => $isActive,
+                'bg-gray-100 text-gray-600 dark:bg-white/5 dark:text-gray-400 group-hover:bg-white group-hover:text-primary-500 dark:group-hover:text-primary-400 dark:group-hover:bg-white/10' => ! $isActive,
             ])>
                 {{ $avatar }}
             </span>
