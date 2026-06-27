@@ -2,6 +2,16 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## 5.0.0 - 2026-06-27
+
+### What's Changed
+
+* 5.x by @bezhanSalleh in https://github.com/bezhanSalleh/filament-language-switch/pull/159
+* Bump dependabot/fetch-metadata from 3.0.0 to 3.1.0 by @dependabot[bot] in https://github.com/bezhanSalleh/filament-language-switch/pull/160
+* Bump actions/checkout from 6 to 7 by @dependabot[bot] in https://github.com/bezhanSalleh/filament-language-switch/pull/163
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/4.3.0...5.0.0
+
 ## 4.3.0 - 2026-04-05
 
 ### What's Changed
