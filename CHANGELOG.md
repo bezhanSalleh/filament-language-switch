@@ -2,6 +2,19 @@
 
 All notable changes to `filament-language-switch` will be documented in this file.
 
+## 5.1.0 - 2026-11-05
+
+### What's Changed
+
+* Add a `cookieName()` setting to rename the locale cookie (#165) by @steffjenl in https://github.com/bezhanSalleh/filament-language-switch/pull/166
+* Fix dropdown opening off-screen for pinned centre placements (#167) by @gp-lnuff in https://github.com/bezhanSalleh/filament-language-switch/pull/168
+
+### New Contributors
+
+* @steffjenl made their first contribution in https://github.com/bezhanSalleh/filament-language-switch/pull/166
+
+**Full Changelog**: https://github.com/bezhanSalleh/filament-language-switch/compare/5.0.0...5.1.0
+
 ## 5.0.0 - 2026-06-27
 
 ### What's Changed
