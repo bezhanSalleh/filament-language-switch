@@ -28,7 +28,8 @@
 
 Zero-config language switching for Filament Panels. Drop it in, provide your locales, and you're done. The plugin auto-detects your panel layout and renders in the right place with the right design — topbar icon button, sidebar nav item, user menu item — without any manual wiring.
 
-## Table of Contents
+<div class="filament-hidden">
+<b>Table of Contents</b>
 
 - [Installation](#installation)
 - [Quick Start](#quick-start)
@@ -48,6 +49,7 @@ Zero-config language switching for Filament Panels. Drop it in, provide your loc
 - [Control Panel](#control-panel)
 - [Full Example](#full-example)
 - [Version Support](#version-support)
+</div>
 
 ## Installation
 
