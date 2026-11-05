@@ -36,6 +36,7 @@ Zero-config language switching for Filament Panels. Drop it in, provide your loc
 - [Inline Embedding](#inline-embedding-in-custom-pages)
 - [Panel Exclusion](#panel-exclusion)
 - [User Preferred Locale](#user-preferred-locale)
+- [Cookie Name](#cookie-name)
 - [Customization](#customization)
 - [Event](#event)
 - [Control Panel](#control-panel)
@@ -488,6 +489,16 @@ The locale resolution order is:
 5. Cookie
 6. `app.locale` config
 
+## Cookie Name
+
+The selected locale is remembered in a forever cookie. Rename it if it collides with a cookie your app already uses:
+
+```php
+$switch->cookieName('my_app_locale');
+```
+
+Defaults to `filament_language_switch_locale`. If you need to read the cookie outside of Laravel (in JavaScript, for example), add the same name to the `$except` list of your `EncryptCookies` middleware.
+
 ## Customization
 
 For deep customization, publish the plugin's views and edit them in your app:
@@ -583,7 +594,8 @@ LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
             icon: Heroicon::GlobeAlt,
         )
         ->excludes(['admin'])
-        ->userPreferredLocale(fn () => auth()->user()?->locale);
+        ->userPreferredLocale(fn () => auth()->user()?->locale)
+        ->cookieName('my_app_locale');
 });
 ```
 

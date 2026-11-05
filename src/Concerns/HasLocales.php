@@ -22,6 +22,8 @@ trait HasLocales
 
     protected string | Closure | null $userPreferredLocale = null;
 
+    protected string | Closure $cookieName = 'filament_language_switch_locale';
+
     public function locales(array | Closure $locales): static
     {
         $this->locales = $locales;
@@ -60,6 +62,13 @@ trait HasLocales
     public function userPreferredLocale(Closure | string | null $locale): static
     {
         $this->userPreferredLocale = $locale;
+
+        return $this;
+    }
+
+    public function cookieName(string | Closure $name): static
+    {
+        $this->cookieName = $name;
 
         return $this;
     }
@@ -105,13 +114,18 @@ trait HasLocales
         return $this->evaluate($this->userPreferredLocale);
     }
 
+    public function getCookieName(): string
+    {
+        return (string) $this->evaluate($this->cookieName);
+    }
+
     public function getPreferredLocale(): string
     {
         $locale = session()->get('locale') ??
             request()->query('locale') ??
             $this->getUserPreferredLocale() ??
             request()->getPreferredLanguage($this->getLocales()) ??
-            request()->cookie('filament_language_switch_locale') ??
+            request()->cookie($this->getCookieName()) ??
             config('app.locale');
 
         return in_array($locale, $this->getLocales(), true) ? $locale : config('app.locale');
@@ -149,7 +163,7 @@ trait HasLocales
     {
         session()->put('locale', $locale);
 
-        cookie()->queue(cookie()->forever('filament_language_switch_locale', $locale));
+        cookie()->queue(cookie()->forever(static::make()->getCookieName(), $locale));
 
         event(new LocaleChanged($locale));
     }
